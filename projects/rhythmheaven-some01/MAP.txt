@@ -7708,396 +7708,396 @@
 801F72F0 RFLiGetAdditionalInfo
 801F7400 RFLGetAdditionalInfo
 801F7410 RFLiClearDBBuffer
-@12@__dt__Q34nw4r3snd18SoundArchivePlayerFv = .text:0x801BC790; // type:function size:0x8
-@12@detail_ConvertLabelStringToSoundId__Q34nw4r3snd18SoundArchivePlayerFPCc = .text:0x801BC770; // type:function size:0x8
-@12@detail_SetupSound__Q34nw4r3snd18SoundArchivePlayerFPQ34nw4r3snd11SoundHandleUlbPCQ44nw4r3snd14SoundStartable9StartInfo = .text:0x801BC780; // type:function size:0x8
-@180@InvalidateData__Q44nw4r3snd6detail9SeqPlayerFPCvPCv = .text:0x801B28F0; // type:function size:0x8
-@180@InvalidateData__Q44nw4r3snd6detail9WsdPlayerFPCvPCv = .text:0x801C7B30; // type:function size:0x8
-@180@InvalidateWaveData__Q44nw4r3snd6detail9SeqPlayerFPCvPCv = .text:0x801B28E0; // type:function size:0x8
-@180@InvalidateWaveData__Q44nw4r3snd6detail9WsdPlayerFPCvPCv = .text:0x801C7B20; // type:function size:0x8
-@180@OnShutdownSoundThread__Q44nw4r3snd6detail10StrmPlayerFv = .text:0x801C1850; // type:function size:0x8
-@180@OnUpdateFrameSoundThread__Q44nw4r3snd6detail10StrmPlayerFv = .text:0x801C1870; // type:function size:0x8
-@180@OnUpdateVoiceSoundThread__Q44nw4r3snd6detail10StrmPlayerFv = .text:0x801C1860; // type:function size:0x8
-@180@__dt__Q44nw4r3snd6detail10StrmPlayerFv = .text:0x801C1880; // type:function size:0x8
-@180@__dt__Q44nw4r3snd6detail9SeqPlayerFv = .text:0x801B6260; // type:function size:0x8
-@180@__dt__Q44nw4r3snd6detail9WsdPlayerFv = .text:0x801C7B40; // type:function size:0x8
-@192@OnShutdownSoundThread__Q44nw4r3snd6detail9SeqPlayerFv = .text:0x801B2900; // type:function size:0x8
-@192@OnShutdownSoundThread__Q44nw4r3snd6detail9WsdPlayerFv = .text:0x801C7B50; // type:function size:0x8
-@192@OnUpdateFrameSoundThread__Q44nw4r3snd6detail9SeqPlayerFv = .text:0x801B2910; // type:function size:0x8
-@192@OnUpdateFrameSoundThread__Q44nw4r3snd6detail9WsdPlayerFv = .text:0x801C7B60; // type:function size:0x8
-@192@__dt__Q44nw4r3snd6detail9SeqPlayerFv = .text:0x801B6270; // type:function size:0x8
-@192@__dt__Q44nw4r3snd6detail9WsdPlayerFv = .text:0x801C7B70; // type:function size:0x8
-AdjustCursor__Q34nw4r2ut17TextWriterBase<c>FPfPfPCci = .text:0x801D0370; // type:function size:0x4D8
-AdjustCursor__Q34nw4r2ut17TextWriterBase<w>FPfPfPCwi = .text:0x801D2D00; // type:function size:0x4D8
-AdjustCursor__Q36nw4hbm2ut17TextWriterBase<c>FPfPfPCci = .text:0x801913C0; // type:function size:0x4EC
-AdjustCursor__Q36nw4hbm2ut17TextWriterBase<w>FPfPfPCwi = .text:0x80193DC0; // type:function size:0x4EC
-AudioFrameCallback__24@unnamed@HBMAxSound_cpp@Fv = .text:0x80177410; // type:function size:0x64
-AudioSoundThreadProc__24@unnamed@HBMAxSound_cpp@FPv = .text:0x80177480; // type:function size:0x240
-CalcFormatStringHeight__Q34nw4r2ut17TextWriterBase<c>CFPCce = .text:0x801CE2F0; // type:function size:0x204
-CalcFormatStringHeight__Q34nw4r2ut17TextWriterBase<w>CFPCwe = .text:0x801D0C50; // type:function size:0x204
-CalcFormatStringHeight__Q36nw4hbm2ut17TextWriterBase<c>CFPCce = .text:0x8018F3B0; // type:function size:0x1F8
-CalcFormatStringHeight__Q36nw4hbm2ut17TextWriterBase<w>CFPCwe = .text:0x80191D70; // type:function size:0x1F8
-CalcFormatStringRect__Q34nw4r2ut17TextWriterBase<c>CFPQ34nw4r2ut4RectPCce = .text:0x801CE500; // type:function size:0x1E0
-CalcFormatStringRect__Q34nw4r2ut17TextWriterBase<w>CFPQ34nw4r2ut4RectPCwe = .text:0x801D0E60; // type:function size:0x1E0
-CalcFormatStringRect__Q36nw4hbm2ut17TextWriterBase<c>CFPQ36nw4hbm2ut4RectPCce = .text:0x8018F5B0; // type:function size:0x1D0
-CalcFormatStringRect__Q36nw4hbm2ut17TextWriterBase<w>CFPQ36nw4hbm2ut4RectPCwe = .text:0x80191F70; // type:function size:0x1D0
-CalcFormatStringWidth__Q34nw4r2ut17TextWriterBase<c>CFPCce = .text:0x801CE0E0; // type:function size:0x204
-CalcFormatStringWidth__Q34nw4r2ut17TextWriterBase<w>CFPCwe = .text:0x801D0A40; // type:function size:0x204
-CalcFormatStringWidth__Q36nw4hbm2ut17TextWriterBase<c>CFPCce = .text:0x8018F1B0; // type:function size:0x1F8
-CalcFormatStringWidth__Q36nw4hbm2ut17TextWriterBase<w>CFPCwe = .text:0x80191B70; // type:function size:0x1F8
-CalcLineRectImpl<w>__25@unnamed@lyt_textBox_cpp@FPQ36nw4hbm2ut4RectPQ36nw4hbm2ut17TextWriterBase<w>PCwifPb_i = .text:0x80188B10; // type:function size:0x444
-CalcLineRectImpl<w>__Q34nw4r3lyt25@unnamed@lyt_textBox_cpp@FPQ34nw4r2ut4RectPQ34nw4r2ut17TextWriterBase<w>PCwifPb_i = .text:0x8019EBF0; // type:function size:0x3E0
-CalcLineRectImpl__Q34nw4r2ut17TextWriterBase<c>FPQ34nw4r2ut4RectPPCci = .text:0x801CF480; // type:function size:0x5BC
-CalcLineRectImpl__Q34nw4r2ut17TextWriterBase<w>FPQ34nw4r2ut4RectPPCwi = .text:0x801D1DE0; // type:function size:0x5BC
-CalcLineRectImpl__Q36nw4hbm2ut17TextWriterBase<c>FPQ36nw4hbm2ut4RectPCci = .text:0x80190910; // type:function size:0x3DC
-CalcLineRectImpl__Q36nw4hbm2ut17TextWriterBase<w>FPQ36nw4hbm2ut4RectPCwi = .text:0x801932D0; // type:function size:0x3F4
-CalcLineWidth__Q34nw4r2ut17TextWriterBase<c>FPCci = .text:0x801CF320; // type:function size:0x154
-CalcLineWidth__Q34nw4r2ut17TextWriterBase<w>FPCwi = .text:0x801D1C80; // type:function size:0x154
-CalcLineWidth__Q36nw4hbm2ut17TextWriterBase<c>FPCci = .text:0x801907A0; // type:function size:0x168
-CalcLineWidth__Q36nw4hbm2ut17TextWriterBase<w>FPCwi = .text:0x80193160; // type:function size:0x168
-CalcRect__Q34nw4r2ut19TagProcessorBase<c>FPQ34nw4r2ut4RectUsPQ34nw4r2ut15PrintContext<c> = .text:0x801C81E0; // type:function size:0x1E4
-CalcRect__Q34nw4r2ut19TagProcessorBase<w>FPQ34nw4r2ut4RectUsPQ34nw4r2ut15PrintContext<w> = .text:0x801C8690; // type:function size:0x1E4
-CalcRect__Q36nw4hbm2ut19TagProcessorBase<c>FPQ36nw4hbm2ut4RectUsPQ36nw4hbm2ut15PrintContext<c> = .text:0x8018E600; // type:function size:0x234
-CalcRect__Q36nw4hbm2ut19TagProcessorBase<w>FPQ36nw4hbm2ut4RectUsPQ36nw4hbm2ut15PrintContext<w> = .text:0x8018EB60; // type:function size:0x234
-CalcStringHeight__Q34nw4r2ut17TextWriterBase<c>CFPCci = .text:0x801CE9B0; // type:function size:0x144
-CalcStringHeight__Q34nw4r2ut17TextWriterBase<w>CFPCwi = .text:0x801D1310; // type:function size:0x144
-CalcStringHeight__Q36nw4hbm2ut17TextWriterBase<c>CFPCc = .text:0x8018FCC0; // type:function size:0x150
-CalcStringHeight__Q36nw4hbm2ut17TextWriterBase<c>CFPCci = .text:0x8018FB80; // type:function size:0x140
-CalcStringHeight__Q36nw4hbm2ut17TextWriterBase<w>CFPCw = .text:0x80192680; // type:function size:0x150
-CalcStringHeight__Q36nw4hbm2ut17TextWriterBase<w>CFPCwi = .text:0x80192540; // type:function size:0x140
-CalcStringRectImpl<w>__25@unnamed@lyt_textBox_cpp@FPQ36nw4hbm2ut4RectPQ36nw4hbm2ut17TextWriterBase<w>PCwif_v = .text:0x801891B0; // type:function size:0x168
-CalcStringRectImpl<w>__Q34nw4r3lyt25@unnamed@lyt_textBox_cpp@FPQ34nw4r2ut4RectPQ34nw4r2ut17TextWriterBase<w>PCwif_v = .text:0x8019F670; // type:function size:0x1D4
-CalcStringRectImpl__Q34nw4r2ut17TextWriterBase<c>FPQ34nw4r2ut4RectPCci = .text:0x801CFA50; // type:function size:0x110
-CalcStringRectImpl__Q34nw4r2ut17TextWriterBase<w>FPQ34nw4r2ut4RectPCwi = .text:0x801D23B0; // type:function size:0x120
-CalcStringRectImpl__Q36nw4hbm2ut17TextWriterBase<c>FPQ36nw4hbm2ut4RectPCci = .text:0x80190CF0; // type:function size:0x114
-CalcStringRectImpl__Q36nw4hbm2ut17TextWriterBase<w>FPQ36nw4hbm2ut4RectPCwi = .text:0x801936D0; // type:function size:0x118
-CalcStringRect__Q34nw4r2ut17TextWriterBase<c>CFPQ34nw4r2ut4RectPCci = .text:0x801CEB00; // type:function size:0x118
-CalcStringRect__Q34nw4r2ut17TextWriterBase<w>CFPQ34nw4r2ut4RectPCwi = .text:0x801D1460; // type:function size:0x118
-CalcStringRect__Q36nw4hbm2ut17TextWriterBase<c>CFPQ36nw4hbm2ut4RectPCc = .text:0x8018FF20; // type:function size:0x130
-CalcStringRect__Q36nw4hbm2ut17TextWriterBase<c>CFPQ36nw4hbm2ut4RectPCci = .text:0x8018FE10; // type:function size:0x110
-CalcStringRect__Q36nw4hbm2ut17TextWriterBase<w>CFPQ36nw4hbm2ut4RectPCw = .text:0x801928E0; // type:function size:0x130
-CalcStringRect__Q36nw4hbm2ut17TextWriterBase<w>CFPQ36nw4hbm2ut4RectPCwi = .text:0x801927D0; // type:function size:0x110
-CalcStringWidth__Q34nw4r2ut17TextWriterBase<c>CFPCci = .text:0x801CE860; // type:function size:0x144
-CalcStringWidth__Q34nw4r2ut17TextWriterBase<w>CFPCwi = .text:0x801D11C0; // type:function size:0x144
-CalcStringWidth__Q36nw4hbm2ut17TextWriterBase<c>CFPCc = .text:0x8018FA30; // type:function size:0x150
-CalcStringWidth__Q36nw4hbm2ut17TextWriterBase<c>CFPCci = .text:0x8018F8F0; // type:function size:0x140
-CalcStringWidth__Q36nw4hbm2ut17TextWriterBase<w>CFPCw = .text:0x801923F0; // type:function size:0x150
-CalcStringWidth__Q36nw4hbm2ut17TextWriterBase<w>CFPCwi = .text:0x801922B0; // type:function size:0x140
-CalcTextureMtx__26@unnamed@lyt_material_cpp@FPQ36nw4hbm4math5MTX34RCQ36nw4hbm3lyt6TexSRT = .text:0x80183580; // type:function size:0x118
-CalcTextureMtx__Q34nw4r3lyt26@unnamed@lyt_material_cpp@FPQ34nw4r4math5MTX34RCQ34nw4r3lyt6TexSRT = .text:0x801A1EE0; // type:function size:0x108
-CalcVStringRect__Q34nw4r2ut17TextWriterBase<c>CFPQ34nw4r2ut4RectPCcP16__va_list_struct = .text:0x801CE6E0; // type:function size:0x180
-CalcVStringRect__Q34nw4r2ut17TextWriterBase<w>CFPQ34nw4r2ut4RectPCwP16__va_list_struct = .text:0x801D1040; // type:function size:0x180
-CalcVStringRect__Q36nw4hbm2ut17TextWriterBase<c>CFPQ36nw4hbm2ut4RectPCcP16__va_list_struct = .text:0x8018F780; // type:function size:0x170
-CalcVStringRect__Q36nw4hbm2ut17TextWriterBase<w>CFPQ36nw4hbm2ut4RectPCwP16__va_list_struct = .text:0x80192140; // type:function size:0x170
-ConvertOffsToPtr<Q34nw4r2ut5Color>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r2ut5Color = .text:0x801A2C50; // type:function size:0x8
-ConvertOffsToPtr<Q34nw4r3lyt11TevSwapMode>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt11TevSwapMode = .text:0x801A2C40; // type:function size:0x8
-ConvertOffsToPtr<Q34nw4r3lyt11TexCoordGen>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt11TexCoordGen = .text:0x801A2CA0; // type:function size:0x8
-ConvertOffsToPtr<Q34nw4r3lyt12AlphaCompare>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt12AlphaCompare = .text:0x801A2C10; // type:function size:0x8
-ConvertOffsToPtr<Q34nw4r3lyt13IndirectStage>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt13IndirectStage = .text:0x801A2C30; // type:function size:0x8
-ConvertOffsToPtr<Q34nw4r3lyt6TexSRT>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt6TexSRT = .text:0x801A2CB0; // type:function size:0x8
-ConvertOffsToPtr<Q34nw4r3lyt8ChanCtrl>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt8ChanCtrl = .text:0x801A2C60; // type:function size:0x8
-ConvertOffsToPtr<Q34nw4r3lyt8TevStage>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt8TevStage = .text:0x801A2C20; // type:function size:0x8
-ConvertOffsToPtr<Q34nw4r3lyt9BlendMode>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt9BlendMode = .text:0x801A2C00; // type:function size:0x8
-ConvertOffsToPtr<Q44nw4r3lyt3res6TexMap>__Q34nw4r3lyt6detailFPCvUi_PCQ44nw4r3lyt3res6TexMap = .text:0x801A2CC0; // type:function size:0x8
-ConvertOffsToPtr<Q44nw4r3lyt3res7Texture>__Q34nw4r3lyt6detailFPCvUi_PCQ44nw4r3lyt3res7Texture = .text:0x801A2C80; // type:function size:0x8
-ConvertOffsToPtr<c>__Q34nw4r3lyt6detailFPCvUi_PCc = .text:0x801A2C70; // type:function size:0x8
-EqualsPaneName__Q36nw4hbm3lyt6detailFPCcPCc????EqualsPaneName__Q36nw4hbm3lyt6detailFPCUcPCUc = .text:0x80181650; // type:function size:0x2C
-FindAnimationLink__Q34nw4r3lyt6detailFPQ34nw4r2ut38LinkList<Q34nw4r3lyt13AnimationLink,0>PQ34nw4r3lyt13AnimTransform = .text:0x801A65B0; // type:function size:0x38
-FindAnimationLink__Q34nw4r3lyt6detailFPQ34nw4r2ut38LinkList<Q34nw4r3lyt13AnimationLink,0>RCQ34nw4r3lyt12AnimResource = .text:0x801A65F0; // type:function size:0x40
-FindAnimationLink__Q36nw4hbm3lyt6detailFPQ36nw4hbm2ut40LinkList<Q36nw4hbm3lyt13AnimationLink,0>PQ36nw4hbm3lyt13AnimTransform = .text:0x801810F0; // type:function size:0x38
-FindNameResource__37@unnamed@lyt_arcResourceAccessor_cpp@FP9ARCHandlePCc = .text:0x80181130; // type:function size:0xDC scope:local
-FindNameResource__37@unnamed@lyt_arcResourceAccessor_cpp@FP9ARCHandlePCc = .text:0x801A6720; // type:function size:0xCC scope:local
-Flush__Q34nw4r2db15DbgPrintBase<c>Fiiii = .text:0x80198880; // type:function size:0xC0
-Flush__Q34nw4r2db15DbgPrintBase<c>Fv = .text:0x801986F0; // type:function size:0x18C
-Flush__Q34nw4r2db15DbgPrintBase<w>Fiiii = .text:0x80199610; // type:function size:0xC0
-Flush__Q34nw4r2db15DbgPrintBase<w>Fv = .text:0x80199480; // type:function size:0x18C
-GetBufferSize__Q36nw4hbm2ut17TextWriterBase<c>Fv = .text:0x80190760; // type:function size:0xC
-GetBufferSize__Q36nw4hbm2ut17TextWriterBase<w>Fv = .text:0x80193120; // type:function size:0xC
-GetBuffer__Q36nw4hbm2ut17TextWriterBase<c>Fv = .text:0x80190770; // type:function size:0xC
-GetBuffer__Q36nw4hbm2ut17TextWriterBase<w>Fv = .text:0x80193130; // type:function size:0xC
-GetCharSpace__Q34nw4r2ut17TextWriterBase<c>CFv = .text:0x801CFA40; // type:function size:0x8
-GetCharSpace__Q34nw4r2ut17TextWriterBase<w>CFv = .text:0x801D23A0; // type:function size:0x8
-GetCharSpace__Q36nw4hbm2ut17TextWriterBase<c>CFv = .text:0x8018F130; // type:function size:0x8
-GetCharSpace__Q36nw4hbm2ut17TextWriterBase<w>CFv = .text:0x80191AF0; // type:function size:0x8
-GetDrawFlag__Q36nw4hbm2ut17TextWriterBase<c>CFv = .text:0x8018F170; // type:function size:0x8
-GetDrawFlag__Q36nw4hbm2ut17TextWriterBase<w>CFv = .text:0x80191B30; // type:function size:0x8
-GetFirstText__Q34nw4r2db15DbgPrintBase<c>Fv = .text:0x801989F0; // type:function size:0xC
-GetFirstText__Q34nw4r2db15DbgPrintBase<w>Fv = .text:0x80199780; // type:function size:0xC
-GetFontSize__Q34nw4r2db15DbgPrintBase<c>CFv = .text:0x80197F60; // type:function size:0x8
-GetFontSize__Q34nw4r2db15DbgPrintBase<w>CFv = .text:0x80198CF0; // type:function size:0x8
-GetFont__Q34nw4r2db15DbgPrintBase<c>CFv = .text:0x80197F00; // type:function size:0x8
-GetFont__Q34nw4r2db15DbgPrintBase<w>CFv = .text:0x80198C90; // type:function size:0x8
-GetFreePlayer__24@unnamed@HBMAxSound_cpp@Fi = .text:0x80177270; // type:function size:0x198
-GetHermiteCurveValue__27@unnamed@lyt_animation_cpp@FfPCQ46nw4hbm3lyt3res10HermiteKeyUl = .text:0x80180670; // type:function size:0x1C4
-GetHermiteCurveValue__Q34nw4r3lyt27@unnamed@lyt_animation_cpp@FfPCQ44nw4r3lyt3res10HermiteKeyUl = .text:0x801A5210; // type:function size:0x1BC
-GetInstance__Q34nw4r2db15DbgPrintBase<c>Fv = .text:0x80197DB0; // type:function size:0x8
-GetInstance__Q34nw4r2db15DbgPrintBase<w>Fv = .text:0x80198B40; // type:function size:0x8
-GetLineHeight__Q34nw4r2ut17TextWriterBase<c>CFv = .text:0x801CE060; // type:function size:0x7C
-GetLineHeight__Q34nw4r2ut17TextWriterBase<w>CFv = .text:0x801D09C0; // type:function size:0x7C
-GetLineHeight__Q36nw4hbm2ut17TextWriterBase<c>CFv = .text:0x8018F070; // type:function size:0x8C
-GetLineHeight__Q36nw4hbm2ut17TextWriterBase<w>CFv = .text:0x80191A30; // type:function size:0x8C
-GetLineSpace__Q36nw4hbm2ut17TextWriterBase<c>CFv = .text:0x8018F120; // type:function size:0x8
-GetLineSpace__Q36nw4hbm2ut17TextWriterBase<w>CFv = .text:0x80191AE0; // type:function size:0x8
-GetNextText__Q34nw4r2db15DbgPrintBase<c>FPQ44nw4r2db15DbgPrintBase<c>7DbgText = .text:0x80198A00; // type:function size:0x8
-GetNextText__Q34nw4r2db15DbgPrintBase<w>FPQ44nw4r2db15DbgPrintBase<w>7DbgText = .text:0x80199790; // type:function size:0x8
-GetReferenceToSubRegion__Q44nw4r3snd6detail14BankFileReaderCFPCQ54nw4r3snd6detail4Util128DataRef<v,Q54nw4r3snd6detail8BankFile9InstParam,Q54nw4r3snd6detail8BankFile10RangeTable,Q54nw4r3snd6detail8BankFile10IndexTable>i = .text:0x801ACEA0; // type:function size:0x120
-GetResourceSub__37@unnamed@lyt_arcResourceAccessor_cpp@FP9ARCHandlePCcUlPCcPUl = .text:0x80181210; // type:function size:0x148 scope:local
-GetResourceSub__37@unnamed@lyt_arcResourceAccessor_cpp@FP9ARCHandlePCcUlPCcPUl = .text:0x801A67F0; // type:function size:0x140 scope:local
-GetStepCurveValue__27@unnamed@lyt_animation_cpp@FfPCQ46nw4hbm3lyt3res7StepKeyUl = .text:0x80180580; // type:function size:0xF0
-GetStepCurveValue__Q34nw4r3lyt27@unnamed@lyt_animation_cpp@FfPCQ44nw4r3lyt3res7StepKeyUl = .text:0x801A5120; // type:function size:0xE8
-GetTabWidth__Q36nw4hbm2ut17TextWriterBase<c>CFv = .text:0x8018F150; // type:function size:0x8
-GetTabWidth__Q36nw4hbm2ut17TextWriterBase<w>CFv = .text:0x80191B10; // type:function size:0x8
-GetTagProcessor__Q36nw4hbm2ut17TextWriterBase<c>CFv = .text:0x8018F1A0; // type:function size:0x8
-GetTagProcessor__Q36nw4hbm2ut17TextWriterBase<w>CFv = .text:0x80191B60; // type:function size:0x8
-GetTextColor__Q34nw4r2db15DbgPrintBase<c>CFv = .text:0x80197F40; // type:function size:0xC
-GetTextColor__Q34nw4r2db15DbgPrintBase<w>CFv = .text:0x80198CD0; // type:function size:0xC
-GetTextDrawRect__Q34nw4r3lyt7TextBoxCFPQ34nw4r2ut17TextWriterBase<w> = .text:0x8019F3C0; // type:function size:0x2A4
-Initialize__Q34nw4r2db15DbgPrintBase<c>FPvUlQ34nw4r2ut5Color = .text:0x80197DC0; // type:function size:0x90
-Initialize__Q34nw4r2db15DbgPrintBase<c>FPvUlRCQ34nw4r2ut4FontQ34nw4r2ut5Color = .text:0x80197E50; // type:function size:0x98
-Initialize__Q34nw4r2db15DbgPrintBase<w>FPvUlQ34nw4r2ut5Color = .text:0x80198B50; // type:function size:0x90
-Initialize__Q34nw4r2db15DbgPrintBase<w>FPvUlRCQ34nw4r2ut4FontQ34nw4r2ut5Color = .text:0x80198BE0; // type:function size:0x98
-IsDrawFlagSet__Q34nw4r2ut17TextWriterBase<c>CFUlUl = .text:0x801D0850; // type:function size:0x18
-IsDrawFlagSet__Q34nw4r2ut17TextWriterBase<w>CFUlUl = .text:0x801D31E0; // type:function size:0x18
-IsDrawFlagSet__Q36nw4hbm2ut17TextWriterBase<c>CFUlUl = .text:0x801918B0; // type:function size:0x18
-IsDrawFlagSet__Q36nw4hbm2ut17TextWriterBase<w>CFUlUl = .text:0x801942B0; // type:function size:0x18
-IsIncludeAnimationGroupRef__Q34nw4r3lyt24@unnamed@lyt_layout_cpp@FPQ34nw4r3lyt14GroupContainerPCQ34nw4r3lyt17AnimationGroupRefUsbPQ34nw4r3lyt4Pane = .text:0x8019CD00; // type:function size:0xCC
-IsVisible__Q34nw4r2db15DbgPrintBase<c>CFv = .text:0x80197F80; // type:function size:0x8
-IsVisible__Q34nw4r2db15DbgPrintBase<w>CFv = .text:0x80198D10; // type:function size:0x8
-Min<Uc>__Q34nw4r2ut26@unnamed@lyt_material_cpp@FUcUc_Uc = .text:0x801A2C90; // type:function size:0x10
-PrintImpl__Q34nw4r2ut17TextWriterBase<c>FPCcib = .text:0x801CFB60; // type:function size:0x804
-PrintImpl__Q34nw4r2ut17TextWriterBase<w>FPCwib = .text:0x801D24D0; // type:function size:0x828
-PrintImpl__Q36nw4hbm2ut17TextWriterBase<c>FPCci = .text:0x80190E10; // type:function size:0x5AC
-PrintImpl__Q36nw4hbm2ut17TextWriterBase<w>FPCwi = .text:0x801937F0; // type:function size:0x5D0
-PrintMutable__Q34nw4r2ut17TextWriterBase<c>FPCci = .text:0x801CF300; // type:function size:0x8
-PrintMutable__Q34nw4r2ut17TextWriterBase<w>FPCwi = .text:0x801D1C60; // type:function size:0x8
-Print__Q34nw4r2ut17TextWriterBase<c>FPCci = .text:0x801CF000; // type:function size:0x140
-Print__Q34nw4r2ut17TextWriterBase<w>FPCwi = .text:0x801D1960; // type:function size:0x140
-Print__Q36nw4hbm2ut17TextWriterBase<c>FPCc = .text:0x801905B0; // type:function size:0x170
-Print__Q36nw4hbm2ut17TextWriterBase<c>FPCci = .text:0x80190450; // type:function size:0x154
-Print__Q36nw4hbm2ut17TextWriterBase<w>FPCw = .text:0x80192F70; // type:function size:0x170
-Print__Q36nw4hbm2ut17TextWriterBase<w>FPCwi = .text:0x80192E10; // type:function size:0x154
-PrintfMutable__Q34nw4r2ut17TextWriterBase<c>FPCce = .text:0x801CF140; // type:function size:0x110
-PrintfMutable__Q34nw4r2ut17TextWriterBase<w>FPCwe = .text:0x801D1AA0; // type:function size:0x110
-Printf__Q34nw4r2ut17TextWriterBase<c>FPCce = .text:0x801CEC20; // type:function size:0x21C
-Printf__Q34nw4r2ut17TextWriterBase<w>FPCwe = .text:0x801D1580; // type:function size:0x21C
-Printf__Q36nw4hbm2ut17TextWriterBase<c>FPCce = .text:0x80190050; // type:function size:0x228
-Printf__Q36nw4hbm2ut17TextWriterBase<w>FPCwe = .text:0x80192A10; // type:function size:0x228
-ProcessLinefeed__Q34nw4r2ut19TagProcessorBase<c>FPQ34nw4r2ut15PrintContext<c> = .text:0x801C83D0; // type:function size:0x64
-ProcessLinefeed__Q34nw4r2ut19TagProcessorBase<w>FPQ34nw4r2ut15PrintContext<w> = .text:0x801C8880; // type:function size:0x64
-ProcessLinefeed__Q36nw4hbm2ut19TagProcessorBase<c>FPQ36nw4hbm2ut15PrintContext<c> = .text:0x8018E840; // type:function size:0x70
-ProcessLinefeed__Q36nw4hbm2ut19TagProcessorBase<w>FPQ36nw4hbm2ut15PrintContext<w> = .text:0x8018EDA0; // type:function size:0x70
-ProcessTab__Q34nw4r2ut19TagProcessorBase<c>FPQ34nw4r2ut15PrintContext<c> = .text:0x801C8440; // type:function size:0xC4
-ProcessTab__Q34nw4r2ut19TagProcessorBase<w>FPQ34nw4r2ut15PrintContext<w> = .text:0x801C88F0; // type:function size:0xC4
-ProcessTab__Q36nw4hbm2ut19TagProcessorBase<c>FPQ36nw4hbm2ut15PrintContext<c> = .text:0x8018E8B0; // type:function size:0xF8
-ProcessTab__Q36nw4hbm2ut19TagProcessorBase<w>FPQ36nw4hbm2ut15PrintContext<w> = .text:0x8018EE10; // type:function size:0xF8
-Process__15CMyTagProcessorFUsPQ34nw4r2ut15PrintContext<w> = .text:0x80024A48; // type:function size:0x1BA0
-Process__Q34nw4r2ut19TagProcessorBase<c>FUsPQ34nw4r2ut15PrintContext<c> = .text:0x801C80B0; // type:function size:0x12C
-Process__Q34nw4r2ut19TagProcessorBase<w>FUsPQ34nw4r2ut15PrintContext<w> = .text:0x801C8560; // type:function size:0x12C
-Process__Q36nw4hbm2ut19TagProcessorBase<c>FUsPQ36nw4hbm2ut15PrintContext<c> = .text:0x8018E4A0; // type:function size:0x15C
-Process__Q36nw4hbm2ut19TagProcessorBase<w>FUsPQ36nw4hbm2ut15PrintContext<w> = .text:0x8018EA00; // type:function size:0x15C
-Regist__Q34nw4r2db15DbgPrintBase<c>FiiiPCci = .text:0x80198640; // type:function size:0x4
-Regist__Q34nw4r2db15DbgPrintBase<w>FiiiPCwi = .text:0x801993D0; // type:function size:0x4
-Register__Q34nw4r2db15DbgPrintBase<c>FiiiPCci = .text:0x80198290; // type:function size:0xAC
-Register__Q34nw4r2db15DbgPrintBase<w>FiiiPCwi = .text:0x80199020; // type:function size:0xAC
-Registerf__Q34nw4r2db15DbgPrintBase<c>FiiPCce = .text:0x80197F90; // type:function size:0x110
-Registerf__Q34nw4r2db15DbgPrintBase<c>FiiiPCce = .text:0x801980A0; // type:function size:0x120
-Registerf__Q34nw4r2db15DbgPrintBase<w>FiiPCwe = .text:0x80198D20; // type:function size:0x110
-Registerf__Q34nw4r2db15DbgPrintBase<w>FiiiPCwe = .text:0x80198E30; // type:function size:0x120
-Registf__Q34nw4r2db15DbgPrintBase<c>FiiPCce = .text:0x80198340; // type:function size:0x110
-Registf__Q34nw4r2db15DbgPrintBase<c>FiiiPCce = .text:0x80198450; // type:function size:0x120
-Registf__Q34nw4r2db15DbgPrintBase<w>FiiPCwe = .text:0x801990D0; // type:function size:0x110
-Registf__Q34nw4r2db15DbgPrintBase<w>FiiiPCwe = .text:0x801991E0; // type:function size:0x120
-ReleaseBuffer__Q34nw4r2db15DbgPrintBase<c>Fv = .text:0x80198A80; // type:function size:0x60
-ReleaseBuffer__Q34nw4r2db15DbgPrintBase<w>Fv = .text:0x80199810; // type:function size:0x60
-ResetTagProcessor__Q36nw4hbm2ut17TextWriterBase<c>Fv = .text:0x8018F190; // type:function size:0x10
-ResetTagProcessor__Q36nw4hbm2ut17TextWriterBase<w>Fv = .text:0x80191B50; // type:function size:0x10
-Reset__Q34nw4r2db15DbgPrintBase<c>Fv = .text:0x80198650; // type:function size:0x98
-Reset__Q34nw4r2db15DbgPrintBase<w>Fv = .text:0x801993E0; // type:function size:0x98
-SetBuffer__Q34nw4r2db15DbgPrintBase<c>FPvUl = .text:0x80198A50; // type:function size:0x28
-SetBuffer__Q34nw4r2db15DbgPrintBase<w>FPvUl = .text:0x801997E0; // type:function size:0x28
-SetBuffer__Q36nw4hbm2ut17TextWriterBase<c>FPcUl = .text:0x80190720; // type:function size:0x1C
-SetBuffer__Q36nw4hbm2ut17TextWriterBase<c>FUl = .text:0x80190740; // type:function size:0x20
-SetBuffer__Q36nw4hbm2ut17TextWriterBase<w>FPwUl = .text:0x801930E0; // type:function size:0x1C
-SetBuffer__Q36nw4hbm2ut17TextWriterBase<w>FUl = .text:0x80193100; // type:function size:0x20
-SetCharSpace__Q36nw4hbm2ut17TextWriterBase<c>Ff = .text:0x8018F110; // type:function size:0x8
-SetCharSpace__Q36nw4hbm2ut17TextWriterBase<w>Ff = .text:0x80191AD0; // type:function size:0x8
-SetDrawFlag__Q36nw4hbm2ut17TextWriterBase<c>FUl = .text:0x8018F160; // type:function size:0x8
-SetDrawFlag__Q36nw4hbm2ut17TextWriterBase<w>FUl = .text:0x80191B20; // type:function size:0x8
-SetFontSize__Q34nw4r2db15DbgPrintBase<c>Ff = .text:0x80197F50; // type:function size:0x8
-SetFontSize__Q34nw4r2db15DbgPrintBase<w>Ff = .text:0x80198CE0; // type:function size:0x8
-SetFont__Q34nw4r2db15DbgPrintBase<c>FRCQ34nw4r2ut4Font = .text:0x80197EF0; // type:function size:0x8
-SetFont__Q34nw4r2db15DbgPrintBase<w>FRCQ34nw4r2ut4Font = .text:0x80198C80; // type:function size:0x8
-SetIndTexMtx__26@unnamed@lyt_material_cpp@F14_GXIndTexMtxIDPA3_Cf = .text:0x801836A0; // type:function size:0x208
-SetIndTexMtx__Q34nw4r3lyt26@unnamed@lyt_material_cpp@F14_GXIndTexMtxIDPA3_Cf = .text:0x801A1FF0; // type:function size:0x200
-SetLineHeight__Q34nw4r2ut17TextWriterBase<c>Ff = .text:0x801CDFD0; // type:function size:0x90
-SetLineHeight__Q34nw4r2ut17TextWriterBase<w>Ff = .text:0x801D0930; // type:function size:0x90
-SetLineHeight__Q36nw4hbm2ut17TextWriterBase<c>Ff = .text:0x8018EFD0; // type:function size:0xA0
-SetLineHeight__Q36nw4hbm2ut17TextWriterBase<w>Ff = .text:0x80191990; // type:function size:0xA0
-SetLineSpace__Q36nw4hbm2ut17TextWriterBase<c>Ff = .text:0x8018F100; // type:function size:0x8
-SetLineSpace__Q36nw4hbm2ut17TextWriterBase<w>Ff = .text:0x80191AC0; // type:function size:0x8
-SetTabWidth__Q36nw4hbm2ut17TextWriterBase<c>Fi = .text:0x8018F140; // type:function size:0x8
-SetTabWidth__Q36nw4hbm2ut17TextWriterBase<w>Fi = .text:0x80191B00; // type:function size:0x8
-SetTagProcessorImpl__24@unnamed@lyt_layout_cpp@FPQ36nw4hbm3lyt4PanePQ36nw4hbm2ut19TagProcessorBase<w> = .text:0x801828E0; // type:function size:0x1A0
-SetTagProcessorImpl__Q34nw4r3lyt24@unnamed@lyt_layout_cpp@FPQ34nw4r3lyt4PanePQ34nw4r2ut19TagProcessorBase<w> = .text:0x8019CB40; // type:function size:0x1B8
-SetTagProcessor__Q34nw4r3lyt6LayoutFPQ34nw4r2ut19TagProcessorBase<w> = .text:0x8019D7F0; // type:function size:0x1B8
-SetTagProcessor__Q36nw4hbm2ut17TextWriterBase<c>FPQ36nw4hbm2ut19TagProcessorBase<c> = .text:0x8018F180; // type:function size:0x8
-SetTagProcessor__Q36nw4hbm2ut17TextWriterBase<w>FPQ36nw4hbm2ut19TagProcessorBase<w> = .text:0x80191B40; // type:function size:0x8
-SetTagProcessor__Q36nw4hbm3lyt6LayoutFPQ36nw4hbm2ut19TagProcessorBase<w> = .text:0x801831D0; // type:function size:0x1A8
-SetTextColor__Q34nw4r2db15DbgPrintBase<c>FQ34nw4r2ut5Color = .text:0x80197F10; // type:function size:0x24
-SetTextColor__Q34nw4r2db15DbgPrintBase<w>FQ34nw4r2ut5Color = .text:0x80198CA0; // type:function size:0x24
-SetVisible__Q34nw4r2db15DbgPrintBase<c>Fb = .text:0x80197F70; // type:function size:0x8
-SetVisible__Q34nw4r2db15DbgPrintBase<w>Fb = .text:0x80198D00; // type:function size:0x8
-StrLen__Q36nw4hbm2ut17TextWriterBase<c>FPCc = .text:0x80190790; // type:function size:0x4
-StrLen__Q36nw4hbm2ut17TextWriterBase<w>FPCw = .text:0x80193150; // type:function size:0x4
-UnbindAnimationLink__Q34nw4r3lyt6detailFPQ34nw4r2ut38LinkList<Q34nw4r3lyt13AnimationLink,0>PQ34nw4r3lyt13AnimTransform = .text:0x801A6630; // type:function size:0x84
-Unregister__Q34nw4r2db15DbgPrintBase<c>FPQ44nw4r2db15DbgPrintBase<c>7DbgText = .text:0x80198A10; // type:function size:0x3C
-Unregister__Q34nw4r2db15DbgPrintBase<w>FPQ44nw4r2db15DbgPrintBase<w>7DbgText = .text:0x801997A0; // type:function size:0x3C
-VPrintfMutable__Q34nw4r2ut17TextWriterBase<c>FPCcP16__va_list_struct = .text:0x801CF250; // type:function size:0xAC
-VPrintfMutable__Q34nw4r2ut17TextWriterBase<w>FPCwP16__va_list_struct = .text:0x801D1BB0; // type:function size:0xAC
-VPrintf__Q34nw4r2ut17TextWriterBase<c>FPCcP16__va_list_struct = .text:0x801CEE40; // type:function size:0x1B8
-VPrintf__Q34nw4r2ut17TextWriterBase<w>FPCwP16__va_list_struct = .text:0x801D17A0; // type:function size:0x1B8
-VPrintf__Q36nw4hbm2ut17TextWriterBase<c>FPCcP16__va_list_struct = .text:0x80190280; // type:function size:0x1C4
-VPrintf__Q36nw4hbm2ut17TextWriterBase<w>FPCwP16__va_list_struct = .text:0x80192C40; // type:function size:0x1C4
-VRegisterf__Q34nw4r2db15DbgPrintBase<c>FiiiPCcP16__va_list_struct = .text:0x801981C0; // type:function size:0xC8
-VRegisterf__Q34nw4r2db15DbgPrintBase<w>FiiiPCwP16__va_list_struct = .text:0x80198F50; // type:function size:0xC8
-VRegistf__Q34nw4r2db15DbgPrintBase<c>FiiiPCcP16__va_list_struct = .text:0x80198570; // type:function size:0xC8
-VRegistf__Q34nw4r2db15DbgPrintBase<w>FiiiPCwP16__va_list_struct = .text:0x80199300; // type:function size:0xC8
-VSNPrintf__Q34nw4r2ut17TextWriterBase<c>FPcUlPCcP16__va_list_struct = .text:0x801CF310; // type:function size:0x4
-VSNPrintf__Q34nw4r2ut17TextWriterBase<w>FPwUlPCwP16__va_list_struct = .text:0x801D1C70; // type:function size:0x4
-VSNPrintf__Q36nw4hbm2ut17TextWriterBase<c>FPcUlPCcP16__va_list_struct = .text:0x80190780; // type:function size:0x4
-VSNPrintf__Q36nw4hbm2ut17TextWriterBase<w>FPwUlPCwP16__va_list_struct = .text:0x80193140; // type:function size:0x4
-_08__24TSingleton<10CCafeTopic>Fv = .text:0x800393D8; // type:function size:0x4
-_08__24TSingleton<10CDebugFont>Fv = .text:0x801ED89C; // type:function size:0x4
-_08__24TSingleton<10CSDManager>Fv = .text:0x801EC32C; // type:function size:0x4
-_08__25TSingleton<11CDebugPrint>Fv = .text:0x801EC4B8; // type:function size:0x4
-_08__25TSingleton<11CHBMManager>Fv = .text:0x80086040; // type:function size:0x4
-_08__25TSingleton<11CRFLManager>Fv = .text:0x800C2AB0; // type:function size:0x4
-_08__26TSingleton<12CFileManager>Fv = .text:0x801D3A14; // type:function size:0x4
-_08__26TSingleton<12CGameManager>Fv = .text:0x801D7288; // type:function size:0x4
-_08__26TSingleton<12CPlayHistory>Fv = .text:0x8003936C; // type:function size:0x4
-_08__27TSingleton<13CDebugConsole>Fv = .text:0x801ED9B8; // type:function size:0x4
-_08__27TSingleton<13CSceneManager>Fv = .text:0x80089E68; // type:function size:0x4
-_08__27TSingleton<13CSoundManager>Fv = .text:0x801E4538; // type:function size:0x4
-_08__28TSingleton<14CLayoutManager>Fv = .text:0x801D6704; // type:function size:0x4
-_08__29TSingleton<15CGraphicManager> = .text:0x801D6108; // type:function size:0x4
-_08__29TSingleton<15CMessageManager>Fv = .text:0x80087F9C; // type:function size:0x4
-_08__30TSingleton<16CCellAnimManager>Fv = .text:0x801DAAD8; // type:function size:0x4
-_08__30TSingleton<16CMyCanvasManager>Fv = .text:0x8007BC08; // type:function size:0x4
-_08__30TSingleton<16CTickFlowManager>Fv = .text:0x801DF080; // type:function size:0x4
-_08__30TSingleton<16CVarParamManager>Fv = .text:0x801ED164; // type:function size:0x4
-_08__32TSingleton<18CCheckPointManager>Fv = .text:0x801EACB0; // type:function size:0x4
-_08__32TSingleton<18CControllerManager>Fv = .text:0x801D5A84; // type:function size:0x4
-_08__32TSingleton<18CInputCheckManager>Fv = .text:0x801E8684; // type:function size:0x4
-_10__Q223@unnamed@SceneMenu_cpp@11CMenuLayoutFv = .text:0x800079D4; // type:function size:0x1A4
-_10__Q224@unnamed@HBMManager_cpp@11CDummySceneFv = .text:0x800874F0; // type:function size:0x4
-_10__Q224@unnamed@SceneError_cpp@11CDummySceneFv = .text:0x80079CCC; // type:function size:0x4
-_14__Q223@unnamed@SceneMenu_cpp@11CMenuLayoutFv = .text:0x800079D0; // type:function size:0x4
-_14__Q224@unnamed@HBMManager_cpp@11CDummySceneFv = .text:0x800874EC; // type:function size:0x4
-_14__Q224@unnamed@SceneError_cpp@11CDummySceneFv = .text:0x80079CC8; // type:function size:0x4
-_18__Q224@unnamed@HBMManager_cpp@11CDummySceneFv = .text:0x800874D8; // type:function size:0x14
-_18__Q224@unnamed@SceneError_cpp@11CDummySceneFv = .text:0x80079CC4; // type:function size:0x4
-_1C__Q224@unnamed@HBMManager_cpp@11CDummySceneFv = .text:0x800874D4; // type:function size:0x4
-_1C__Q224@unnamed@SceneError_cpp@11CDummySceneFv = .text:0x80079CC0; // type:function size:0x4
-_20__Q224@unnamed@HBMManager_cpp@11CDummySceneFv = .text:0x800874D0; // type:function size:0x4
-_20__Q224@unnamed@SceneError_cpp@11CDummySceneFv = .text:0x80079CBC; // type:function size:0x4
-__arraydtor$4226 = .text:0x801BD180; // type:function size:0x1C
-__ct__Q34nw4r2db15DbgPrintBase<c>FQ34nw4r2ut5ColorPCQ34nw4r2ut4Font = .text:0x80198940; // type:function size:0x54
-__ct__Q34nw4r2db15DbgPrintBase<w>FQ34nw4r2ut5ColorPCQ34nw4r2ut4Font = .text:0x801996D0; // type:function size:0x54
-__ct__Q34nw4r2ut17TextWriterBase<c>Fv = .text:0x801CDF10; // type:function size:0x5C
-__ct__Q34nw4r2ut17TextWriterBase<w>Fv = .text:0x801D0870; // type:function size:0x5C
-__ct__Q34nw4r2ut19TagProcessorBase<c>Fv = .text:0x801C8060; // type:function size:0x10
-__ct__Q34nw4r2ut19TagProcessorBase<w>Fv = .text:0x801C8510; // type:function size:0x10
-__ct__Q34nw4r2ut30LinkList<Q34nw4r3snd6FxBase,4>Fv = .text:0x801A7FB0; // type:function size:0x18
-__ct__Q34nw4r2ut35LinkList<Q44nw4r3snd6detail4Task,4>Fv = .text:0x801C2230; // type:function size:0x18
-__ct__Q34nw4r2ut38LinkList<Q34nw4r3lyt13AnimationLink,0>Fv = .text:0x801A2210; // type:function size:0x18
-__ct__Q34nw4r2ut41LinkList<Q44nw4r3snd6detail8SeqSound,240>Fv = .text:0x801B9F60; // type:function size:0x18
-__ct__Q34nw4r2ut42LinkList<Q44nw4r3snd6detail9StrmSound,240>Fv = .text:0x801B9FE0; // type:function size:0x18
-__ct__Q34nw4r2ut42LinkList<Q44nw4r3snd6detail9WaveSound,240>Fv = .text:0x801BA060; // type:function size:0x18
-__ct__Q34nw4r2ut44LinkList<Q44nw4r3snd6detail10BasicSound,256>Fv = .text:0x801BCBD0; // type:function size:0x18
-__ct__Q36nw4hbm2ut17TextWriterBase<c>Fv = .text:0x8018EF10; // type:function size:0x5C
-__ct__Q36nw4hbm2ut17TextWriterBase<w>Fv = .text:0x801918D0; // type:function size:0x5C
-__ct__Q36nw4hbm2ut19TagProcessorBase<c>Fv = .text:0x8018E450; // type:function size:0x10
-__ct__Q36nw4hbm2ut19TagProcessorBase<w>Fv = .text:0x8018E9B0; // type:function size:0x10
-__ct__Q44nw4r3snd6detail8SeqSoundFPQ44nw4r3snd6detail49SoundInstanceManager<Q44nw4r3snd6detail8SeqSound>ii = .text:0x801B6280; // type:function size:0x9C
-__ct__Q44nw4r3snd6detail9StrmSoundFPQ44nw4r3snd6detail50SoundInstanceManager<Q44nw4r3snd6detail9StrmSound>ii = .text:0x801C1890; // type:function size:0xB4
-__ct__Q44nw4r3snd6detail9WaveSoundFPQ44nw4r3snd6detail50SoundInstanceManager<Q44nw4r3snd6detail9WaveSound>ii = .text:0x801C6100; // type:function size:0x68
-__ct__Q54nw4r3g3d8G3DState23@unnamed@g3d_state_cpp@14CameraMtxStateFv = .text:0x8019A880; // type:function size:0x98
-__dl__Q34nw4r2db15DbgPrintBase<c>FPv = .text:0x80198B30; // type:function size:0xC
-__dl__Q34nw4r2db15DbgPrintBase<w>FPv = .text:0x801998C0; // type:function size:0xC
-__dt__24TSingleton<10CCafeTopic>Fv = .text:0x80039370; // type:function size:0x68
-__dt__24TSingleton<10CDebugFont>Fv = .text:0x801ED834; // type:function size:0x68
-__dt__24TSingleton<10CSDManager>Fv = .text:0x801EC2C4; // type:function size:0x68
-__dt__25TSingleton<11CDebugPrint>Fv = .text:0x801EC450; // type:function size:0x68
-__dt__25TSingleton<11CHBMManager>Fv = .text:0x80085FD8; // type:function size:0x68
-__dt__25TSingleton<11CRFLManager>Fv = .text:0x800C2A48; // type:function size:0x68
-__dt__26TSingleton<12CFileManager>Fv = .text:0x801D39AC; // type:function size:0x68
-__dt__26TSingleton<12CGameManager>Fv = .text:0x801D7220; // type:function size:0x68
-__dt__26TSingleton<12CPlayHistory>Fv = .text:0x80039304; // type:function size:0x68
-__dt__27TSingleton<13CDebugConsole>Fv = .text:0x801ED950; // type:function size:0x68
-__dt__27TSingleton<13CSceneManager>Fv = .text:0x80089E00; // type:function size:0x68
-__dt__27TSingleton<13CSoundManager>Fv = .text:0x801E44D0; // type:function size:0x68
-__dt__28CVector<Q211CDebugPrint3SBG>Fv = .text:0x801EC4BC; // type:function size:0x6C
-__dt__28TSingleton<14CLayoutManager>Fv = .text:0x801D669C; // type:function size:0x68
-__dt__29TSingleton<15CGraphicManager> = .text:0x801D60A0; // type:function size:0x68
-__dt__29TSingleton<15CMessageManager>Fv = .text:0x80087F34; // type:function size:0x68
-__dt__30TSingleton<16CCellAnimManager>Fv = .text:0x801DAA70; // type:function size:0x68
-__dt__30TSingleton<16CMyCanvasManager>Fv = .text:0x8007BBA0; // type:function size:0x68
-__dt__30TSingleton<16CTickFlowManager>Fv = .text:0x801DF018; // type:function size:0x68
-__dt__30TSingleton<16CVarParamManager>Fv = .text:0x801ED0FC; // type:function size:0x68
-__dt__32TSingleton<18CCheckPointManager>Fv = .text:0x801EAC48; // type:function size:0x68
-__dt__32TSingleton<18CControllerManager>Fv = .text:0x801D5A1C; // type:function size:0x68
-__dt__32TSingleton<18CInputCheckManager>Fv = .text:0x801E861C; // type:function size:0x68
-__dt__Q223@unnamed@SceneMenu_cpp@11CMenuLayoutFv = .text:0x80007B78; // type:function size:0x68
-__dt__Q224@unnamed@HBMManager_cpp@11CDummySceneFv = .text:0x800874F4; // type:function size:0x40
-__dt__Q224@unnamed@SceneError_cpp@11CDummySceneFv = .text:0x80079CD0; // type:function size:0x40
-__dt__Q34nw4r2db15DbgPrintBase<c>Fv = .text:0x801989A0; // type:function size:0x48
-__dt__Q34nw4r2db15DbgPrintBase<w>Fv = .text:0x80199730; // type:function size:0x48
-__dt__Q34nw4r2ut17TextWriterBase<c>Fv = .text:0x801CDF70; // type:function size:0x58
-__dt__Q34nw4r2ut17TextWriterBase<w>Fv = .text:0x801D08D0; // type:function size:0x58
-__dt__Q34nw4r2ut19TagProcessorBase<c>Fv = .text:0x801C8070; // type:function size:0x40
-__dt__Q34nw4r2ut19TagProcessorBase<w>Fv = .text:0x801C8520; // type:function size:0x40
-__dt__Q34nw4r2ut30LinkList<Q34nw4r3snd6FxBase,4>Fv = .text:0x801A7FD0; // type:function size:0x58
-__dt__Q34nw4r2ut35LinkList<Q44nw4r3snd6detail4Task,4>Fv = .text:0x801C21D0; // type:function size:0x58
-__dt__Q34nw4r2ut41LinkList<Q44nw4r3snd6detail8SeqSound,240>Fv = .text:0x801B9F80; // type:function size:0x58
-__dt__Q34nw4r2ut42LinkList<Q44nw4r3snd6detail9StrmSound,240>Fv = .text:0x801BA000; // type:function size:0x58
-__dt__Q34nw4r2ut42LinkList<Q44nw4r3snd6detail9WaveSound,240>Fv = .text:0x801BA080; // type:function size:0x58
-__dt__Q34nw4r2ut44LinkList<Q44nw4r3snd6detail10BasicSound,256>Fv = .text:0x801BCBF0; // type:function size:0x58
-__dt__Q36nw4hbm2ut17TextWriterBase<c>Fv = .text:0x8018EF70; // type:function size:0x58
-__dt__Q36nw4hbm2ut17TextWriterBase<w>Fv = .text:0x80191930; // type:function size:0x58
-__dt__Q36nw4hbm2ut19TagProcessorBase<c>Fv = .text:0x8018E460; // type:function size:0x40
-__dt__Q36nw4hbm2ut19TagProcessorBase<w>Fv = .text:0x8018E9C0; // type:function size:0x40
-__nw__Q34nw4r2db15DbgPrintBase<c>FUl = .text:0x80198AE0; // type:function size:0x44
-__nw__Q34nw4r2db15DbgPrintBase<w>FUl = .text:0x80199870; // type:function size:0x44
-__sinit_\ExScene_cpp = .text:0x8000AB34; // type:function size:0x8C
-__sinit_\GameManager_cpp = .text:0x801D8374; // type:function size:0x48
-__sinit_\Layout_cpp = .text:0x801D9E2C; // type:function size:0x14
-__sinit_\Random_cpp = .text:0x801DA9E0; // type:function size:0x80 scope:local
-__sinit_\g3d_state_cpp = .text:0x8019AED0; // type:function size:0x270 scope:local
-__sinit_\lyt_bounding_cpp = .text:0x80181630; // type:function size:0x14 scope:local
-__sinit_\lyt_bounding_cpp = .text:0x801A1ED0; // type:function size:0xC scope:local
-__sinit_\lyt_pane_cpp = .text:0x80187930; // type:function size:0x10 scope:local
-__sinit_\lyt_pane_cpp = .text:0x8019C7D0; // type:function size:0xC scope:local
-__sinit_\lyt_picture_cpp = .text:0x80187E80; // type:function size:0x14 scope:local
-__sinit_\lyt_picture_cpp = .text:0x8019E120; // type:function size:0xC scope:local
-__sinit_\lyt_textBox_cpp = .text:0x80189330; // type:function size:0x14 scope:local
-__sinit_\lyt_textBox_cpp = .text:0x8019F860; // type:function size:0xC scope:local
-__sinit_\lyt_window_cpp = .text:0x8018B960; // type:function size:0x14 scope:local
-__sinit_\lyt_window_cpp = .text:0x801A1E00; // type:function size:0xC scope:local
-__sinit_\snd_AxManager_cpp = .text:0x801A9190; // type:function size:0x40
-__sinit_\snd_BasicSound_cpp = .text:0x801AEAA0; // type:function size:0xC
-__sinit_\snd_SeqSound_cpp = .text:0x801B6AC0; // type:function size:0xC
-__sinit_\snd_SoundSystem_cpp = .text:0x801BD9E0; // type:function size:0x48
-__sinit_\snd_StrmSound_cpp = .text:0x801C1F30; // type:function size:0xC
-__sinit_\snd_WaveSound_cpp = .text:0x801C64B0; // type:function size:0xC
-__sinit_\ut_DvdFileStream_cpp = .text:0x801C9170; // type:function size:0xC
-__sinit_\ut_DvdLockedFileStream_cpp = .text:0x801C9560; // type:function size:0xC
-__sinit_\ut_FileStream_cpp = .text:0x801C8B30; // type:function size:0xC
-__sinit_\ut_IOStream_cpp = .text:0x801C8A00; // type:function size:0xC
-__sinit_\ut_LockedCache_cpp = .text:0x801C9650; // type:function size:0x18
-__sinit_\ut_TextWriterBase_cpp = .text:0x801942D0; // type:function size:0xA4 scope:local
-__sinit_\ut_TextWriterBase_cpp = .text:0x801D3200; // type:function size:0x84
-create__Q224@unnamed@HBMManager_cpp@11CDummySceneFUs = .text:0x80086E78; // type:function size:0x70
-create__Q224@unnamed@SceneError_cpp@11CDummySceneFUs = .text:0x80079C48; // type:function size:0x70
-impl_GetSoundInfoOffset__Q44nw4r3snd6detail22SoundArchiveFileReaderCFUlPQ54nw4r3snd6detail4Util165DataRef<v,Q54nw4r3snd6detail16SoundArchiveFile12SeqSoundInfo,Q54nw4r3snd6detail16SoundArchiveFile13StrmSoundInfo,Q54nw4r3snd6detail16SoundArchiveFile13WaveSoundInfo> = .text:0x801B9660; // type:function size:0x100
-walkInChildrenDel__Q310homebutton3gui11PaneManagerFRQ36nw4hbm2ut30LinkList<Q36nw4hbm3lyt4Pane,4> = .text:0x801757F0; // type:function size:0x11C
-walkInChildren__Q310homebutton3gui11PaneManagerFRQ36nw4hbm2ut30LinkList<Q36nw4hbm3lyt4Pane,4> = .text:0x80175510; // type:function size:0x298
+801BC790 __dt__Q34nw4r3snd18SoundArchivePlayerFv
+801BC770 detail_ConvertLabelStringToSoundId__Q34nw4r3snd18SoundArchivePlayerFPCc
+801BC780 detail_SetupSound__Q34nw4r3snd18SoundArchivePlayerFPQ34nw4r3snd11SoundHandleUlbPCQ44nw4r3snd14SoundStartable9StartInfo
+801B28F0 InvalidateData__Q44nw4r3snd6detail9SeqPlayerFPCvPCv
+801C7B30 InvalidateData__Q44nw4r3snd6detail9WsdPlayerFPCvPCv
+801B28E0 InvalidateWaveData__Q44nw4r3snd6detail9SeqPlayerFPCvPCv
+801C7B20 InvalidateWaveData__Q44nw4r3snd6detail9WsdPlayerFPCvPCv
+801C1850 OnShutdownSoundThread__Q44nw4r3snd6detail10StrmPlayerFv
+801C1870 OnUpdateFrameSoundThread__Q44nw4r3snd6detail10StrmPlayerFv
+801C1860 OnUpdateVoiceSoundThread__Q44nw4r3snd6detail10StrmPlayerFv
+801C1880 __dt__Q44nw4r3snd6detail10StrmPlayerFv
+801B6260 __dt__Q44nw4r3snd6detail9SeqPlayerFv
+801C7B40 __dt__Q44nw4r3snd6detail9WsdPlayerFv
+801B2900 OnShutdownSoundThread__Q44nw4r3snd6detail9SeqPlayerFv
+801C7B50 OnShutdownSoundThread__Q44nw4r3snd6detail9WsdPlayerFv
+801B2910 OnUpdateFrameSoundThread__Q44nw4r3snd6detail9SeqPlayerFv
+801C7B60 OnUpdateFrameSoundThread__Q44nw4r3snd6detail9WsdPlayerFv
+801B6270 __dt__Q44nw4r3snd6detail9SeqPlayerFv
+801C7B70 __dt__Q44nw4r3snd6detail9WsdPlayerFv
+801D0370 AdjustCursor__Q34nw4r2ut17TextWriterBase<c>FPfPfPCci
+801D2D00 AdjustCursor__Q34nw4r2ut17TextWriterBase<w>FPfPfPCwi
+801913C0 AdjustCursor__Q36nw4hbm2ut17TextWriterBase<c>FPfPfPCci
+80193DC0 AdjustCursor__Q36nw4hbm2ut17TextWriterBase<w>FPfPfPCwi
+80177410 AudioFrameCallback__24@unnamed@HBMAxSound_cpp@Fv
+80177480 AudioSoundThreadProc__24@unnamed@HBMAxSound_cpp@FPv
+801CE2F0 CalcFormatStringHeight__Q34nw4r2ut17TextWriterBase<c>CFPCce
+801D0C50 CalcFormatStringHeight__Q34nw4r2ut17TextWriterBase<w>CFPCwe
+8018F3B0 CalcFormatStringHeight__Q36nw4hbm2ut17TextWriterBase<c>CFPCce
+80191D70 CalcFormatStringHeight__Q36nw4hbm2ut17TextWriterBase<w>CFPCwe
+801CE500 CalcFormatStringRect__Q34nw4r2ut17TextWriterBase<c>CFPQ34nw4r2ut4RectPCce
+801D0E60 CalcFormatStringRect__Q34nw4r2ut17TextWriterBase<w>CFPQ34nw4r2ut4RectPCwe
+8018F5B0 CalcFormatStringRect__Q36nw4hbm2ut17TextWriterBase<c>CFPQ36nw4hbm2ut4RectPCce
+80191F70 CalcFormatStringRect__Q36nw4hbm2ut17TextWriterBase<w>CFPQ36nw4hbm2ut4RectPCwe
+801CE0E0 CalcFormatStringWidth__Q34nw4r2ut17TextWriterBase<c>CFPCce
+801D0A40 CalcFormatStringWidth__Q34nw4r2ut17TextWriterBase<w>CFPCwe
+8018F1B0 CalcFormatStringWidth__Q36nw4hbm2ut17TextWriterBase<c>CFPCce
+80191B70 CalcFormatStringWidth__Q36nw4hbm2ut17TextWriterBase<w>CFPCwe
+80188B10 CalcLineRectImpl<w>__25@unnamed@lyt_textBox_cpp@FPQ36nw4hbm2ut4RectPQ36nw4hbm2ut17TextWriterBase<w>PCwifPb_i
+8019EBF0 CalcLineRectImpl<w>__Q34nw4r3lyt25@unnamed@lyt_textBox_cpp@FPQ34nw4r2ut4RectPQ34nw4r2ut17TextWriterBase<w>PCwifPb_i
+801CF480 CalcLineRectImpl__Q34nw4r2ut17TextWriterBase<c>FPQ34nw4r2ut4RectPPCci
+801D1DE0 CalcLineRectImpl__Q34nw4r2ut17TextWriterBase<w>FPQ34nw4r2ut4RectPPCwi
+80190910 CalcLineRectImpl__Q36nw4hbm2ut17TextWriterBase<c>FPQ36nw4hbm2ut4RectPCci
+801932D0 CalcLineRectImpl__Q36nw4hbm2ut17TextWriterBase<w>FPQ36nw4hbm2ut4RectPCwi
+801CF320 CalcLineWidth__Q34nw4r2ut17TextWriterBase<c>FPCci
+801D1C80 CalcLineWidth__Q34nw4r2ut17TextWriterBase<w>FPCwi
+801907A0 CalcLineWidth__Q36nw4hbm2ut17TextWriterBase<c>FPCci
+80193160 CalcLineWidth__Q36nw4hbm2ut17TextWriterBase<w>FPCwi
+801C81E0 CalcRect__Q34nw4r2ut19TagProcessorBase<c>FPQ34nw4r2ut4RectUsPQ34nw4r2ut15PrintContext<c>
+801C8690 CalcRect__Q34nw4r2ut19TagProcessorBase<w>FPQ34nw4r2ut4RectUsPQ34nw4r2ut15PrintContext<w>
+8018E600 CalcRect__Q36nw4hbm2ut19TagProcessorBase<c>FPQ36nw4hbm2ut4RectUsPQ36nw4hbm2ut15PrintContext<c>
+8018EB60 CalcRect__Q36nw4hbm2ut19TagProcessorBase<w>FPQ36nw4hbm2ut4RectUsPQ36nw4hbm2ut15PrintContext<w>
+801CE9B0 CalcStringHeight__Q34nw4r2ut17TextWriterBase<c>CFPCci
+801D1310 CalcStringHeight__Q34nw4r2ut17TextWriterBase<w>CFPCwi
+8018FCC0 CalcStringHeight__Q36nw4hbm2ut17TextWriterBase<c>CFPCc
+8018FB80 CalcStringHeight__Q36nw4hbm2ut17TextWriterBase<c>CFPCci
+80192680 CalcStringHeight__Q36nw4hbm2ut17TextWriterBase<w>CFPCw
+80192540 CalcStringHeight__Q36nw4hbm2ut17TextWriterBase<w>CFPCwi
+801891B0 CalcStringRectImpl<w>__25@unnamed@lyt_textBox_cpp@FPQ36nw4hbm2ut4RectPQ36nw4hbm2ut17TextWriterBase<w>PCwif_v
+8019F670 CalcStringRectImpl<w>__Q34nw4r3lyt25@unnamed@lyt_textBox_cpp@FPQ34nw4r2ut4RectPQ34nw4r2ut17TextWriterBase<w>PCwif_v
+801CFA50 CalcStringRectImpl__Q34nw4r2ut17TextWriterBase<c>FPQ34nw4r2ut4RectPCci
+801D23B0 CalcStringRectImpl__Q34nw4r2ut17TextWriterBase<w>FPQ34nw4r2ut4RectPCwi
+80190CF0 CalcStringRectImpl__Q36nw4hbm2ut17TextWriterBase<c>FPQ36nw4hbm2ut4RectPCci
+801936D0 CalcStringRectImpl__Q36nw4hbm2ut17TextWriterBase<w>FPQ36nw4hbm2ut4RectPCwi
+801CEB00 CalcStringRect__Q34nw4r2ut17TextWriterBase<c>CFPQ34nw4r2ut4RectPCci
+801D1460 CalcStringRect__Q34nw4r2ut17TextWriterBase<w>CFPQ34nw4r2ut4RectPCwi
+8018FF20 CalcStringRect__Q36nw4hbm2ut17TextWriterBase<c>CFPQ36nw4hbm2ut4RectPCc
+8018FE10 CalcStringRect__Q36nw4hbm2ut17TextWriterBase<c>CFPQ36nw4hbm2ut4RectPCci
+801928E0 CalcStringRect__Q36nw4hbm2ut17TextWriterBase<w>CFPQ36nw4hbm2ut4RectPCw
+801927D0 CalcStringRect__Q36nw4hbm2ut17TextWriterBase<w>CFPQ36nw4hbm2ut4RectPCwi
+801CE860 CalcStringWidth__Q34nw4r2ut17TextWriterBase<c>CFPCci
+801D11C0 CalcStringWidth__Q34nw4r2ut17TextWriterBase<w>CFPCwi
+8018FA30 CalcStringWidth__Q36nw4hbm2ut17TextWriterBase<c>CFPCc
+8018F8F0 CalcStringWidth__Q36nw4hbm2ut17TextWriterBase<c>CFPCci
+801923F0 CalcStringWidth__Q36nw4hbm2ut17TextWriterBase<w>CFPCw
+801922B0 CalcStringWidth__Q36nw4hbm2ut17TextWriterBase<w>CFPCwi
+80183580 CalcTextureMtx__26@unnamed@lyt_material_cpp@FPQ36nw4hbm4math5MTX34RCQ36nw4hbm3lyt6TexSRT
+801A1EE0 CalcTextureMtx__Q34nw4r3lyt26@unnamed@lyt_material_cpp@FPQ34nw4r4math5MTX34RCQ34nw4r3lyt6TexSRT
+801CE6E0 CalcVStringRect__Q34nw4r2ut17TextWriterBase<c>CFPQ34nw4r2ut4RectPCcP16__va_list_struct
+801D1040 CalcVStringRect__Q34nw4r2ut17TextWriterBase<w>CFPQ34nw4r2ut4RectPCwP16__va_list_struct
+8018F780 CalcVStringRect__Q36nw4hbm2ut17TextWriterBase<c>CFPQ36nw4hbm2ut4RectPCcP16__va_list_struct
+80192140 CalcVStringRect__Q36nw4hbm2ut17TextWriterBase<w>CFPQ36nw4hbm2ut4RectPCwP16__va_list_struct
+801A2C50 ConvertOffsToPtr<Q34nw4r2ut5Color>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r2ut5Color
+801A2C40 ConvertOffsToPtr<Q34nw4r3lyt11TevSwapMode>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt11TevSwapMode
+801A2CA0 ConvertOffsToPtr<Q34nw4r3lyt11TexCoordGen>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt11TexCoordGen
+801A2C10 ConvertOffsToPtr<Q34nw4r3lyt12AlphaCompare>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt12AlphaCompare
+801A2C30 ConvertOffsToPtr<Q34nw4r3lyt13IndirectStage>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt13IndirectStage
+801A2CB0 ConvertOffsToPtr<Q34nw4r3lyt6TexSRT>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt6TexSRT
+801A2C60 ConvertOffsToPtr<Q34nw4r3lyt8ChanCtrl>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt8ChanCtrl
+801A2C20 ConvertOffsToPtr<Q34nw4r3lyt8TevStage>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt8TevStage
+801A2C00 ConvertOffsToPtr<Q34nw4r3lyt9BlendMode>__Q34nw4r3lyt6detailFPCvUi_PCQ34nw4r3lyt9BlendMode
+801A2CC0 ConvertOffsToPtr<Q44nw4r3lyt3res6TexMap>__Q34nw4r3lyt6detailFPCvUi_PCQ44nw4r3lyt3res6TexMap
+801A2C80 ConvertOffsToPtr<Q44nw4r3lyt3res7Texture>__Q34nw4r3lyt6detailFPCvUi_PCQ44nw4r3lyt3res7Texture
+801A2C70 ConvertOffsToPtr<c>__Q34nw4r3lyt6detailFPCvUi_PCc
+80181650 EqualsPaneName__Q36nw4hbm3lyt6detailFPCcPCc????EqualsPaneName__Q36nw4hbm3lyt6detailFPCUcPCUc
+801A65B0 FindAnimationLink__Q34nw4r3lyt6detailFPQ34nw4r2ut38LinkList<Q34nw4r3lyt13AnimationLink,0>PQ34nw4r3lyt13AnimTransform
+801A65F0 FindAnimationLink__Q34nw4r3lyt6detailFPQ34nw4r2ut38LinkList<Q34nw4r3lyt13AnimationLink,0>RCQ34nw4r3lyt12AnimResource
+801810F0 FindAnimationLink__Q36nw4hbm3lyt6detailFPQ36nw4hbm2ut40LinkList<Q36nw4hbm3lyt13AnimationLink,0>PQ36nw4hbm3lyt13AnimTransform
+80181130 FindNameResource__37@unnamed@lyt_arcResourceAccessor_cpp@FP9ARCHandlePCc
+801A6720 FindNameResource__37@unnamed@lyt_arcResourceAccessor_cpp@FP9ARCHandlePCc
+80198880 Flush__Q34nw4r2db15DbgPrintBase<c>Fiiii
+801986F0 Flush__Q34nw4r2db15DbgPrintBase<c>Fv
+80199610 Flush__Q34nw4r2db15DbgPrintBase<w>Fiiii
+80199480 Flush__Q34nw4r2db15DbgPrintBase<w>Fv
+80190760 GetBufferSize__Q36nw4hbm2ut17TextWriterBase<c>Fv
+80193120 GetBufferSize__Q36nw4hbm2ut17TextWriterBase<w>Fv
+80190770 GetBuffer__Q36nw4hbm2ut17TextWriterBase<c>Fv
+80193130 GetBuffer__Q36nw4hbm2ut17TextWriterBase<w>Fv
+801CFA40 GetCharSpace__Q34nw4r2ut17TextWriterBase<c>CFv
+801D23A0 GetCharSpace__Q34nw4r2ut17TextWriterBase<w>CFv
+8018F130 GetCharSpace__Q36nw4hbm2ut17TextWriterBase<c>CFv
+80191AF0 GetCharSpace__Q36nw4hbm2ut17TextWriterBase<w>CFv
+8018F170 GetDrawFlag__Q36nw4hbm2ut17TextWriterBase<c>CFv
+80191B30 GetDrawFlag__Q36nw4hbm2ut17TextWriterBase<w>CFv
+801989F0 GetFirstText__Q34nw4r2db15DbgPrintBase<c>Fv
+80199780 GetFirstText__Q34nw4r2db15DbgPrintBase<w>Fv
+80197F60 GetFontSize__Q34nw4r2db15DbgPrintBase<c>CFv
+80198CF0 GetFontSize__Q34nw4r2db15DbgPrintBase<w>CFv
+80197F00 GetFont__Q34nw4r2db15DbgPrintBase<c>CFv
+80198C90 GetFont__Q34nw4r2db15DbgPrintBase<w>CFv
+80177270 GetFreePlayer__24@unnamed@HBMAxSound_cpp@Fi
+80180670 GetHermiteCurveValue__27@unnamed@lyt_animation_cpp@FfPCQ46nw4hbm3lyt3res10HermiteKeyUl
+801A5210 GetHermiteCurveValue__Q34nw4r3lyt27@unnamed@lyt_animation_cpp@FfPCQ44nw4r3lyt3res10HermiteKeyUl
+80197DB0 GetInstance__Q34nw4r2db15DbgPrintBase<c>Fv
+80198B40 GetInstance__Q34nw4r2db15DbgPrintBase<w>Fv
+801CE060 GetLineHeight__Q34nw4r2ut17TextWriterBase<c>CFv
+801D09C0 GetLineHeight__Q34nw4r2ut17TextWriterBase<w>CFv
+8018F070 GetLineHeight__Q36nw4hbm2ut17TextWriterBase<c>CFv
+80191A30 GetLineHeight__Q36nw4hbm2ut17TextWriterBase<w>CFv
+8018F120 GetLineSpace__Q36nw4hbm2ut17TextWriterBase<c>CFv
+80191AE0 GetLineSpace__Q36nw4hbm2ut17TextWriterBase<w>CFv
+80198A00 GetNextText__Q34nw4r2db15DbgPrintBase<c>FPQ44nw4r2db15DbgPrintBase<c>7DbgText
+80199790 GetNextText__Q34nw4r2db15DbgPrintBase<w>FPQ44nw4r2db15DbgPrintBase<w>7DbgText
+801ACEA0 GetReferenceToSubRegion__Q44nw4r3snd6detail14BankFileReaderCFPCQ54nw4r3snd6detail4Util128DataRef<v,Q54nw4r3snd6detail8BankFile9InstParam,Q54nw4r3snd6detail8BankFile10RangeTable,Q54nw4r3snd6detail8BankFile10IndexTable>i
+80181210 GetResourceSub__37@unnamed@lyt_arcResourceAccessor_cpp@FP9ARCHandlePCcUlPCcPUl
+801A67F0 GetResourceSub__37@unnamed@lyt_arcResourceAccessor_cpp@FP9ARCHandlePCcUlPCcPUl
+80180580 GetStepCurveValue__27@unnamed@lyt_animation_cpp@FfPCQ46nw4hbm3lyt3res7StepKeyUl
+801A5120 GetStepCurveValue__Q34nw4r3lyt27@unnamed@lyt_animation_cpp@FfPCQ44nw4r3lyt3res7StepKeyUl
+8018F150 GetTabWidth__Q36nw4hbm2ut17TextWriterBase<c>CFv
+80191B10 GetTabWidth__Q36nw4hbm2ut17TextWriterBase<w>CFv
+8018F1A0 GetTagProcessor__Q36nw4hbm2ut17TextWriterBase<c>CFv
+80191B60 GetTagProcessor__Q36nw4hbm2ut17TextWriterBase<w>CFv
+80197F40 GetTextColor__Q34nw4r2db15DbgPrintBase<c>CFv
+80198CD0 GetTextColor__Q34nw4r2db15DbgPrintBase<w>CFv
+8019F3C0 GetTextDrawRect__Q34nw4r3lyt7TextBoxCFPQ34nw4r2ut17TextWriterBase<w>
+80197DC0 Initialize__Q34nw4r2db15DbgPrintBase<c>FPvUlQ34nw4r2ut5Color
+80197E50 Initialize__Q34nw4r2db15DbgPrintBase<c>FPvUlRCQ34nw4r2ut4FontQ34nw4r2ut5Color
+80198B50 Initialize__Q34nw4r2db15DbgPrintBase<w>FPvUlQ34nw4r2ut5Color
+80198BE0 Initialize__Q34nw4r2db15DbgPrintBase<w>FPvUlRCQ34nw4r2ut4FontQ34nw4r2ut5Color
+801D0850 IsDrawFlagSet__Q34nw4r2ut17TextWriterBase<c>CFUlUl
+801D31E0 IsDrawFlagSet__Q34nw4r2ut17TextWriterBase<w>CFUlUl
+801918B0 IsDrawFlagSet__Q36nw4hbm2ut17TextWriterBase<c>CFUlUl
+801942B0 IsDrawFlagSet__Q36nw4hbm2ut17TextWriterBase<w>CFUlUl
+8019CD00 IsIncludeAnimationGroupRef__Q34nw4r3lyt24@unnamed@lyt_layout_cpp@FPQ34nw4r3lyt14GroupContainerPCQ34nw4r3lyt17AnimationGroupRefUsbPQ34nw4r3lyt4Pane
+80197F80 IsVisible__Q34nw4r2db15DbgPrintBase<c>CFv
+80198D10 IsVisible__Q34nw4r2db15DbgPrintBase<w>CFv
+801A2C90 Min<Uc>__Q34nw4r2ut26@unnamed@lyt_material_cpp@FUcUc_Uc
+801CFB60 PrintImpl__Q34nw4r2ut17TextWriterBase<c>FPCcib
+801D24D0 PrintImpl__Q34nw4r2ut17TextWriterBase<w>FPCwib
+80190E10 PrintImpl__Q36nw4hbm2ut17TextWriterBase<c>FPCci
+801937F0 PrintImpl__Q36nw4hbm2ut17TextWriterBase<w>FPCwi
+801CF300 PrintMutable__Q34nw4r2ut17TextWriterBase<c>FPCci
+801D1C60 PrintMutable__Q34nw4r2ut17TextWriterBase<w>FPCwi
+801CF000 Print__Q34nw4r2ut17TextWriterBase<c>FPCci
+801D1960 Print__Q34nw4r2ut17TextWriterBase<w>FPCwi
+801905B0 Print__Q36nw4hbm2ut17TextWriterBase<c>FPCc
+80190450 Print__Q36nw4hbm2ut17TextWriterBase<c>FPCci
+80192F70 Print__Q36nw4hbm2ut17TextWriterBase<w>FPCw
+80192E10 Print__Q36nw4hbm2ut17TextWriterBase<w>FPCwi
+801CF140 PrintfMutable__Q34nw4r2ut17TextWriterBase<c>FPCce
+801D1AA0 PrintfMutable__Q34nw4r2ut17TextWriterBase<w>FPCwe
+801CEC20 Printf__Q34nw4r2ut17TextWriterBase<c>FPCce
+801D1580 Printf__Q34nw4r2ut17TextWriterBase<w>FPCwe
+80190050 Printf__Q36nw4hbm2ut17TextWriterBase<c>FPCce
+80192A10 Printf__Q36nw4hbm2ut17TextWriterBase<w>FPCwe
+801C83D0 ProcessLinefeed__Q34nw4r2ut19TagProcessorBase<c>FPQ34nw4r2ut15PrintContext<c>
+801C8880 ProcessLinefeed__Q34nw4r2ut19TagProcessorBase<w>FPQ34nw4r2ut15PrintContext<w>
+8018E840 ProcessLinefeed__Q36nw4hbm2ut19TagProcessorBase<c>FPQ36nw4hbm2ut15PrintContext<c>
+8018EDA0 ProcessLinefeed__Q36nw4hbm2ut19TagProcessorBase<w>FPQ36nw4hbm2ut15PrintContext<w>
+801C8440 ProcessTab__Q34nw4r2ut19TagProcessorBase<c>FPQ34nw4r2ut15PrintContext<c>
+801C88F0 ProcessTab__Q34nw4r2ut19TagProcessorBase<w>FPQ34nw4r2ut15PrintContext<w>
+8018E8B0 ProcessTab__Q36nw4hbm2ut19TagProcessorBase<c>FPQ36nw4hbm2ut15PrintContext<c>
+8018EE10 ProcessTab__Q36nw4hbm2ut19TagProcessorBase<w>FPQ36nw4hbm2ut15PrintContext<w>
+80024A48 Process__15CMyTagProcessorFUsPQ34nw4r2ut15PrintContext<w>
+801C80B0 Process__Q34nw4r2ut19TagProcessorBase<c>FUsPQ34nw4r2ut15PrintContext<c>
+801C8560 Process__Q34nw4r2ut19TagProcessorBase<w>FUsPQ34nw4r2ut15PrintContext<w>
+8018E4A0 Process__Q36nw4hbm2ut19TagProcessorBase<c>FUsPQ36nw4hbm2ut15PrintContext<c>
+8018EA00 Process__Q36nw4hbm2ut19TagProcessorBase<w>FUsPQ36nw4hbm2ut15PrintContext<w>
+80198640 Regist__Q34nw4r2db15DbgPrintBase<c>FiiiPCci
+801993D0 Regist__Q34nw4r2db15DbgPrintBase<w>FiiiPCwi
+80198290 Register__Q34nw4r2db15DbgPrintBase<c>FiiiPCci
+80199020 Register__Q34nw4r2db15DbgPrintBase<w>FiiiPCwi
+80197F90 Registerf__Q34nw4r2db15DbgPrintBase<c>FiiPCce
+801980A0 Registerf__Q34nw4r2db15DbgPrintBase<c>FiiiPCce
+80198D20 Registerf__Q34nw4r2db15DbgPrintBase<w>FiiPCwe
+80198E30 Registerf__Q34nw4r2db15DbgPrintBase<w>FiiiPCwe
+80198340 Registf__Q34nw4r2db15DbgPrintBase<c>FiiPCce
+80198450 Registf__Q34nw4r2db15DbgPrintBase<c>FiiiPCce
+801990D0 Registf__Q34nw4r2db15DbgPrintBase<w>FiiPCwe
+801991E0 Registf__Q34nw4r2db15DbgPrintBase<w>FiiiPCwe
+80198A80 ReleaseBuffer__Q34nw4r2db15DbgPrintBase<c>Fv
+80199810 ReleaseBuffer__Q34nw4r2db15DbgPrintBase<w>Fv
+8018F190 ResetTagProcessor__Q36nw4hbm2ut17TextWriterBase<c>Fv
+80191B50 ResetTagProcessor__Q36nw4hbm2ut17TextWriterBase<w>Fv
+80198650 Reset__Q34nw4r2db15DbgPrintBase<c>Fv
+801993E0 Reset__Q34nw4r2db15DbgPrintBase<w>Fv
+80198A50 SetBuffer__Q34nw4r2db15DbgPrintBase<c>FPvUl
+801997E0 SetBuffer__Q34nw4r2db15DbgPrintBase<w>FPvUl
+80190720 SetBuffer__Q36nw4hbm2ut17TextWriterBase<c>FPcUl
+80190740 SetBuffer__Q36nw4hbm2ut17TextWriterBase<c>FUl
+801930E0 SetBuffer__Q36nw4hbm2ut17TextWriterBase<w>FPwUl
+80193100 SetBuffer__Q36nw4hbm2ut17TextWriterBase<w>FUl
+8018F110 SetCharSpace__Q36nw4hbm2ut17TextWriterBase<c>Ff
+80191AD0 SetCharSpace__Q36nw4hbm2ut17TextWriterBase<w>Ff
+8018F160 SetDrawFlag__Q36nw4hbm2ut17TextWriterBase<c>FUl
+80191B20 SetDrawFlag__Q36nw4hbm2ut17TextWriterBase<w>FUl
+80197F50 SetFontSize__Q34nw4r2db15DbgPrintBase<c>Ff
+80198CE0 SetFontSize__Q34nw4r2db15DbgPrintBase<w>Ff
+80197EF0 SetFont__Q34nw4r2db15DbgPrintBase<c>FRCQ34nw4r2ut4Font
+80198C80 SetFont__Q34nw4r2db15DbgPrintBase<w>FRCQ34nw4r2ut4Font
+801836A0 SetIndTexMtx__26@unnamed@lyt_material_cpp@F14_GXIndTexMtxIDPA3_Cf
+801A1FF0 SetIndTexMtx__Q34nw4r3lyt26@unnamed@lyt_material_cpp@F14_GXIndTexMtxIDPA3_Cf
+801CDFD0 SetLineHeight__Q34nw4r2ut17TextWriterBase<c>Ff
+801D0930 SetLineHeight__Q34nw4r2ut17TextWriterBase<w>Ff
+8018EFD0 SetLineHeight__Q36nw4hbm2ut17TextWriterBase<c>Ff
+80191990 SetLineHeight__Q36nw4hbm2ut17TextWriterBase<w>Ff
+8018F100 SetLineSpace__Q36nw4hbm2ut17TextWriterBase<c>Ff
+80191AC0 SetLineSpace__Q36nw4hbm2ut17TextWriterBase<w>Ff
+8018F140 SetTabWidth__Q36nw4hbm2ut17TextWriterBase<c>Fi
+80191B00 SetTabWidth__Q36nw4hbm2ut17TextWriterBase<w>Fi
+801828E0 SetTagProcessorImpl__24@unnamed@lyt_layout_cpp@FPQ36nw4hbm3lyt4PanePQ36nw4hbm2ut19TagProcessorBase<w>
+8019CB40 SetTagProcessorImpl__Q34nw4r3lyt24@unnamed@lyt_layout_cpp@FPQ34nw4r3lyt4PanePQ34nw4r2ut19TagProcessorBase<w>
+8019D7F0 SetTagProcessor__Q34nw4r3lyt6LayoutFPQ34nw4r2ut19TagProcessorBase<w>
+8018F180 SetTagProcessor__Q36nw4hbm2ut17TextWriterBase<c>FPQ36nw4hbm2ut19TagProcessorBase<c>
+80191B40 SetTagProcessor__Q36nw4hbm2ut17TextWriterBase<w>FPQ36nw4hbm2ut19TagProcessorBase<w>
+801831D0 SetTagProcessor__Q36nw4hbm3lyt6LayoutFPQ36nw4hbm2ut19TagProcessorBase<w>
+80197F10 SetTextColor__Q34nw4r2db15DbgPrintBase<c>FQ34nw4r2ut5Color
+80198CA0 SetTextColor__Q34nw4r2db15DbgPrintBase<w>FQ34nw4r2ut5Color
+80197F70 SetVisible__Q34nw4r2db15DbgPrintBase<c>Fb
+80198D00 SetVisible__Q34nw4r2db15DbgPrintBase<w>Fb
+80190790 StrLen__Q36nw4hbm2ut17TextWriterBase<c>FPCc
+80193150 StrLen__Q36nw4hbm2ut17TextWriterBase<w>FPCw
+801A6630 UnbindAnimationLink__Q34nw4r3lyt6detailFPQ34nw4r2ut38LinkList<Q34nw4r3lyt13AnimationLink,0>PQ34nw4r3lyt13AnimTransform
+80198A10 Unregister__Q34nw4r2db15DbgPrintBase<c>FPQ44nw4r2db15DbgPrintBase<c>7DbgText
+801997A0 Unregister__Q34nw4r2db15DbgPrintBase<w>FPQ44nw4r2db15DbgPrintBase<w>7DbgText
+801CF250 VPrintfMutable__Q34nw4r2ut17TextWriterBase<c>FPCcP16__va_list_struct
+801D1BB0 VPrintfMutable__Q34nw4r2ut17TextWriterBase<w>FPCwP16__va_list_struct
+801CEE40 VPrintf__Q34nw4r2ut17TextWriterBase<c>FPCcP16__va_list_struct
+801D17A0 VPrintf__Q34nw4r2ut17TextWriterBase<w>FPCwP16__va_list_struct
+80190280 VPrintf__Q36nw4hbm2ut17TextWriterBase<c>FPCcP16__va_list_struct
+80192C40 VPrintf__Q36nw4hbm2ut17TextWriterBase<w>FPCwP16__va_list_struct
+801981C0 VRegisterf__Q34nw4r2db15DbgPrintBase<c>FiiiPCcP16__va_list_struct
+80198F50 VRegisterf__Q34nw4r2db15DbgPrintBase<w>FiiiPCwP16__va_list_struct
+80198570 VRegistf__Q34nw4r2db15DbgPrintBase<c>FiiiPCcP16__va_list_struct
+80199300 VRegistf__Q34nw4r2db15DbgPrintBase<w>FiiiPCwP16__va_list_struct
+801CF310 VSNPrintf__Q34nw4r2ut17TextWriterBase<c>FPcUlPCcP16__va_list_struct
+801D1C70 VSNPrintf__Q34nw4r2ut17TextWriterBase<w>FPwUlPCwP16__va_list_struct
+80190780 VSNPrintf__Q36nw4hbm2ut17TextWriterBase<c>FPcUlPCcP16__va_list_struct
+80193140 VSNPrintf__Q36nw4hbm2ut17TextWriterBase<w>FPwUlPCwP16__va_list_struct
+800393D8 _08__24TSingleton<10CCafeTopic>Fv
+801ED89C _08__24TSingleton<10CDebugFont>Fv
+801EC32C _08__24TSingleton<10CSDManager>Fv
+801EC4B8 _08__25TSingleton<11CDebugPrint>Fv
+80086040 _08__25TSingleton<11CHBMManager>Fv
+800C2AB0 _08__25TSingleton<11CRFLManager>Fv
+801D3A14 _08__26TSingleton<12CFileManager>Fv
+801D7288 _08__26TSingleton<12CGameManager>Fv
+8003936C _08__26TSingleton<12CPlayHistory>Fv
+801ED9B8 _08__27TSingleton<13CDebugConsole>Fv
+80089E68 _08__27TSingleton<13CSceneManager>Fv
+801E4538 _08__27TSingleton<13CSoundManager>Fv
+801D6704 _08__28TSingleton<14CLayoutManager>Fv
+801D6108 _08__29TSingleton<15CGraphicManager>
+80087F9C _08__29TSingleton<15CMessageManager>Fv
+801DAAD8 _08__30TSingleton<16CCellAnimManager>Fv
+8007BC08 _08__30TSingleton<16CMyCanvasManager>Fv
+801DF080 _08__30TSingleton<16CTickFlowManager>Fv
+801ED164 _08__30TSingleton<16CVarParamManager>Fv
+801EACB0 _08__32TSingleton<18CCheckPointManager>Fv
+801D5A84 _08__32TSingleton<18CControllerManager>Fv
+801E8684 _08__32TSingleton<18CInputCheckManager>Fv
+800079D4 _10__Q223@unnamed@SceneMenu_cpp@11CMenuLayoutFv
+800874F0 _10__Q224@unnamed@HBMManager_cpp@11CDummySceneFv
+80079CCC _10__Q224@unnamed@SceneError_cpp@11CDummySceneFv
+800079D0 _14__Q223@unnamed@SceneMenu_cpp@11CMenuLayoutFv
+800874EC _14__Q224@unnamed@HBMManager_cpp@11CDummySceneFv
+80079CC8 _14__Q224@unnamed@SceneError_cpp@11CDummySceneFv
+800874D8 _18__Q224@unnamed@HBMManager_cpp@11CDummySceneFv
+80079CC4 _18__Q224@unnamed@SceneError_cpp@11CDummySceneFv
+800874D4 _1C__Q224@unnamed@HBMManager_cpp@11CDummySceneFv
+80079CC0 _1C__Q224@unnamed@SceneError_cpp@11CDummySceneFv
+800874D0 _20__Q224@unnamed@HBMManager_cpp@11CDummySceneFv
+80079CBC _20__Q224@unnamed@SceneError_cpp@11CDummySceneFv
+801BD180 __arraydtor$4226
+80198940 __ct__Q34nw4r2db15DbgPrintBase<c>FQ34nw4r2ut5ColorPCQ34nw4r2ut4Font
+801996D0 __ct__Q34nw4r2db15DbgPrintBase<w>FQ34nw4r2ut5ColorPCQ34nw4r2ut4Font
+801CDF10 __ct__Q34nw4r2ut17TextWriterBase<c>Fv
+801D0870 __ct__Q34nw4r2ut17TextWriterBase<w>Fv
+801C8060 __ct__Q34nw4r2ut19TagProcessorBase<c>Fv
+801C8510 __ct__Q34nw4r2ut19TagProcessorBase<w>Fv
+801A7FB0 __ct__Q34nw4r2ut30LinkList<Q34nw4r3snd6FxBase,4>Fv
+801C2230 __ct__Q34nw4r2ut35LinkList<Q44nw4r3snd6detail4Task,4>Fv
+801A2210 __ct__Q34nw4r2ut38LinkList<Q34nw4r3lyt13AnimationLink,0>Fv
+801B9F60 __ct__Q34nw4r2ut41LinkList<Q44nw4r3snd6detail8SeqSound,240>Fv
+801B9FE0 __ct__Q34nw4r2ut42LinkList<Q44nw4r3snd6detail9StrmSound,240>Fv
+801BA060 __ct__Q34nw4r2ut42LinkList<Q44nw4r3snd6detail9WaveSound,240>Fv
+801BCBD0 __ct__Q34nw4r2ut44LinkList<Q44nw4r3snd6detail10BasicSound,256>Fv
+8018EF10 __ct__Q36nw4hbm2ut17TextWriterBase<c>Fv
+801918D0 __ct__Q36nw4hbm2ut17TextWriterBase<w>Fv
+8018E450 __ct__Q36nw4hbm2ut19TagProcessorBase<c>Fv
+8018E9B0 __ct__Q36nw4hbm2ut19TagProcessorBase<w>Fv
+801B6280 __ct__Q44nw4r3snd6detail8SeqSoundFPQ44nw4r3snd6detail49SoundInstanceManager<Q44nw4r3snd6detail8SeqSound>ii
+801C1890 __ct__Q44nw4r3snd6detail9StrmSoundFPQ44nw4r3snd6detail50SoundInstanceManager<Q44nw4r3snd6detail9StrmSound>ii
+801C6100 __ct__Q44nw4r3snd6detail9WaveSoundFPQ44nw4r3snd6detail50SoundInstanceManager<Q44nw4r3snd6detail9WaveSound>ii
+8019A880 __ct__Q54nw4r3g3d8G3DState23@unnamed@g3d_state_cpp@14CameraMtxStateFv
+80198B30 __dl__Q34nw4r2db15DbgPrintBase<c>FPv
+801998C0 __dl__Q34nw4r2db15DbgPrintBase<w>FPv
+80039370 __dt__24TSingleton<10CCafeTopic>Fv
+801ED834 __dt__24TSingleton<10CDebugFont>Fv
+801EC2C4 __dt__24TSingleton<10CSDManager>Fv
+801EC450 __dt__25TSingleton<11CDebugPrint>Fv
+80085FD8 __dt__25TSingleton<11CHBMManager>Fv
+800C2A48 __dt__25TSingleton<11CRFLManager>Fv
+801D39AC __dt__26TSingleton<12CFileManager>Fv
+801D7220 __dt__26TSingleton<12CGameManager>Fv
+80039304 __dt__26TSingleton<12CPlayHistory>Fv
+801ED950 __dt__27TSingleton<13CDebugConsole>Fv
+80089E00 __dt__27TSingleton<13CSceneManager>Fv
+801E44D0 __dt__27TSingleton<13CSoundManager>Fv
+801EC4BC __dt__28CVector<Q211CDebugPrint3SBG>Fv
+801D669C __dt__28TSingleton<14CLayoutManager>Fv
+801D60A0 __dt__29TSingleton<15CGraphicManager>
+80087F34 __dt__29TSingleton<15CMessageManager>Fv
+801DAA70 __dt__30TSingleton<16CCellAnimManager>Fv
+8007BBA0 __dt__30TSingleton<16CMyCanvasManager>Fv
+801DF018 __dt__30TSingleton<16CTickFlowManager>Fv
+801ED0FC __dt__30TSingleton<16CVarParamManager>Fv
+801EAC48 __dt__32TSingleton<18CCheckPointManager>Fv
+801D5A1C __dt__32TSingleton<18CControllerManager>Fv
+801E861C __dt__32TSingleton<18CInputCheckManager>Fv
+80007B78 __dt__Q223@unnamed@SceneMenu_cpp@11CMenuLayoutFv
+800874F4 __dt__Q224@unnamed@HBMManager_cpp@11CDummySceneFv
+80079CD0 __dt__Q224@unnamed@SceneError_cpp@11CDummySceneFv
+801989A0 __dt__Q34nw4r2db15DbgPrintBase<c>Fv
+80199730 __dt__Q34nw4r2db15DbgPrintBase<w>Fv
+801CDF70 __dt__Q34nw4r2ut17TextWriterBase<c>Fv
+801D08D0 __dt__Q34nw4r2ut17TextWriterBase<w>Fv
+801C8070 __dt__Q34nw4r2ut19TagProcessorBase<c>Fv
+801C8520 __dt__Q34nw4r2ut19TagProcessorBase<w>Fv
+801A7FD0 __dt__Q34nw4r2ut30LinkList<Q34nw4r3snd6FxBase,4>Fv
+801C21D0 __dt__Q34nw4r2ut35LinkList<Q44nw4r3snd6detail4Task,4>Fv
+801B9F80 __dt__Q34nw4r2ut41LinkList<Q44nw4r3snd6detail8SeqSound,240>Fv
+801BA000 __dt__Q34nw4r2ut42LinkList<Q44nw4r3snd6detail9StrmSound,240>Fv
+801BA080 __dt__Q34nw4r2ut42LinkList<Q44nw4r3snd6detail9WaveSound,240>Fv
+801BCBF0 __dt__Q34nw4r2ut44LinkList<Q44nw4r3snd6detail10BasicSound,256>Fv
+8018EF70 __dt__Q36nw4hbm2ut17TextWriterBase<c>Fv
+80191930 __dt__Q36nw4hbm2ut17TextWriterBase<w>Fv
+8018E460 __dt__Q36nw4hbm2ut19TagProcessorBase<c>Fv
+8018E9C0 __dt__Q36nw4hbm2ut19TagProcessorBase<w>Fv
+80198AE0 __nw__Q34nw4r2db15DbgPrintBase<c>FUl
+80199870 __nw__Q34nw4r2db15DbgPrintBase<w>FUl
+8000AB34 __sinit_\ExScene_cpp
+801D8374 __sinit_\GameManager_cpp
+801D9E2C __sinit_\Layout_cpp
+801DA9E0 __sinit_\Random_cpp
+8019AED0 __sinit_\g3d_state_cpp
+80181630 __sinit_\lyt_bounding_cpp
+801A1ED0 __sinit_\lyt_bounding_cpp
+80187930 __sinit_\lyt_pane_cpp
+8019C7D0 __sinit_\lyt_pane_cpp
+80187E80 __sinit_\lyt_picture_cpp
+8019E120 __sinit_\lyt_picture_cpp
+80189330 __sinit_\lyt_textBox_cpp
+8019F860 __sinit_\lyt_textBox_cpp
+8018B960 __sinit_\lyt_window_cpp
+801A1E00 __sinit_\lyt_window_cpp
+801A9190 __sinit_\snd_AxManager_cpp
+801AEAA0 __sinit_\snd_BasicSound_cpp
+801B6AC0 __sinit_\snd_SeqSound_cpp
+801BD9E0 __sinit_\snd_SoundSystem_cpp
+801C1F30 __sinit_\snd_StrmSound_cpp
+801C64B0 __sinit_\snd_WaveSound_cpp
+801C9170 __sinit_\ut_DvdFileStream_cpp
+801C9560 __sinit_\ut_DvdLockedFileStream_cpp
+801C8B30 __sinit_\ut_FileStream_cpp
+801C8A00 __sinit_\ut_IOStream_cpp
+801C9650 __sinit_\ut_LockedCache_cpp
+801942D0 __sinit_\ut_TextWriterBase_cpp
+801D3200 __sinit_\ut_TextWriterBase_cpp
+80086E78 create__Q224@unnamed@HBMManager_cpp@11CDummySceneFUs
+80079C48 create__Q224@unnamed@SceneError_cpp@11CDummySceneFUs
+801B9660 impl_GetSoundInfoOffset__Q44nw4r3snd6detail22SoundArchiveFileReaderCFUlPQ54nw4r3snd6detail4Util165DataRef<v,Q54nw4r3snd6detail16SoundArchiveFile12SeqSoundInfo,Q54nw4r3snd6detail16SoundArchiveFile13StrmSoundInfo,Q54nw4r3snd6detail16SoundArchiveFile13WaveSoundInfo>
+801757F0 walkInChildrenDel__Q310homebutton3gui11PaneManagerFRQ36nw4hbm2ut30LinkList<Q36nw4hbm3lyt4Pane,4>
+80175510 walkInChildren__Q310homebutton3gui11PaneManagerFRQ36nw4hbm2ut30LinkList<Q36nw4hbm3lyt4Pane,4>
