@@ -1,0 +1,38 @@
+schema_version: 1
+workspace_root: ../..
+
+# Rhythm Heaven Fever USA (SOME01). BORRADOR: direcciones del decomp conhlee/rhf (config/SOME01).
+# Pendiente de validar contra el main.dol del dispositivo antes de compilar.
+project:
+  id: rhf-some01
+  display_name: Rhythm Heaven Fever (USA)
+  game_id: SOME01
+  region: E
+  base_manifest_format: rhf-recomp-base-manifest
+  base_manifest_stem: rhf_base
+
+memory:
+  base: 0x80000000
+  size: 0x01800000
+  # r13 y r2 confirmados leyendo __init_registers (0x80004210) del main.dol de SOME01
+  sda_base: 0x80326EC0
+  sda2_base: 0x80328FE0
+
+inputs:
+  dol:
+    path: Assets/main.dol
+    sha256: e6ebeb5c894369f65dbe24cef3081d1ecb8653d611dcf258673fad649e2367ff
+
+translation:
+  entry_points:
+    - 0x80004050
+  function_map:
+    path: projects/rhythmheaven-some01/MAP.txt
+  allow_unsupported_instructions: false
+
+output:
+  root: generated
+  functions: functions
+  runtime_config: RuntimeConfig.h
+  data_initializer: data_sections_init.cpp
+  base_manifest: ../build/base/rhf_base_manifest.json
