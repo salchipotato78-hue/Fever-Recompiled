@@ -1,0 +1,26 @@
+name: RHF - verificar main.dol
+
+on:
+  workflow_dispatch:
+
+jobs:
+  dol:
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Descargar main.dol del repo privado DOL-rhf
+        env:
+          GH_TOKEN: ${{ secrets.RHF_ASSETS_TOKEN }}
+        run: |
+          mkdir -p dol
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/salchipotato78-hue/DOL-rhf/contents/main.dol" \
+            -o dol/main.dol
+          echo "e6ebeb5c894369f65dbe24cef3081d1ecb8653d611dcf258673fad649e2367ff  dol/main.dol" | sha256sum -c -
+      - name: Subir como artefacto temporal
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhf-dol-verificado
+          path: dol/main.dol
+          retention-days: 1
