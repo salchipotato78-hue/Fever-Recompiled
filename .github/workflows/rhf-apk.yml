@@ -1,0 +1,127 @@
+name: RHF - APK de Android (todo en uno)
+
+# Un solo workflow: DOL -> traductor -> runtime nativo (NDK) -> app Android -> APK.
+# AVISO: el runtime del fork todavía tiene direcciones de NSMBW (E1). El APK compila, pero el juego
+# no arranca hasta reapuntar los hooks a SOME01. Este workflow sirve para encontrar esos errores.
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  apk:
+    runs-on: windows-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '8.0.x'
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: '8.7'
+
+      - name: Descargar main.dol (repo privado DOL-rhf) y verificar
+        shell: bash
+        env:
+          GH_TOKEN: ${{ secrets.RHF_ASSETS_TOKEN }}
+        run: |
+          mkdir -p Assets
+          curl -fsSL \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github.raw" \
+            "https://api.github.com/repos/salchipotato78-hue/DOL-rhf/contents/main.dol" \
+            -o Assets/main.dol
+          echo "e6ebeb5c894369f65dbe24cef3081d1ecb8653d611dcf258673fad649e2367ff  Assets/main.dol" | sha256sum -c -
+
+      - name: NDK 29.0.14206865 (el que usa el fork)
+        shell: pwsh
+        run: |
+          $sdk = $env:ANDROID_SDK_ROOT
+          if (-not $sdk) { $sdk = Join-Path $env:LOCALAPPDATA 'Android\Sdk' }
+          $sdkmanager = Join-Path $sdk 'cmdline-tools\latest\bin\sdkmanager.bat'
+          if (-not (Test-Path $sdkmanager)) { throw "sdkmanager no encontrado en $sdkmanager" }
+          'y','y','y','y','y' | & $sdkmanager --licenses | Out-Null
+          & $sdkmanager --install 'ndk;29.0.14206865' 'platforms;android-34' 'build-tools;34.0.0' | Out-Null
+          $ndk = Join-Path $sdk 'ndk\29.0.14206865'
+          if (-not (Test-Path (Join-Path $ndk 'build\cmake\android.toolchain.cmake'))) { throw 'NDK 29 no quedó instalado' }
+          "ANDROID_NDK_HOME=$ndk" | Add-Content $env:GITHUB_ENV
+
+      - name: Herramientas portables (CMake, Ninja, llvm-mingw)
+        shell: pwsh
+        run: ./Launcher/Prepare-PortableTools.ps1
+
+      - name: Dependencias fijadas (fuentes)
+        shell: pwsh
+        run: ./Launcher/Prepare-Dependencies.ps1 -Destination Dependencies
+
+      - name: Dawn para Android (NO está en Prepare-Dependencies)
+        shell: bash
+        env:
+          DAWN_ANDROID_URL: ${{ secrets.DAWN_ANDROID_URL }}
+          DAWN_ANDROID_SHA256: ${{ secrets.DAWN_ANDROID_SHA256 }}
+        run: |
+          set -e
+          if [ -z "$DAWN_ANDROID_URL" ] || [ -z "$DAWN_ANDROID_SHA256" ]; then
+            echo "::error::Falta el secreto DAWN_ANDROID_URL / DAWN_ANDROID_SHA256 (dawn-android-aarch64 v20260603.191052)."
+            exit 1
+          fi
+          curl -fsSL "$DAWN_ANDROID_URL" -o dawn-android.tar.gz
+          echo "$DAWN_ANDROID_SHA256  dawn-android.tar.gz" | sha256sum -c -
+          mkdir -p Dependencies/dawn_prebuilt_android
+          tar -xzf dawn-android.tar.gz -C Dependencies/dawn_prebuilt_android --strip-components=1
+          test -f Dependencies/dawn_prebuilt_android/lib/libwebgpu_dawn.a
+
+      - name: Traducir el DOL (translate-recursive, manifest, datos, shards)
+        shell: bash
+        run: |
+          set -e
+          dotnet build translator/Translator.sln -c Release -nologo
+          T=translator/src/Translator.Cli/bin/Release/net8.0/Translator.Cli.dll
+          P=projects/rhythmheaven-some01/recomp.yml
+          dotnet "$T" translate-recursive 0x80004050 --project "$P" \
+            --outdir generated/functions \
+            --output-metadata generated/base_translation_output.json \
+            --production-source-bundle generated/base_translation_sources.bin \
+            --no-function-files --prune-stale --threads 4
+          dotnet "$T" emit-base-manifest --project "$P" --out build/base \
+            --functions-dir generated/functions \
+            --translation-output-metadata generated/base_translation_output.json --region E
+          dotnet "$T" generate-data-init --project "$P"
+          dotnet "$T" emit-build-shards --project "$P" \
+            --base-metadata generated/base_translation_output.json \
+            --base-functions-dir generated/functions \
+            --native-source-dir runtime/src --out generated/build_shards
+
+      - name: Configurar la librería nativa de Android (arm64)
+        shell: pwsh
+        run: ./projects/nsmbw/tools/configure-android.ps1
+
+      - name: Compilar libmain.so
+        shell: pwsh
+        run: ./projects/nsmbw/tools/build-android.ps1
+
+      - name: Preparar android/native (libmain.so y datos)
+        shell: pwsh
+        run: ./projects/nsmbw/tools/stage-android.ps1
+
+      - name: Empaquetar la APK
+        run: gradle -p android assembleRelease --no-daemon
+
+      - name: Subir APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhf-apk
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+          retention-days: 14
