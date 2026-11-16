@@ -135,7 +135,8 @@ function Assert-Pinned($Package) {
 }
 
 function Assert-Hash($Package, [string]$Archive) {
-    if (-not $Package.Sha256) { return }
+    # Under Set-StrictMode, reading a missing property throws, so test for it first.
+    if (-not $Package.PSObject.Properties['Sha256'] -or -not $Package.Sha256) { return }
     $actual = (Get-FileHash -LiteralPath $Archive -Algorithm SHA256).Hash.ToLowerInvariant()
     if ($actual -ne $Package.Sha256) {
         Remove-Item -LiteralPath $Archive -Force -ErrorAction SilentlyContinue
