@@ -21,6 +21,7 @@ $auroraExtern = Join-Path $repoRoot 'aurora-main\extern\CMakeLists.txt'
 $auroraDawn = Join-Path $repoRoot 'aurora-main\cmake\AuroraDawnProvider.cmake'
 $auroraLibUsb = Join-Path $repoRoot 'aurora-main\cmake\AuroraLibUSB.cmake'
 $auroraSdl = Join-Path $repoRoot 'aurora-main\cmake\AuroraSDL3Provider.cmake'
+$mbedtlsPin = Join-Path $repoRoot 'runtime\cmake\MbedTLSPin.cmake'
 
 # Name = directory under the destination; FetchContent maps it back through
 # FETCHCONTENT_SOURCE_DIR_<UPPERCASE NAME> (NativeBuildFlags.ps1), so the names are the declared
@@ -65,6 +66,16 @@ $packages = @(
         Uris = @('https://github.com/libusb/libusb/releases/download/v1.0.30/libusb-1.0.30.tar.bz2')
         Pins = @(@{ File = $auroraCMake; Text = 'set(AURORA_LIBUSB_VERSION "1.0.30"' },
                  @{ File = $auroraLibUsb; Text = 'releases/download/v${AURORA_LIBUSB_VERSION}/libusb-${AURORA_LIBUSB_VERSION}.tar.bz2' })
+    },
+    # mbed TLS for the non-Windows guest network (runtime/CMakeLists.txt). The native and Android
+    # builds run with FETCHCONTENT_FULLY_DISCONNECTED=ON, so the source must be here under the FetchContent
+    # name mkw_mbedtls_upstream (-> FETCHCONTENT_SOURCE_DIR_MKW_MBEDTLS_UPSTREAM). Version and hash
+    # come from runtime/cmake/MbedTLSPin.cmake.
+    [pscustomobject]@{
+        Name = 'mkw_mbedtls_upstream'; File = 'mbedtls-3.6.7.tar.bz2'
+        Uris = @('https://github.com/Mbed-TLS/mbedtls/releases/download/mbedtls-3.6.7/mbedtls-3.6.7.tar.bz2')
+        Sha256 = 'a7e8bcbec0e6f761b4af24f25677626b35f762f68eef79c08677a363212d11f6'
+        Pins = @(@{ File = $mbedtlsPin; Text = 'set(MKW_MBEDTLS_VERSION "3.6.7"' })
     },
     [pscustomobject]@{
         Name = 'png'; File = 'libpng-1.6.58.tar.gz'
@@ -123,9 +134,18 @@ function Assert-Pinned($Package) {
     }
 }
 
+function Assert-Hash($Package, [string]$Archive) {
+    if (-not $Package.Sha256) { return }
+    $actual = (Get-FileHash -LiteralPath $Archive -Algorithm SHA256).Hash.ToLowerInvariant()
+    if ($actual -ne $Package.Sha256) {
+        Remove-Item -LiteralPath $Archive -Force -ErrorAction SilentlyContinue
+        throw "$($Package.Name): SHA-256 $actual does not match the pinned $($Package.Sha256)."
+    }
+}
+
 function Get-Archive($Package) {
     $archive = Join-Path $downloads $Package.File
-    if (Test-Path -LiteralPath $archive -PathType Leaf) { return $archive }
+    if (Test-Path -LiteralPath $archive -PathType Leaf) { Assert-Hash $Package $archive; return $archive }
     $temporary = $archive + '.partial'
     $failures = @()
     foreach ($uri in $Package.Uris) {
@@ -138,6 +158,7 @@ function Get-Archive($Package) {
             continue
         }
         Move-Item -LiteralPath $temporary -Destination $archive -Force
+        Assert-Hash $Package $archive
         return $archive
     }
     Remove-Item -LiteralPath $temporary -Force -ErrorAction SilentlyContinue
