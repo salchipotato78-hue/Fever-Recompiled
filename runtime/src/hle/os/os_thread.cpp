@@ -395,7 +395,7 @@ extern "C" void OSCreateThread_HLE_801a9e84(CpuContext* ctx)
         cpu->gpr[3] = 0; // Return failure
     }
 }
-PPC_NATIVE_OVERRIDE_VOID(801B5130, OSCreateThread_HLE_801a9e84, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E3080, OSCreateThread_HLE_801a9e84, (CpuContext* ctx), (ctx));
 
 extern "C" void OSExitThread_HLE_801aa0f0(CpuContext* ctx)
 {
@@ -421,7 +421,7 @@ extern "C" void OSExitThread_HLE_801aa0f0(CpuContext* ctx)
 
     OS__RestoreInterrupts_801a65d4(irqState);
 }
-PPC_NATIVE_OVERRIDE_VOID(801B53A0, OSExitThread_HLE_801aa0f0, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E32F0, OSExitThread_HLE_801aa0f0, (CpuContext* ctx), (ctx));
 
 extern "C" void OSCancelThread_HLE_801aa1d4(CpuContext* ctx)
 {
@@ -463,7 +463,7 @@ extern "C" void OSCancelThread_HLE_801aa1d4(CpuContext* ctx)
 
     OS__RestoreInterrupts_801a65d4(irqState);
 }
-PPC_NATIVE_OVERRIDE_VOID(801B5490, OSCancelThread_HLE_801aa1d4, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E33E0, OSCancelThread_HLE_801aa1d4, (CpuContext* ctx), (ctx));
 
 extern "C" void OSJoinThread_HLE_801aa3ac(CpuContext* ctx)
 {
@@ -522,7 +522,7 @@ extern "C" void OSJoinThread_HLE_801aa3ac(CpuContext* ctx)
     OS__RestoreInterrupts_801a65d4(irqState);
     cpu->gpr[3] = result;
 }
-PPC_NATIVE_OVERRIDE_VOID(801B5670, OSJoinThread_HLE_801aa3ac, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E35C0, OSJoinThread_HLE_801aa3ac, (CpuContext* ctx), (ctx));
 
 extern "C" void OSDetachThread_HLE_801aa4ec(CpuContext* ctx)
 {
@@ -608,7 +608,7 @@ extern "C" void OSSuspendThread_HLE_801aa6a8(CpuContext* ctx)
 
     OS__RestoreInterrupts_801a65d4(irqState);
 }
-PPC_NATIVE_OVERRIDE_VOID(801B5B00, OSSuspendThread_HLE_801aa6a8, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E39B0, OSSuspendThread_HLE_801aa6a8, (CpuContext* ctx), (ctx));
 
 // OSResumeThread (0x801b5860)
 // Resumes a suspended thread, making it eligible for scheduling.
@@ -711,4 +711,4 @@ extern "C" void OSResumeThread_HLE_801aa58c(CpuContext* ctx)
     
     OS__RestoreInterrupts_801a65d4(irqState);
 }
-PPC_NATIVE_OVERRIDE_VOID(801B5860, OSResumeThread_HLE_801aa58c, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E3710, OSResumeThread_HLE_801aa58c, (CpuContext* ctx), (ctx));

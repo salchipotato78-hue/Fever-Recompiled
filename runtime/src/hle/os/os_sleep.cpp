@@ -522,4 +522,4 @@ extern "C" void OSSleepThread_HLE_801aa9b8(CpuContext* ctx)
     
     OS__RestoreInterrupts_801a65d4(irqState);
 }
-PPC_NATIVE_OVERRIDE_VOID(801B5C90, OSSleepThread_HLE_801aa9b8, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E3B40, OSSleepThread_HLE_801aa9b8, (CpuContext* ctx), (ctx));

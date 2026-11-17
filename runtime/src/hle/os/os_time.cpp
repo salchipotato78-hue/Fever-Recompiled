@@ -61,7 +61,7 @@ extern "C" void OS__GetTime_HLE(CpuContext* ctx)
     ctx->gpr[4] = lo;
 }
 
-PPC_NATIVE_OVERRIDE_VOID(801B5F80, OS__GetTime_HLE, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(7F000003, OS__GetTime_HLE, (CpuContext* ctx), (ctx));
 
 
 // ----------------------------------------------------------------------------

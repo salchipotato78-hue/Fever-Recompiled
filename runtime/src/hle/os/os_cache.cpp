@@ -93,10 +93,10 @@ extern "C" void DCStoreRangeNoSync_801a16b8(uint32_t addr, uint32_t length)
     DcRangeOp("DCStoreRangeNoSync_801a16b8", addr, length);
 }
 
-PPC_NATIVE_OVERRIDE_VOID(801AC440, DCInvalidateRange_801a1600, (uint32_t addr, uint32_t length), (addr, length));
-PPC_NATIVE_OVERRIDE_VOID(801AC470, DCFlushRange_801a162c, (uint32_t addr, uint32_t length), (addr, length));
-PPC_NATIVE_OVERRIDE_VOID(801AC4A0, DCStoreRange_801a165c, (uint32_t addr, uint32_t length), (addr, length));
-PPC_NATIVE_OVERRIDE_VOID(801AC4D0, DCFlushRangeNoSync_801a168c, (uint32_t addr, uint32_t length), (addr, length));
+PPC_NATIVE_OVERRIDE_VOID(800DB6A0, DCInvalidateRange_801a1600, (uint32_t addr, uint32_t length), (addr, length));
+PPC_NATIVE_OVERRIDE_VOID(800DB6D0, DCFlushRange_801a162c, (uint32_t addr, uint32_t length), (addr, length));
+PPC_NATIVE_OVERRIDE_VOID(800DB700, DCStoreRange_801a165c, (uint32_t addr, uint32_t length), (addr, length));
+PPC_NATIVE_OVERRIDE_VOID(800DB730, DCFlushRangeNoSync_801a168c, (uint32_t addr, uint32_t length), (addr, length));
 PPC_NATIVE_OVERRIDE_VOID(801AC500, DCStoreRangeNoSync_801a16b8, (uint32_t addr, uint32_t length), (addr, length));
 
 // ----------------------------------------------------------------------------
@@ -221,16 +221,16 @@ extern "C" void LCQueueWait_HLE_801a1988(CpuContext*)
 }
 
 PPC_NATIVE_OVERRIDE_VOID(801ac420, Cache_Maintenance_Stub, (), ()); // DCEnable
-PPC_NATIVE_OVERRIDE_VOID(801ac530, DCZeroRange_HLE_801a16e4, (CpuContext* ctx), (ctx)); // DCZeroRange
+PPC_NATIVE_OVERRIDE_VOID(800DB760, DCZeroRange_HLE_801a16e4, (CpuContext* ctx), (ctx)); // DCZeroRange
 PPC_NATIVE_OVERRIDE_VOID(801ac560, Cache_Maintenance_Stub, (), ()); // ICInvalidateRange
 PPC_NATIVE_OVERRIDE_VOID(801ac5a0, Cache_Maintenance_Stub, (), ()); // ICFlashInvalidate
 PPC_NATIVE_OVERRIDE_VOID(801ac5b0, Cache_Maintenance_Stub, (), ()); // ICEnable
 PPC_NATIVE_OVERRIDE_VOID(801ac5d0, Cache_Maintenance_Stub, (), ()); // __LCEnable
 PPC_NATIVE_OVERRIDE_VOID(801ac6a0, Cache_Maintenance_Stub, (), ()); // LCEnable
-PPC_NATIVE_OVERRIDE_VOID(801ac6e0, Cache_Maintenance_Stub, (), ()); // LCDisable
+PPC_NATIVE_OVERRIDE_VOID(7F000004, Cache_Maintenance_Stub, (), ()); // LCDisable
 PPC_NATIVE_OVERRIDE_VOID(801ac710, LCLoadBlocks_HLE_801a1894, (CpuContext* ctx), (ctx)); // LCLoadBlocks
 PPC_NATIVE_OVERRIDE_VOID(801ac740, LCStoreBlocks_HLE_801a18b8, (CpuContext* ctx), (ctx)); // LCStoreBlocks
 PPC_NATIVE_OVERRIDE(801ac770, LCStoreData_HLE_801a18dc, uint32_t, (CpuContext* ctx), (ctx)); // LCStoreData
-PPC_NATIVE_OVERRIDE(801ac810, LCQueueLength_HLE_801a197c, uint32_t, (CpuContext* ctx), (ctx)); // LCQueueLength
+PPC_NATIVE_OVERRIDE(800DB940, LCQueueLength_HLE_801a197c, uint32_t, (CpuContext* ctx), (ctx)); // LCQueueLength
 PPC_NATIVE_OVERRIDE_VOID(801ac820, LCQueueWait_HLE_801a1988, (CpuContext* ctx), (ctx)); // LCQueueWait
 PPC_NATIVE_OVERRIDE_VOID(801ac990, Cache_Maintenance_Stub, (), ()); // OS____CacheInit

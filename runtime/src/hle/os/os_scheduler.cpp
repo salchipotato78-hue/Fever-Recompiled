@@ -456,7 +456,7 @@ extern "C" void SelectThread_801a9c08(CpuContext* ctx)
     OS__LoadContext_801a1f58(cpu);
 }
 
-PPC_NATIVE_OVERRIDE_VOID(801B4EA0, SelectThread_801a9c08, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E2DF0, SelectThread_801a9c08, (CpuContext* ctx), (ctx));
 
 // ============================================================================
 // OSWakeupThread HLE - drain a thread queue and mark threads runnable
@@ -543,7 +543,7 @@ void OS_HLE_WakeupThreadNoReschedule(CpuContext* ctx, uint32_t waitQueue)
     cpu->gpr[3] = savedR3;
 }
 
-PPC_NATIVE_OVERRIDE_VOID(801B5D80, OSWakeupThread_HLE_801aaaa4, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E3C30, OSWakeupThread_HLE_801aaaa4, (CpuContext* ctx), (ctx));
 
 extern "C" void OSSleepThread_HLE_801aa9b8(CpuContext* ctx);
 
@@ -595,7 +595,7 @@ extern "C" void OSLockMutex_HLE_801a7ee4(CpuContext* ctx)
 
     OS__RestoreInterrupts_801a65d4(irqState);
 }
-PPC_NATIVE_OVERRIDE_VOID(801B2E60, OSLockMutex_HLE_801a7ee4, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E1000, OSLockMutex_HLE_801a7ee4, (CpuContext* ctx), (ctx));
 
 extern "C" void OSUnlockMutex_HLE_801a7fc0(CpuContext* ctx)
 {
@@ -641,5 +641,5 @@ extern "C" void OSUnlockMutex_HLE_801a7fc0(CpuContext* ctx)
 
     OS__RestoreInterrupts_801a65d4(irqState);
 }
-PPC_NATIVE_OVERRIDE_VOID(801B2F40, OSUnlockMutex_HLE_801a7fc0, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800E10E0, OSUnlockMutex_HLE_801a7fc0, (CpuContext* ctx), (ctx));
 
