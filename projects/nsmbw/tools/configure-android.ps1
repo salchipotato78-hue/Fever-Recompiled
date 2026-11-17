@@ -11,7 +11,9 @@ param(
     [switch]$Newer,
     # Disc ID the native library is built for. Rhythm Heaven Fever (USA) is SOME01.
     [ValidateSet('SMNE01','SMNE03','SOME01')]
-    [string]$GameId = 'SMNE01'
+    [string]$GameId = 'SMNE01',
+    # Compiler launcher for CMake (e.g. ccache). Resolved before PATH is narrowed below.
+    [string]$CompilerLauncher = ''
 )
 
 $ErrorActionPreference = 'Stop'
@@ -28,6 +30,8 @@ function ConvertTo-CMakePath([string]$Path) { [IO.Path]::GetFullPath($Path).Repl
 if (-not (Test-Path (Join-Path $dependencies 'dawn_prebuilt_android\lib\libwebgpu_dawn.a'))) {
     throw 'Dependencies\dawn_prebuilt_android is missing (pinned dawn-android-aarch64 v20260603.191052)'
 }
+
+$launcherPath = if ($CompilerLauncher) { (Get-Command $CompilerLauncher -ErrorAction Stop).Source } else { '' }
 
 # Keep the Windows compilers out of reach: only the NDK's clang may be found.
 $env:PATH = "$toolchain\CMake\bin;$toolchain\Ninja;$env:SystemRoot\System32;$env:SystemRoot"
@@ -56,6 +60,10 @@ foreach ($directory in Get-ChildItem -LiteralPath $dependencies -Directory) {
     $configure += "-DFETCHCONTENT_SOURCE_DIR_$($directory.Name.ToUpperInvariant())=$(ConvertTo-CMakePath $directory.FullName)"
 }
 $configure += "-DFETCHCONTENT_SOURCE_DIR_DAWN_PREBUILT=$(ConvertTo-CMakePath (Join-Path $dependencies 'dawn_prebuilt_android'))"
+if ($launcherPath) {
+    $configure += "-DCMAKE_C_COMPILER_LAUNCHER=$(ConvertTo-CMakePath $launcherPath)"
+    $configure += "-DCMAKE_CXX_COMPILER_LAUNCHER=$(ConvertTo-CMakePath $launcherPath)"
+}
 
 # Windows PowerShell 5.1 turns a native program's stderr lines into error records; CMake prints
 # ordinary status there, so run it with 'Continue' and keep the log as plain text.
