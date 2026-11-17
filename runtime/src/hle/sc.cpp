@@ -99,7 +99,7 @@ extern "C" uint32_t SCCheckStatus_HLE()
     return 0;
 }
 
-PPC_NATIVE_OVERRIDE(801DB8E0, SCCheckStatus_HLE, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(80122C60, SCCheckStatus_HLE, uint32_t, (), ());
 
 // 0x801DD1D0 -> SCGetAspectRatio()
 // Returns: 0 = 4:3, 1 = 16:9. The display settings' aspect at boot: 16:9 and Fill both run the
@@ -109,7 +109,7 @@ extern "C" uint32_t SCGetAspectRatio_HLE()
     return DisplaySettings::GameWidescreen() ? 1u : 0u;
 }
 
-PPC_NATIVE_OVERRIDE(801DD1D0, SCGetAspectRatio_HLE, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(80124550, SCGetAspectRatio_HLE, uint32_t, (), ());
 
 // 0x801DD2B0 -> SCGetEuRgb60Mode()
 // Returns: 0 = PAL50, 1 = PAL60/RGB60
@@ -121,7 +121,7 @@ extern "C" uint32_t SCGetEuRgb60Mode_HLE()
     return 1;
 }
 
-PPC_NATIVE_OVERRIDE(801DD2B0, SCGetEuRgb60Mode_HLE, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(80124630, SCGetEuRgb60Mode_HLE, uint32_t, (), ());
 
 // 0x801DD320 -> SCGetLanguage()
 // The console language (SC_LANG_*: 1 English, 3 French, 4 Spanish; the USA disc has EngUS, FraUS
@@ -140,7 +140,7 @@ extern "C" uint32_t SCGetLanguage_HLE()
     return language;
 }
 
-PPC_NATIVE_OVERRIDE(801DD320, SCGetLanguage_HLE, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(801246A0, SCGetLanguage_HLE, uint32_t, (), ());
 
 // Expose the selected emulated NAND identity through the SDK SC APIs.
 
@@ -150,7 +150,7 @@ extern "C" uint32_t SCGetProductArea_HLE()
                                RuntimeConsoleIdentity::Current().area);
 }
 
-PPC_NATIVE_OVERRIDE(801DD860, SCGetProductArea_HLE, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(80124BD0, SCGetProductArea_HLE, uint32_t, (), ());
 
 #if 0  // NSMBW: SCGetProductCode is not linked into NSMBW; this wrote MKW's SC CODE buffer
 extern "C" uint32_t SCGetProductCode_HLE()
@@ -190,7 +190,7 @@ extern "C" uint32_t SCGetProductGameRegion_HLE()
                                RuntimeConsoleIdentity::Current().gameRegion);
 }
 
-PPC_NATIVE_OVERRIDE(801DD940, SCGetProductGameRegion_HLE, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(80124C60, SCGetProductGameRegion_HLE, uint32_t, (), ());
 
 // These stubs make the game think all titles are installed; otherwise it checks title ID
 // 0x00010004524d4350 ("RMCP", Mario Kart Wii PAL) and reports error code 5.
