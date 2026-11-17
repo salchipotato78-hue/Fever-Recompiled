@@ -218,7 +218,7 @@ extern "C" void AIInit_801240b0(uint32_t callback_stack_switch)
     }
 }
 
-PPC_NATIVE_OVERRIDE_VOID(8019f1f0, AIInit_801240b0, (uint32_t callback_stack_switch), (callback_stack_switch));
+PPC_NATIVE_OVERRIDE_VOID(800F6530, AIInit_801240b0, (uint32_t callback_stack_switch), (callback_stack_switch));
 
 extern "C" uint32_t AICheckInit_80124094()
 {
@@ -236,7 +236,7 @@ extern "C" void DSPInit_8015d444()
     RT_LOG(RT_TAG_AUDIO) << "DSPInit_8015d444 called: DSP hardware boundary initialized (HLE)" << std::endl;
 }
 
-PPC_NATIVE_OVERRIDE_VOID(801d5740, DSPInit_8015d444, (), ());
+PPC_NATIVE_OVERRIDE_VOID(800FAE90, DSPInit_8015d444, (), ());
 
 extern "C" uint32_t DSPCheckInit_8015d504()
 {
@@ -257,7 +257,7 @@ extern "C" void __DSP_boot_task_8015dc60(uint32_t task_ptr)
               << std::hex << task_ptr << std::dec << std::endl;
 }
 
-PPC_NATIVE_OVERRIDE_VOID(801d5f70, __DSP_boot_task_8015dc60, (uint32_t task_ptr), (task_ptr));
+PPC_NATIVE_OVERRIDE_VOID(800FB6C0, __DSP_boot_task_8015dc60, (uint32_t task_ptr), (task_ptr));
 
 
 extern "C" void __AXOutInitDSP_801269bc(CpuContext* ctx)
@@ -266,7 +266,7 @@ extern "C" void __AXOutInitDSP_801269bc(CpuContext* ctx)
     RT_LOG(RT_TAG_AUDIO) << "__AXOutInitDSP called: native AX/DSP HLE initialized." << std::endl;
 }
 
-PPC_NATIVE_OVERRIDE_VOID(801a1ce0, __AXOutInitDSP_801269bc, (CpuContext* ctx), (ctx));
+PPC_NATIVE_OVERRIDE_VOID(800F8620, __AXOutInitDSP_801269bc, (CpuContext* ctx), (ctx));
 
 
 
@@ -279,7 +279,7 @@ extern "C" void AIInitDMA_80123fcc(uint32_t start_addr, uint32_t length)
     g_ai.bytesLeft = g_ai.length;
 }
 
-PPC_NATIVE_OVERRIDE_VOID(8019f100, AIInitDMA_80123fcc, (uint32_t start_addr, uint32_t length), (start_addr, length));
+PPC_NATIVE_OVERRIDE_VOID(800F6440, AIInitDMA_80123fcc, (uint32_t start_addr, uint32_t length), (start_addr, length));
 
 
 
@@ -297,7 +297,7 @@ extern "C" uint32_t AIRegisterDMACallback_80123f88(uint32_t callback)
     }
     return old_callback;
 }
-PPC_NATIVE_OVERRIDE(8019f0b0, AIRegisterDMACallback_80123f88, uint32_t, (uint32_t callback), (callback));
+PPC_NATIVE_OVERRIDE(800F63F0, AIRegisterDMACallback_80123f88, uint32_t, (uint32_t callback), (callback));
 
 // AIStartDMA toggles the AI DMA control register on hardware. Keep the guest-visible
 // DMA state here and let the VI tick advance the hardware boundary.
@@ -316,28 +316,28 @@ extern "C" void AIStartDMA_80124048()
     }
 }
 
-PPC_NATIVE_OVERRIDE_VOID(8019F180, AIStartDMA_80124048, (), ());
+PPC_NATIVE_OVERRIDE_VOID(800F64C0, AIStartDMA_80124048, (), ());
 
 extern "C" uint32_t AIGetDMABytesLeft_8012405c()
 {
     std::lock_guard<std::mutex> lock(g_ai.mutex);
     return g_ai.bytesLeft;
 }
-PPC_NATIVE_OVERRIDE(8019F1A0, AIGetDMABytesLeft_8012405c, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(800F64E0, AIGetDMABytesLeft_8012405c, uint32_t, (), ());
 
 extern "C" uint32_t AIGetDMAStartAddr_8012406c()
 {
     std::lock_guard<std::mutex> lock(g_ai.mutex);
     return g_ai.registerStartAddr;
 }
-PPC_NATIVE_OVERRIDE(8019F1B0, AIGetDMAStartAddr_8012406c, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(800F64F0, AIGetDMAStartAddr_8012406c, uint32_t, (), ());
 
 extern "C" uint32_t AIGetDMALength_80124084()
 {
     std::lock_guard<std::mutex> lock(g_ai.mutex);
     return g_ai.length;
 }
-PPC_NATIVE_OVERRIDE(8019F1D0, AIGetDMALength_80124084, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(800F6510, AIGetDMALength_80124084, uint32_t, (), ());
 
 extern "C" uint32_t AIGetDSPSampleRate_8012409c()
 {
@@ -353,7 +353,7 @@ extern "C" void DSPSendMailToDSP_8015d430(uint32_t mail)
 {
     AxDspHle::SendMailToDSP(mail);
 }
-PPC_NATIVE_OVERRIDE_VOID(801D5720, DSPSendMailToDSP_8015d430, (uint32_t mail), (mail));
+PPC_NATIVE_OVERRIDE_VOID(800FAE70, DSPSendMailToDSP_8015d430, (uint32_t mail), (mail));
 
 extern "C" void SoundPlayerSetVolume_800a35e0(uint32_t soundPlayer, float volume)
 {
@@ -369,7 +369,7 @@ extern "C" uint32_t DSPCheckMailToDSP_8015d3fc()
 {
     return AxDspHle::CheckMailToDSP();
 }
-PPC_NATIVE_OVERRIDE(801D56E0, DSPCheckMailToDSP_8015d3fc, uint32_t, (), ());
+PPC_NATIVE_OVERRIDE(800FAE30, DSPCheckMailToDSP_8015d3fc, uint32_t, (), ());
 
 extern "C" uint32_t DSPCheckMailFromDSP_8015d40c()
 {
@@ -387,7 +387,7 @@ extern "C" uint32_t DSPAssertTask_8015d57c(uint32_t taskPtr)
 {
     return AxDspHle::AssertTask(taskPtr);
 }
-PPC_NATIVE_OVERRIDE(801D5880, DSPAssertTask_8015d57c, uint32_t, (uint32_t taskPtr), (taskPtr));
+PPC_NATIVE_OVERRIDE(800FAFD0, DSPAssertTask_8015d57c, uint32_t, (uint32_t taskPtr), (taskPtr));
 
 // Each delivered block runs the AI DMA callback and deferred AX task callbacks before the
 // next block, preserving the SoundThread/DSP interleave order real hardware provides.
