@@ -385,7 +385,7 @@ extern "C" void GX__InitTexObjFilter_80170b6c(uint32_t oa, uint32_t minFilter, u
                            (GXAnisotropy)meta.maxAniso);
     }
 }
-PPC_NATIVE_OVERRIDE_VOID(801c7130, GX__InitTexObjFilter_80170b6c, (uint32_t oa, uint32_t minFilter, uint32_t magFilter), (oa, minFilter, magFilter));
+PPC_NATIVE_OVERRIDE_VOID(7F000005, GX__InitTexObjFilter_80170b6c, (uint32_t oa, uint32_t minFilter, uint32_t magFilter), (oa, minFilter, magFilter));
 
 // GXInitTexObjLODBias - sets LOD bias value
 extern "C" void GX__InitTexObjLODBias_80170b94(uint32_t oa, float bias) {

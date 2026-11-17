@@ -16,7 +16,7 @@ PPC_NATIVE_OVERRIDE_VOID(801c8040, GX__SetIndTexOrder_80171a6c, (uint32_t s, uin
 extern "C" void GX__SetIndTexCoordScale_80171968(uint32_t s, uint32_t ss, uint32_t ts) {
     GXSetIndTexCoordScale((GXIndTexStageID)s, (GXIndTexScale)ss, (GXIndTexScale)ts);
 }
-PPC_NATIVE_OVERRIDE_VOID(801C7F40, GX__SetIndTexCoordScale_80171968, (uint32_t s, uint32_t ss, uint32_t ts), (s, ss, ts));
+PPC_NATIVE_OVERRIDE_VOID(7F000016, GX__SetIndTexCoordScale_80171968, (uint32_t s, uint32_t ss, uint32_t ts), (s, ss, ts));
 
 extern "C" void GX__SetIndTexMtx_80171814(uint32_t id, uint32_t ma, uint32_t se) {
     float m[6]; for(int i=0; i<6; ++i) m[i]=Memory::ReadFloat32(ma+i*4);

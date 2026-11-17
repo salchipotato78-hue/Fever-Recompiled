@@ -64,7 +64,7 @@ extern "C" void GX__ClearVtxDesc_8016dc34() {
     // GXClearVtxDesc resets descriptors only; array base/stride state persists.
     GXClearVtxDesc();
 }
-PPC_NATIVE_OVERRIDE_VOID(801c4070, GX__ClearVtxDesc_8016dc34, (), ());
+PPC_NATIVE_OVERRIDE_VOID(7F000012, GX__ClearVtxDesc_8016dc34, (), ());
 
 extern "C" void GX__SetVtxDesc_8016d3a4(uint32_t a, uint32_t t) {
     const uint32_t attr = CanonicalVtxAttr(a);
@@ -78,7 +78,7 @@ extern "C" void GX__SetVtxDesc_8016d3a4(uint32_t a, uint32_t t) {
     if(IsMatrixIndexAttr((GXAttr)attr)) return;
     GXSetVtxDesc((GXAttr)a, (t==GX_INDEX8||t==GX_INDEX16)?GX_DIRECT:(GXAttrType)t);
 }
-PPC_NATIVE_OVERRIDE_VOID(801c37c0, GX__SetVtxDesc_8016d3a4, (uint32_t a, uint32_t t), (a, t));
+PPC_NATIVE_OVERRIDE_VOID(7F000013, GX__SetVtxDesc_8016d3a4, (uint32_t a, uint32_t t), (a, t));
 
 extern "C" void GX__SetVtxDescv_8016d608(uint32_t la) {
     if(!la) return; uint32_t p=la;
@@ -244,7 +244,7 @@ extern "C" void GX__EnableTexOffsets_8016f37c(uint32_t coord, uint32_t lineEnabl
                        lineEnable ? GX_TRUE : GX_FALSE,
                        pointEnable ? GX_TRUE : GX_FALSE);
 }
-PPC_NATIVE_OVERRIDE_VOID(801c5820, GX__EnableTexOffsets_8016f37c, (uint32_t coord, uint32_t lineEnable, uint32_t pointEnable), (coord, lineEnable, pointEnable));
+PPC_NATIVE_OVERRIDE_VOID(7F000014, GX__EnableTexOffsets_8016f37c, (uint32_t coord, uint32_t lineEnable, uint32_t pointEnable), (coord, lineEnable, pointEnable));
 
 extern "C" void GX__SetLineWidth_8016f314(uint32_t width, uint32_t texOffsets) {
     GXSetLineWidth(static_cast<u8>(width), static_cast<GXTexOffset>(texOffsets));

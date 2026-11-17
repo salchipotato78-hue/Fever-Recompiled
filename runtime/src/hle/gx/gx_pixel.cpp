@@ -14,7 +14,7 @@ PPC_NATIVE_OVERRIDE_VOID(801c8dc0, GX__SetBlendMode_8017277c, (uint32_t t, uint3
 extern "C" void GX__SetColorUpdate_801727cc(uint32_t en) {
     GXSetColorUpdate(static_cast<GXBool>(en));
 }
-PPC_NATIVE_OVERRIDE_VOID(801c8e10, GX__SetColorUpdate_801727cc, (uint32_t en), (en));
+PPC_NATIVE_OVERRIDE_VOID(7F000010, GX__SetColorUpdate_801727cc, (uint32_t en), (en));
 
 extern "C" void GX__SetAlphaUpdate_801727f8(uint32_t en) {
     GXSetAlphaUpdate(static_cast<GXBool>(en));
@@ -85,4 +85,4 @@ extern "C" void GX__SetCoPlanar_8016f3e0(uint32_t en) { GXSetCoPlanar((GXBool)en
 PPC_NATIVE_OVERRIDE_VOID(801c58b0, GX__SetCoPlanar_8016f3e0, (uint32_t en), (en));
 
 extern "C" void GX__SetClipMode_8017351c(uint32_t m) { GXSetClipMode((GXClipMode)m); }
-PPC_NATIVE_OVERRIDE_VOID(801c9d60, GX__SetClipMode_8017351c, (uint32_t m), (m));
+PPC_NATIVE_OVERRIDE_VOID(7F000011, GX__SetClipMode_8017351c, (uint32_t m), (m));

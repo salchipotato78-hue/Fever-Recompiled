@@ -33,7 +33,7 @@ extern "C" void GX__SetNumTevStages_801722a8(uint32_t n) {
     }
     GXSetNumTevStages((u8)n);
 }
-PPC_NATIVE_OVERRIDE_VOID(801c88f0, GX__SetNumTevStages_801722a8, (uint32_t n), (n));
+PPC_NATIVE_OVERRIDE_VOID(7F00000D, GX__SetNumTevStages_801722a8, (uint32_t n), (n));
 
 extern "C" void GX__SetTevOp_80171c4c(uint32_t s, uint32_t m) {
     if (!TevStageOk(s)) return;
@@ -77,7 +77,7 @@ extern "C" void GX__SetTevAlphaOp_80171db8(uint32_t s, uint32_t op, uint32_t b, 
     if (!TevStageOk(s) || !TevRegOk(or_)) return;
     GXSetTevAlphaOp((GXTevStageID)s, (GXTevOp)op, (GXTevBias)b, (GXTevScale)sc, (GXBool)cl, (GXTevRegID)or_);
 }
-PPC_NATIVE_OVERRIDE_VOID(801c83d0, GX__SetTevAlphaOp_80171db8, (uint32_t s, uint32_t op, uint32_t b, uint32_t sc, uint32_t cl, uint32_t or_), (s, op, b, sc, cl, or_));
+PPC_NATIVE_OVERRIDE_VOID(7F00000E, GX__SetTevAlphaOp_80171db8, (uint32_t s, uint32_t op, uint32_t b, uint32_t sc, uint32_t cl, uint32_t or_), (s, op, b, sc, cl, or_));
 
 // ============================================================================
 // TEV Color Registers
@@ -106,7 +106,7 @@ extern "C" void GX__SetTevKColor_80171ed4(uint32_t id, uint32_t cp) {
 PPC_NATIVE_OVERRIDE_VOID(801c8500, GX__SetTevKColor_80171ed4, (uint32_t id, uint32_t cp), (id, cp));
 
 extern "C" void GX__SetTevKColorSel_80171f30(uint32_t s, uint32_t sel) { if (!TevStageOk(s)) return; GXSetTevKColorSel((GXTevStageID)s, (GXTevKColorSel)sel); }
-PPC_NATIVE_OVERRIDE_VOID(801c8560, GX__SetTevKColorSel_80171f30, (uint32_t s, uint32_t sel), (s, sel));
+PPC_NATIVE_OVERRIDE_VOID(7F00000F, GX__SetTevKColorSel_80171f30, (uint32_t s, uint32_t sel), (s, sel));
 
 extern "C" void GX__SetTevKAlphaSel_80171f80(uint32_t s, uint32_t sel) { if (!TevStageOk(s)) return; GXSetTevKAlphaSel((GXTevStageID)s, (GXTevKAlphaSel)sel); }
 PPC_NATIVE_OVERRIDE_VOID(801c85b0, GX__SetTevKAlphaSel_80171f80, (uint32_t s, uint32_t sel), (s, sel));
