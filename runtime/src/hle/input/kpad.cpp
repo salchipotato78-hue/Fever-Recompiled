@@ -357,13 +357,13 @@ extern "C" int32_t KPAD__Read_HLE(uint32_t chan, uint32_t statusPtr, uint32_t co
 // With Bluetooth passthrough on, the game's own KPADRead (kept by REGISTER_NATIVE_FUNCTION_AS; see
 // wpad.cpp) reads the real remote. The call stays written out as func_xxx(ctx) so the translator
 // syncs the whole register file around this native.
-extern "C" void func_801ED3A0(CpuContext* ctx);  // the translated KPADRead
+extern "C" void func_8016F4F0(CpuContext* ctx);  // the translated KPADRead
 extern "C" void KPADRead_Native_801ed3a0(CpuContext* ctx)
 {
     const uint32_t chan = ctx->gpr[3];
     const uint32_t statusPtr = ctx->gpr[4];
     if (BtPassthrough::Active()) {
-        func_801ED3A0(ctx);
+        func_8016F4F0(ctx);
         FilterPassthroughStatus(chan, statusPtr, static_cast<int32_t>(ctx->gpr[3]));
         return;
     }
