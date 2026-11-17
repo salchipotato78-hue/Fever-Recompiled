@@ -8,7 +8,10 @@ param(
     [int]$TranslatedJobs = 6,
     [string]$BuildDirectory,
     [string]$LogPath,
-    [switch]$Newer
+    [switch]$Newer,
+    # Disc ID the native library is built for. Rhythm Heaven Fever (USA) is SOME01.
+    [ValidateSet('SMNE01','SMNE03','SOME01')]
+    [string]$GameId = 'SMNE01'
 )
 
 $ErrorActionPreference = 'Stop'
@@ -45,7 +48,7 @@ $configure = @(
     '-DAURORA_DAWN_PROVIDER=package', '-DAURORA_SDL3_PROVIDER=vendor',
     '-DCMAKE_POLICY_DEFAULT_CMP0168=NEW', '-DFETCHCONTENT_FULLY_DISCONNECTED=ON',
     "-DMKW_TRANSLATED_COMPILE_JOBS=$TranslatedJobs",
-    "-DNSMBW_GAME_ID=$(if ($Newer) { 'SMNE03' } else { 'SMNE01' })"
+    "-DNSMBW_GAME_ID=$(if ($Newer) { 'SMNE03' } else { $GameId })"
 )
 foreach ($directory in Get-ChildItem -LiteralPath $dependencies -Directory) {
     # Windows-only trees, and the Windows Dawn package (the Android one replaces it below).
