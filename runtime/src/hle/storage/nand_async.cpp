@@ -124,35 +124,35 @@ bool NandProcessPendingCallbacks(CpuContext* cpu, int maxToProcess) {
 NAND_ASYNC_FWD_BODY(NANDOpenAsync_HLE, NANDOpen_HLE,
     (uint32_t pathPtr, uint32_t fileInfoPtr, uint32_t mode, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, fileInfoPtr, mode))
-PPC_NATIVE_OVERRIDE(801D96D0, NANDOpenAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(801204F0, NANDOpenAsync_HLE, int32_t,
     (uint32_t pathPtr, uint32_t fileInfoPtr, uint32_t mode, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, fileInfoPtr, mode, callbackPtr, commandBlockPtr));
 
 NAND_ASYNC_FWD_BODY(NANDCloseAsync_HLE, NANDClose_HLE,
     (uint32_t fileInfoPtr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (fileInfoPtr))
-PPC_NATIVE_OVERRIDE(801D98C0, NANDCloseAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(801206E0, NANDCloseAsync_HLE, int32_t,
     (uint32_t fileInfoPtr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (fileInfoPtr, callbackPtr, commandBlockPtr));
 
 NAND_ASYNC_FWD_BODY_OKZERO(NANDReadAsync_HLE, NANDRead_HLE,
     (uint32_t fileInfoPtr, uint32_t bufferPtr, uint32_t length, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (fileInfoPtr, bufferPtr, length))
-PPC_NATIVE_OVERRIDE(801D8A60, NANDReadAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(8011F2D0, NANDReadAsync_HLE, int32_t,
     (uint32_t fileInfoPtr, uint32_t bufferPtr, uint32_t length, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (fileInfoPtr, bufferPtr, length, callbackPtr, commandBlockPtr));
 
 NAND_ASYNC_FWD_BODY_OKZERO(NANDWriteAsync_HLE, NANDWrite_HLE,
     (uint32_t fileInfoPtr, uint32_t bufferPtr, uint32_t length, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (fileInfoPtr, bufferPtr, length))
-PPC_NATIVE_OVERRIDE(801D8B50, NANDWriteAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(8011F3C0, NANDWriteAsync_HLE, int32_t,
     (uint32_t fileInfoPtr, uint32_t bufferPtr, uint32_t length, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (fileInfoPtr, bufferPtr, length, callbackPtr, commandBlockPtr));
 
 NAND_ASYNC_FWD_BODY_OKZERO(NANDSeekAsync_HLE, NANDSeek_HLE,
     (uint32_t fileInfoPtr, int32_t offset, int32_t whence, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (fileInfoPtr, offset, whence))
-PPC_NATIVE_OVERRIDE(801D8C70, NANDSeekAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(8011F4E0, NANDSeekAsync_HLE, int32_t,
     (uint32_t fileInfoPtr, int32_t offset, int32_t whence, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (fileInfoPtr, offset, whence, callbackPtr, commandBlockPtr));
 
@@ -175,7 +175,7 @@ extern "C" int32_t NANDGetType_HLE(uint32_t pathPtr, uint32_t outTypePtr);
 NAND_ASYNC_FWD_BODY(NANDPrivateOpenAsync_HLE, NANDOpen_HLE,
     (uint32_t pathPtr, uint32_t fileInfoPtr, uint32_t mode, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, fileInfoPtr, mode))
-PPC_NATIVE_OVERRIDE(801D9750, NANDPrivateOpenAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(80120570, NANDPrivateOpenAsync_HLE, int32_t,
     (uint32_t pathPtr, uint32_t fileInfoPtr, uint32_t mode, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, fileInfoPtr, mode, callbackPtr, commandBlockPtr));
 
@@ -202,35 +202,35 @@ PPC_NATIVE_OVERRIDE(8019D720, NANDSafeCloseAsync_HLE, int32_t,
 NAND_ASYNC_FWD_BODY(NANDPrivateCreateAsync_HLE, NANDCreate_HLE,
     (uint32_t pathPtr, uint32_t perm, uint32_t attr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, perm, attr))
-PPC_NATIVE_OVERRIDE(801D86E0, NANDPrivateCreateAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(8011EFD0, NANDPrivateCreateAsync_HLE, int32_t,
     (uint32_t pathPtr, uint32_t perm, uint32_t attr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, perm, attr, callbackPtr, commandBlockPtr));
 
 NAND_ASYNC_FWD_BODY(NANDPrivateCreateDirAsync_HLE, NANDCreateDir_HLE,
     (uint32_t pathPtr, uint32_t perm, uint32_t attr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, perm, attr))
-PPC_NATIVE_OVERRIDE(801D8D20, NANDPrivateCreateDirAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(8011F6E0, NANDPrivateCreateDirAsync_HLE, int32_t,
     (uint32_t pathPtr, uint32_t perm, uint32_t attr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, perm, attr, callbackPtr, commandBlockPtr));
 
 NAND_ASYNC_FWD_BODY(NANDPrivateDeleteAsync_HLE, NANDDelete_HLE,
     (uint32_t pathPtr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr))
-PPC_NATIVE_OVERRIDE(801D8930, NANDPrivateDeleteAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(8011F1A0, NANDPrivateDeleteAsync_HLE, int32_t,
     (uint32_t pathPtr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, callbackPtr, commandBlockPtr));
 
 NAND_ASYNC_FWD_BODY(NANDPrivateGetStatusAsync_HLE, NANDGetStatus_HLE,
     (uint32_t pathPtr, uint32_t statusPtr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, statusPtr))
-PPC_NATIVE_OVERRIDE(801D9410, NANDPrivateGetStatusAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(8011FED0, NANDPrivateGetStatusAsync_HLE, int32_t,
     (uint32_t pathPtr, uint32_t statusPtr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, statusPtr, callbackPtr, commandBlockPtr));
 
 NAND_ASYNC_FWD_BODY(NANDPrivateGetTypeAsync_HLE, NANDGetType_HLE,
     (uint32_t pathPtr, uint32_t outTypePtr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, outTypePtr))
-PPC_NATIVE_OVERRIDE(801DAEC0, NANDPrivateGetTypeAsync_HLE, int32_t,
+PPC_NATIVE_OVERRIDE(80121EE0, NANDPrivateGetTypeAsync_HLE, int32_t,
     (uint32_t pathPtr, uint32_t outTypePtr, uint32_t callbackPtr, uint32_t commandBlockPtr),
     (pathPtr, outTypePtr, callbackPtr, commandBlockPtr));
 

@@ -1109,7 +1109,7 @@ extern "C" void DVDInit_8015EA1C()
     g_dvdInitialized = true;
     initializing = false;
 }
-PPC_NATIVE_OVERRIDE_VOID(801CAD30, DVDInit_8015EA1C, (), ());
+PPC_NATIVE_OVERRIDE_VOID(800E7D10, DVDInit_8015EA1C, (), ());
 
 // FST-only DVD functions run translated so mods can override them safely.
 
@@ -1178,7 +1178,7 @@ extern "C" int32_t DVDReadPrio_8015E834(uint32_t fileInfoPtr, uint32_t bufferPtr
 
     return static_cast<int32_t>(uLength);
 }
-PPC_NATIVE_OVERRIDE(801CAB20, DVDReadPrio_8015E834, int32_t, (uint32_t f, uint32_t b, int32_t l, int32_t o, int32_t p), (f, b, l, o, p));
+PPC_NATIVE_OVERRIDE(800E7B00, DVDReadPrio_8015E834, int32_t, (uint32_t f, uint32_t b, int32_t l, int32_t o, int32_t p), (f, b, l, o, p));
 
 // 0x801CAA30 -> DVDReadAsyncPrio (internal)
 // HLE: perform synchronous read and invoke callback immediately.
@@ -1195,7 +1195,7 @@ extern "C" int32_t DVD__ReadAsyncPrio_HLE_8015e74c(uint32_t fileInfoPtr,
     CompleteDvdCancelState();
     return bytesRead >= 0 ? 1 : 0;
 }
-PPC_NATIVE_OVERRIDE(801CAA30, DVD__ReadAsyncPrio_HLE_8015e74c, int32_t,
+PPC_NATIVE_OVERRIDE(7F000001, DVD__ReadAsyncPrio_HLE_8015e74c, int32_t,
          (uint32_t f, uint32_t b, int32_t l, int32_t o, uint32_t cb, int32_t p),
          (f, b, l, o, cb, p));
 
@@ -1275,7 +1275,7 @@ extern "C" int32_t DVDLowInit_80164848() {
     DVDInit_8015EA1C(); 
     return 1;
 }
-PPC_NATIVE_OVERRIDE(801D1230, DVDLowInit_80164848, int32_t, (), ());
+PPC_NATIVE_OVERRIDE(800EDC60, DVDLowInit_80164848, int32_t, (), ());
 
 extern "C" int32_t DVDLowInquiry_80165A30(uint32_t cmdBlockPtr, uint32_t callback)
 {
@@ -1288,7 +1288,7 @@ extern "C" int32_t DVDLowInquiry_80165A30(uint32_t cmdBlockPtr, uint32_t callbac
 
     return 1; // Return 1 to indicate the command was successfully issued.
 }
-PPC_NATIVE_OVERRIDE(801D2470, DVDLowInquiry_80165A30, int32_t, (uint32_t b, uint32_t c), (b, c));
+PPC_NATIVE_OVERRIDE(800EEEA0, DVDLowInquiry_80165A30, int32_t, (uint32_t b, uint32_t c), (b, c));
 
 // 0x801D14A0 -> DVDLowReadDiskID
 extern "C" int32_t DVDLowReadDiskID_80164AAC(uint32_t diskIdPtr, uint32_t callback) {
@@ -1300,7 +1300,7 @@ extern "C" int32_t DVDLowReadDiskID_80164AAC(uint32_t diskIdPtr, uint32_t callba
     CompleteDvdCancelState();
     return 1; // Success
 }
-PPC_NATIVE_OVERRIDE(801D14A0, DVDLowReadDiskID_80164AAC, int32_t, (uint32_t p, uint32_t c), (p, c));
+PPC_NATIVE_OVERRIDE(800EDED0, DVDLowReadDiskID_80164AAC, int32_t, (uint32_t p, uint32_t c), (p, c));
 
 // 0x801D2F20 -> DVDLowRead (And 0x801D2130 UnencryptedRead)
 // The game calls this to read the Disk Header (offset 0) or raw data.
@@ -1361,13 +1361,13 @@ extern "C" int32_t DVDLowRead_80166330(uint32_t buffer, uint32_t length, uint32_
     CopyToGuestAsDma(buffer, tempBuf.data(), tempBuf.size());
     return finish(true);
 }
-PPC_NATIVE_OVERRIDE(801D2F20, DVDLowRead_80166330, int32_t, (uint32_t b, uint32_t l, uint32_t o, uint32_t c), (b, l, o, c));
+PPC_NATIVE_OVERRIDE(800EF7E0, DVDLowRead_80166330, int32_t, (uint32_t b, uint32_t l, uint32_t o, uint32_t c), (b, l, o, c));
 
 // UnencryptedRead has the same completion and failure contract as DVDLowRead.
 extern "C" int32_t DVDLowUnencryptedRead_80165708(uint32_t b, uint32_t l, uint32_t o, uint32_t c) {
     return DVDLowRead_80166330(b, l, o, c);
 }
-PPC_NATIVE_OVERRIDE(801D2130, DVDLowUnencryptedRead_80165708, int32_t, (uint32_t b, uint32_t l, uint32_t o, uint32_t c), (b, l, o, c));
+PPC_NATIVE_OVERRIDE(800EEB60, DVDLowUnencryptedRead_80165708, int32_t, (uint32_t b, uint32_t l, uint32_t o, uint32_t c), (b, l, o, c));
 
 // ============================================================================
 // Other Necessary Stubs
@@ -1377,4 +1377,4 @@ extern "C" int32_t DVDCheckDevice_801643FC() { return 1; } // Ready
 PPC_NATIVE_OVERRIDE(801D0980, DVDCheckDevice_801643FC, int32_t, (), ());
 
 extern "C" int32_t DVDLowClearCoverInterrupt_80166964(uint32_t cb) { return 1; }
-PPC_NATIVE_OVERRIDE(801D3700, DVDLowClearCoverInterrupt_80166964, int32_t, (uint32_t cb), (cb));
+PPC_NATIVE_OVERRIDE(800EFFC0, DVDLowClearCoverInterrupt_80166964, int32_t, (uint32_t cb), (cb));
