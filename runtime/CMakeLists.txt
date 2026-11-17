@@ -362,6 +362,10 @@ file(GLOB_RECURSE SOURCES CONFIGURE_DEPENDS "src/*.cpp")
 # mod's patched code (projects/nsmbw/recomp-newer.yml, Newer is SMNE03) accepts that mod's disc;
 # src/product/base_product.cpp names the game and the disc it needs from it.
 set(NSMBW_GAME_ID "SMNE01" CACHE STRING "Disc ID (boot.bin) of the game this build was translated for")
+if(NSMBW_GAME_ID STREQUAL "SOME01")
+    # Rhythm Heaven Fever (USA): see src/hle/rhf_nsmbw_stubs.cpp and the RHF overrides.
+    add_compile_definitions(MKW_RHF_BUILD=1)
+endif()
 set_source_files_properties("${CMAKE_CURRENT_LIST_DIR}/src/product/base_product.cpp" PROPERTIES
     COMPILE_DEFINITIONS "NSMBW_GAME_ID=\"${NSMBW_GAME_ID}\"")
 if(MKW_PLATFORM_MACOS)
