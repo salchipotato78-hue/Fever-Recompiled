@@ -89,7 +89,7 @@ jobs:
         run: |
           set -e
           GAME_TREE=$(git rev-parse "HEAD:games/rhf")
-          TOOL_HASH=$(sha256sum tools/make_analysis.py | cut -c1-16)
+          TOOL_HASH=$(cat tools/make_analysis.py tools/find_dsp_ucode.py | sha256sum | cut -c1-16)
           echo "key=translated-rhf-${DOL_SHA256:0:16}-${GAME_TREE:0:16}-${TOOL_HASH}-${ENGINE_SHA:0:12}" >> "$GITHUB_OUTPUT"
 
       - name: Restaurar la traducción guardada
@@ -108,6 +108,12 @@ jobs:
           set -e
           python3 -m pip install --quiet numpy
           python3 recompiler/recomp.py
+          # Microcódigo de audio (AX): sin esto el DSP corre interpretado y ocupa ~40 % de un hilo de CPU.
+          # find_dsp_ucode.py localiza el AX en el DOL por su checksum; recomp_dsp.py lo traduce a C++ nativo.
+          # Si falla, el juego sigue con el intérprete (solo más CPU): no tumba el APK.
+          python3 ../tools/find_dsp_ucode.py ../data/main.dol games/rhf/analysis/dsp_ucode.csv \
+            && python3 recompiler/dsp/recomp_dsp.py \
+            || echo "::warning::No se pudo traducir el DSP; el audio usará el intérprete."
 
       - name: Guardar la traducción
         if: steps.gen.outputs.cache-hit != 'true'
