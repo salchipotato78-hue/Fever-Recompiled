@@ -5,6 +5,9 @@
 #include <chrono>
 #include <csignal>
 #include <cstdio>
+#if defined(__ANDROID__)
+#include <unistd.h>
+#endif
 #include <cstdlib>
 #include <exception>
 #include <filesystem>
@@ -149,6 +152,13 @@ extern "C" __attribute__((visibility("default"))) int SDL_main(int argc, char** 
 int main(int argc, char** argv) {
 #endif
     std::set_terminate(report_terminate);
+#if defined(__ANDROID__)
+    // La app (SetupActivity) guarda el juego en su carpeta interna y exporta RHF_HOME.
+    // Entrar ahí hace que las rutas relativas del motor (games/rhf/...) apunten a los datos.
+    if (const char* home = std::getenv("RHF_HOME")) {
+        if (chdir(home) != 0) std::fprintf(stderr, "no pude entrar a %s\n", home);
+    }
+#endif
     if (const char* log_path = std::getenv("WP_LOG_FILE")) {
         wp::log::write("boot", "log started");
         std::freopen(log_path, "a", stderr);
