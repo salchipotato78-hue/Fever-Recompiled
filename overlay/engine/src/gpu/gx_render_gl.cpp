@@ -39,7 +39,7 @@ namespace {
 
 #define WP_GL_FUNCTIONS(X)                                                                                                                                  \
     X(ActiveTexture) X(AttachShader) X(BindBuffer) X(BindBufferBase) X(BindFramebuffer) X(BindSampler) X(BindTexture) X(BindVertexArray)              \
-    X(BlendEquationSeparate) X(BlendFuncSeparate) X(BufferData) X(BufferSubData) X(CheckFramebufferStatus) X(Clear) X(ClearColor) X(ClearDepth)      \
+    X(BlendEquationSeparate) X(BlendFuncSeparate) X(BufferData) X(BufferSubData) X(CheckFramebufferStatus) X(Clear) X(ClearColor)                \
     X(ColorMask) X(CompileShader) X(CreateProgram) X(CreateShader) X(DeleteFramebuffers) X(DeleteShader) X(DeleteTextures) X(DepthFunc)              \
     X(DepthMask) X(Disable) X(DrawArrays) X(Enable) X(EnableVertexAttribArray) X(FramebufferTexture2D) X(GenBuffers) X(GenFramebuffers)             \
     X(GenSamplers) X(GenTextures) X(GenVertexArrays) X(GenerateMipmap) X(GetIntegerv) X(GetProgramInfoLog) X(GetProgramiv) X(GetShaderInfoLog)      \
@@ -48,11 +48,15 @@ namespace {
     X(Uniform1f) X(Uniform4f) X(UniformBlockBinding) X(UseProgram) X(VertexAttribPointer) X(Viewport) X(MapBufferRange) X(UnmapBuffer)    \
     X(FenceSync) X(ClientWaitSync) X(DeleteSync)
 
+bool is_gles();
+
 struct Gl {
 #define WP_GL_MEMBER(name) decltype(&::gl##name) name = nullptr;
     WP_GL_FUNCTIONS(WP_GL_MEMBER)
 #undef WP_GL_MEMBER
     decltype(&::glClipControl) ClipControl = nullptr;
+    decltype(&::glClearDepth) ClearDepth = nullptr;  // OpenGL de escritorio
+    void (*ClearDepthf)(float) = nullptr;            // GLES
 };
 
 Gl gl;
@@ -67,6 +71,19 @@ bool load_functions() {
     }
     WP_GL_FUNCTIONS(WP_GL_LOAD)
 #undef WP_GL_LOAD
+    if (is_gles()) {
+        gl.ClearDepthf = reinterpret_cast<decltype(gl.ClearDepthf)>(SDL_GL_GetProcAddress("glClearDepthf"));
+        if (!gl.ClearDepthf) {
+            std::fprintf(stderr, "OpenGL function glClearDepthf is missing\n");
+            ok = false;
+        }
+    } else {
+        gl.ClearDepth = reinterpret_cast<decltype(gl.ClearDepth)>(SDL_GL_GetProcAddress("glClearDepth"));
+        if (!gl.ClearDepth) {
+            std::fprintf(stderr, "OpenGL function glClearDepth is missing\n");
+            ok = false;
+        }
+    }
     return ok;
 }
 
@@ -1822,7 +1839,11 @@ void apply_scale() {
     plain_state();
     gl.DepthMask(GL_TRUE);
     gl.ClearColor(0, 0, 0, 0);
-    gl.ClearDepth(1.0);
+    if (is_gles()) {
+        gl.ClearDepthf(1.0f);
+    } else {
+        gl.ClearDepth(1.0);
+    }
     gl.Clear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
