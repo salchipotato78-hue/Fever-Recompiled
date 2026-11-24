@@ -1,0 +1,139 @@
+name: Android APK (Rhythm Heaven Fever)
+
+# Compila Rhythm Heaven Fever para Android en GitHub Actions, con el mismo modelo que WarioRecomp:
+# el juego NO está en el repositorio. El DOL llega por un secreto de tu propio repositorio privado.
+#
+# Secretos (Settings > Secrets and variables > Actions):
+#   RHF_DATA_URL     Enlace de descarga directa a un .zip con la carpeta DATA (contiene sys/main.dol),
+#                    o al main.dol directamente. Dropbox sirve (dl=0 se cambia por dl=1).
+#   RHF_SYMBOLS_URL  Enlace de descarga directa al archivo de símbolos (texto).
+#
+# El DOL se verifica con su SHA-256 (NTSC-U, rev 0).
+
+name: Android APK (Rhythm Heaven Fever)
+
+on:
+  workflow_dispatch:
+
+env:
+  # Motor de Wii Party: fijado a un commit para que las compilaciones sean reproducibles.
+  ENGINE_REPO: https://github.com/arelkair/wiiparty-recomp.git
+  ENGINE_SHA: dddb9ce3080ac5c2e345f154061031789323e963
+  DOL_SHA256: e6ebeb5c894369f65dbe24cef3081d1ecb8653d611dcf258673fad649e2367ff
+  NDK_VERSION: "27.0.12077973"
+  ANDROID_HOME: /usr/local/lib/android/sdk
+  ANDROID_SDK_ROOT: /usr/local/lib/android/sdk
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Descargar y verificar los datos del juego
+        env:
+          RHF_DATA_URL: ${{ secrets.RHF_DATA_URL }}
+          RHF_SYMBOLS_URL: ${{ secrets.RHF_SYMBOLS_URL }}
+        run: |
+          set -e
+          test -n "$RHF_DATA_URL" || { echo "::error::Falta el secreto RHF_DATA_URL."; exit 1; }
+          test -n "$RHF_SYMBOLS_URL" || { echo "::error::Falta el secreto RHF_SYMBOLS_URL."; exit 1; }
+          mkdir -p data
+          fetch() {
+            local url="$1" out="$2"
+            url="${url/dl=0/dl=1}"
+            curl -fL --retry 3 -o "$out" "$url" || { echo "::error::No pude descargar $out."; exit 1; }
+            if head -c 15 "$out" | grep -qi "<!doctype\|<html"; then
+              echo "::error::El enlace de $out devolvió una página web, no el archivo. Usa un enlace directo."; exit 1
+            fi
+          }
+          fetch "$RHF_DATA_URL" data/download.bin
+          if unzip -tq data/download.bin > /dev/null 2>&1; then
+            rm -rf data/unzipped && mkdir -p data/unzipped
+            unzip -q data/download.bin -d data/unzipped
+            DOL=$(find data/unzipped -path '*/sys/main.dol' | head -n 1)
+            BOOT=$(find data/unzipped -path '*/sys/boot.bin' | head -n 1)
+            [ -n "$DOL" ] || { echo "::error::El zip no contiene sys/main.dol."; exit 1; }
+            cp "$DOL" data/main.dol
+            [ -n "$BOOT" ] && cp "$BOOT" data/boot.bin
+          else
+            cp data/download.bin data/main.dol
+          fi
+          echo "$DOL_SHA256  data/main.dol" | sha256sum -c - \
+            || { echo "::error::main.dol no coincide con Rhythm Heaven Fever NTSC-U rev. 0."; exit 1; }
+          fetch "$RHF_SYMBOLS_URL" data/symbols.txt
+          echo "Datos verificados."
+
+      - name: Clonar el motor (versión fijada)
+        run: |
+          git clone "$ENGINE_REPO" engine
+          git -C engine checkout "$ENGINE_SHA"
+
+      - name: Preparar el proyecto del juego
+        run: |
+          set -e
+          cp -r games/rhf engine/games/rhf
+          mkdir -p engine/games/rhf/extracted/sys
+          cp data/main.dol engine/games/rhf/extracted/sys/main.dol
+          [ -f data/boot.bin ] && cp data/boot.bin engine/games/rhf/extracted/sys/boot.bin || true
+          python3 tools/make_analysis.py data/symbols.txt engine/games/rhf/analysis
+
+      - name: Clave de la traducción (caché)
+        id: tkey
+        run: |
+          set -e
+          GAME_TREE=$(git rev-parse "HEAD:games/rhf")
+          TOOL_HASH=$(sha256sum tools/make_analysis.py | cut -c1-16)
+          echo "key=translated-rhf-${DOL_SHA256:0:16}-${GAME_TREE:0:16}-${TOOL_HASH}-${ENGINE_SHA:0:12}" >> "$GITHUB_OUTPUT"
+
+      - name: Restaurar la traducción guardada
+        id: gen
+        uses: actions/cache/restore@v4
+        with:
+          path: engine/build/rhf/generated
+          key: ${{ steps.tkey.outputs.key }}
+
+      - name: Traducir el juego (motor de Wii Party)
+        if: steps.gen.outputs.cache-hit != 'true'
+        working-directory: engine
+        env:
+          WP_GAME: rhf
+        run: |
+          set -e
+          python3 -m pip install --quiet numpy
+          python3 recompiler/recomp.py
+
+      - name: Guardar la traducción
+        if: steps.gen.outputs.cache-hit != 'true'
+        uses: actions/cache/save@v4
+        with:
+          path: engine/build/rhf/generated
+          key: ${{ steps.tkey.outputs.key }}
+
+      - name: Instalar NDK, CMake y SDK de Android
+        run: |
+          SDKMANAGER="$(ls -d "$ANDROID_HOME"/cmdline-tools/*/bin/sdkmanager | head -n 1)"
+          yes | "$SDKMANAGER" --licenses > /dev/null
+          "$SDKMANAGER" "platforms;android-35" "build-tools;35.0.0" "cmake;3.31.6" "ndk;$NDK_VERSION"
+          echo "ANDROID_NDK_HOME=$ANDROID_HOME/ndk/$NDK_VERSION" >> "$GITHUB_ENV"
+
+      - name: Compilar el juego para arm64
+        shell: bash
+        working-directory: engine
+        run: |
+          set -o pipefail
+          cmake -S . -B build/android -G Ninja \
+            -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
+            -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-29 \
+            -DCMAKE_BUILD_TYPE=Release -DWP_GAME=rhf 2>&1 | tee ../build-config.log
+          cmake --build build/android --target rhf 2>&1 | tee ../build.log
+
+      - name: Guardar los logs de compilación
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-logs
+          path: |
+            build.log
+            build-config.log

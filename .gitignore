@@ -1,0 +1,17 @@
+# Archivos del juego: nunca se suben
+*.dol
+*.bin
+*.rvz
+*.iso
+*.wbfs
+disc/
+games/rhf/extracted/
+games/rhf/analysis/symbols.csv
+games/rhf/analysis/dol_functions.csv
+games/rhf/analysis/hle_functions.csv
+symbols*.txt
+build/
+build_log.txt
+run_log.txt
+generated/
+toolkit/

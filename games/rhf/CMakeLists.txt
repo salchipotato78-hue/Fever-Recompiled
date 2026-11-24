@@ -1,0 +1,53 @@
+set(WP_GENERATED "${CMAKE_SOURCE_DIR}/build/rhf/generated")
+
+file(GLOB WP_DSP_SOURCES CONFIGURE_DEPENDS "${WP_GENERATED}/dsp/*.cpp")
+if(WP_DSP_SOURCES)
+    target_sources(wp_engine PRIVATE ${WP_DSP_SOURCES})
+    set_source_files_properties(${WP_DSP_SOURCES} PROPERTIES COMPILE_OPTIONS -O2)
+else()
+    target_sources(wp_engine PRIVATE "${CMAKE_SOURCE_DIR}/engine/src/audio/no_dsp_code.cpp")
+endif()
+
+file(GLOB WP_DOL_SOURCES CONFIGURE_DEPENDS "${WP_GENERATED}/dol/*.cpp")
+file(GLOB_RECURSE WP_MODULE_SOURCES CONFIGURE_DEPENDS "${WP_GENERATED}/modules/*.cpp")
+if(NOT WP_DOL_SOURCES)
+    message(STATUS "No generated code in ${WP_GENERATED}/dol: run recompiler/recomp.py to build the game")
+    return()
+endif()
+
+add_library(rhf_code STATIC game.cpp ${WP_DOL_SOURCES})
+set_source_files_properties(${WP_DOL_SOURCES} ${WP_MODULE_SOURCES} PROPERTIES COMPILE_OPTIONS "${WP_CODE_OPT}")
+target_include_directories(rhf_code PUBLIC "${WP_GENERATED}/dol")
+if(WP_MODULE_SOURCES)
+    target_sources(rhf_code PRIVATE ${WP_MODULE_SOURCES})
+else()
+    target_sources(rhf_code PRIVATE "${CMAKE_SOURCE_DIR}/engine/src/core/no_modules.cpp")
+endif()
+target_link_libraries(rhf_code PUBLIC wp_engine)
+target_compile_options(rhf_code PRIVATE -Wall -Wextra -Wno-unused-label -Wno-unused-parameter -Wno-clobbered)
+
+add_executable(rhf)
+if(WIN32 AND EXISTS "${CMAKE_CURRENT_SOURCE_DIR}/res/rhf.rc")
+    set(WP_RC_OBJECT "${CMAKE_CURRENT_BINARY_DIR}/rhf_rc.o")
+    add_custom_command(OUTPUT "${WP_RC_OBJECT}"
+        COMMAND "${CMAKE_RC_COMPILER}" -O coff -i rhf.rc -o "${WP_RC_OBJECT}"
+        WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/res"
+        DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/res/rhf.rc" "${CMAKE_CURRENT_SOURCE_DIR}/res/rhf.ico"
+        VERBATIM)
+    target_sources(rhf PRIVATE "${WP_RC_OBJECT}")
+endif()
+target_link_libraries(rhf PRIVATE wp_app "$<LINK_GROUP:RESCAN,rhf_code,wp_engine>")
+target_compile_options(rhf PRIVATE -Wall -Wextra)
+if(WIN32 AND NOT WP_CONSOLE)
+    set_target_properties(rhf PROPERTIES WIN32_EXECUTABLE ON)
+endif()
+if(TARGET SDL3::SDL3)
+    add_custom_command(TARGET rhf POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_if_different $<TARGET_FILE:SDL3::SDL3> $<TARGET_FILE_DIR:rhf>)
+endif()
+
+file(SHA256 "${CMAKE_SOURCE_DIR}/games/rhf/extracted/sys/main.dol" WP_DOL_HASH)
+if(WP_DOL_HASH STREQUAL "f8f46694f942ded88fa6952ca5f93701100d304d63407978d4c700c1bdceab6c")
+    add_executable(lifted_tests "${CMAKE_SOURCE_DIR}/tests/rhf/lifted_tests.cpp")
+    target_link_libraries(lifted_tests PRIVATE "$<LINK_GROUP:RESCAN,rhf_code,wp_engine>")
+    add_test(NAME lifted_tests COMMAND lifted_tests)
+endif()

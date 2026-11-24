@@ -1,0 +1,11 @@
+name = "Rhythm Heaven Fever"
+id = "SOME01"
+executable = "rhythmheaven"
+disc = "disc/rhf.rvz"
+
+[sdk]
+os_save_context = 0x800dbe70
+setjmp = 0x0   # TODO: no encontrado en el mapa de RHF; revisar antes de compilar
+
+[versions.e6ebeb5c894369f65dbe24cef3081d1ecb8653d611dcf258673fad649e2367ff]
+analysis = "analysis"

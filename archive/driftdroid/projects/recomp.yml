@@ -1,0 +1,40 @@
+# Borrador. Valores con TODO deben completarse antes de traducir.
+schema_version: 1
+workspace_root: ../..
+
+project:
+  id: rhf-ntsc-u
+  display_name: Rhythm Heaven Fever (NTSC-U)
+  game_id: SOME01
+  region: E
+  base_manifest_stem: rhf_base
+
+memory:
+  base: 0x80000000
+  size: 0x01800000        # TODO: confirmar tamaño de memoria del Wii (MEM1/MEM2)
+  sda_base: 0x80326EC0    # r13: verificado (inicio de .sdata + 0x8000)
+  sda2_base: 0x80320FE0   # r2: verificado (inicio de .sdata2)
+
+inputs:
+  dol:
+    path: inputs/main.dol
+    sha256: e6ebeb5c894369f65dbe24cef3081d1ecb8653d611dcf258673fad649e2367ff
+
+translation:
+  entry_points:
+    - 0x80004050
+  function_map:
+    path: projects/rhf/MAP.txt   # Copia aquí el mapa de funciones (no incluido en el repo)
+  allow_unsupported_instructions: true   # durante la primera pasada, para ver TODO lo que falta
+
+runtime:
+  native_registration_root: runtime/src
+  native_abi_directories:
+    - runtime/src/hle/gx
+
+output:
+  root: generated
+  functions: functions
+  runtime_config: RuntimeConfig.h
+  data_initializer: data_sections_init.cpp
+  base_manifest: ../build/base/rhf_base_manifest.json
