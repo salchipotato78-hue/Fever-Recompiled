@@ -1,6 +1,8 @@
 package com.rhf.port;
 
 import android.os.Bundle;
+import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.system.ErrnoException;
 import android.system.Os;
 
@@ -25,6 +27,9 @@ public class RhfActivity extends SDLActivity {
             // Sin estas variables el motor usa la carpeta actual; el juego lo indicará si no encuentra datos.
         }
         super.onCreate(savedInstanceState);
+        // Botones táctiles encima de la superficie de SDL: cruceta, A, B y +.
+        addContentView(new TouchOverlay(this), new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
     }
 
     @Override

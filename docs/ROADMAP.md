@@ -7,8 +7,8 @@
 
 ## Fase 2: Android (con el motor de Wii Party)
 - [ ] Compilar el motor con el NDK de Android. Revisar los 12 archivos con código de Windows.
-- [ ] Cambiar el renderizador: OpenGL ES en lugar de Direct3D 11 (`gx_render_gl.cpp` como base).
-- [ ] Entrada: controles táctiles (referencia: `TouchOverlay.java` del repo de Wario).
+- [ ] Cambiar el renderizador: OpenGL ES en lugar de Direct3D 11 (`gx_render_gl.cpp` como base). Bloqueo actual: 0 draw batches en el log de Android.
+- [x] Entrada: controles táctiles (cruceta, A, B, +) en `TouchOverlay.java`. Pendiente de probar en el dispositivo.
 - [ ] Ultrawide sin estirar (referencia: el repo de Wario).
 - [ ] Icono y nombre de la app.
 - [ ] Compilar la APK en GitHub Actions. El juego lo importa el usuario desde su propio disco.
