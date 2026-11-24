@@ -749,6 +749,34 @@ struct PendingBatch {
     uint32_t scissor_offset = 0;
 };
 
+// Último estado de GL aplicado por flush_pending (evita repetir llamadas idénticas en cada batch).
+// Cualquier función fuera de flush_pending que cambie estado de GL debe llamar invalidate_gl_cache().
+struct GlStateCache {
+    GLuint program = ~0u;
+    GLuint vao = ~0u;
+    GLuint array_buffer = ~0u;
+    GLuint framebuffer = ~0u;
+    uint32_t active_unit = ~0u;
+    GLuint texture[kTextureMaps];  // ~0u = desconocido
+    GLuint sampler[kTextureMaps];
+    bool scissor_on = false;
+    int scissor[4] = {-1, -1, -1, -1};
+    bool blend_valid = false;
+    uint32_t blend_word = 0;
+    bool depth_valid = false;
+    uint32_t depth_word = 0;
+    int viewport[4] = {-1, -1, -1, -1};
+};
+GlStateCache g_state_cache;
+
+void invalidate_gl_cache() {
+    g_state_cache = GlStateCache{};
+    for (uint32_t map = 0; map < kTextureMaps; map++) {
+        g_state_cache.texture[map] = ~0u;
+        g_state_cache.sampler[map] = ~0u;
+    }
+}
+
 Device g_device;
 PendingBatch g_pending;
 TexturePack g_pack;
@@ -839,7 +867,7 @@ std::string tev_fragment_source() {
 }
 
 bool link(Program& program, const std::string& vertex, const std::string& fragment) {
-    GLuint vs = compile_stage(GL_VERTEX_SHADER, vertex);
+    invalidate_gl_cache();    GLuint vs = compile_stage(GL_VERTEX_SHADER, vertex);
     GLuint fs = compile_stage(GL_FRAGMENT_SHADER, fragment);
     if (!vs || !fs) {
         return false;
@@ -864,7 +892,7 @@ bool link(Program& program, const std::string& vertex, const std::string& fragme
 }
 
 void bind_samplers(GLuint program, std::initializer_list<const char*> names) {
-    gl.UseProgram(program);
+    invalidate_gl_cache();    gl.UseProgram(program);
     GLint unit = 0;
     for (const char* name : names) {
         gl.Uniform1i(gl.GetUniformLocation(program, name), unit++);
@@ -884,7 +912,7 @@ bool has_extension(const char* name) {
 }
 
 void set_texture_levels(GLuint texture, uint32_t levels) {
-    gl.BindTexture(GL_TEXTURE_2D, texture);
+    invalidate_gl_cache();    gl.BindTexture(GL_TEXTURE_2D, texture);
     gl.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_BASE_LEVEL, 0);
     gl.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAX_LEVEL, static_cast<GLint>(levels) - 1);
     gl.TexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, levels > 1 ? GL_LINEAR_MIPMAP_LINEAR : GL_LINEAR);
@@ -892,7 +920,7 @@ void set_texture_levels(GLuint texture, uint32_t levels) {
 }
 
 bool create_render_texture(Target& target, uint32_t width, uint32_t height) {
-    gl.GenTextures(1, &target.texture);
+    invalidate_gl_cache();    gl.GenTextures(1, &target.texture);
     set_texture_levels(target.texture, 1);
     gl.TexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, static_cast<GLsizei>(width), static_cast<GLsizei>(height), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     gl.GenFramebuffers(1, &target.framebuffer);
@@ -914,7 +942,7 @@ void release_target(Target& target) {
 }
 
 bool create_efb() {
-    gl.GenTextures(1, &g_device.efb_color);
+    invalidate_gl_cache();    gl.GenTextures(1, &g_device.efb_color);
     set_texture_levels(g_device.efb_color, 1);
     gl.TexImage2D(GL_TEXTURE_2D, 0, GL_RGBA8, scaled(kEfbWidth), scaled(kEfbHeight), 0, GL_RGBA, GL_UNSIGNED_BYTE, nullptr);
     gl.GenTextures(1, &g_device.efb_depth);
@@ -952,7 +980,7 @@ GLuint make_sampler(GLint min_filter, GLint mag_filter, GLint wrap) {
 }
 
 bool create_pipeline() {
-    GLint major = 0;
+    invalidate_gl_cache();    GLint major = 0;
     GLint minor = 0;
     gl.GetIntegerv(GL_MAJOR_VERSION, &major);
     gl.GetIntegerv(GL_MINOR_VERSION, &minor);
@@ -1061,7 +1089,7 @@ void APIENTRY report_gl_message(GLenum, GLenum type, GLuint id, GLenum severity,
 }
 
 bool initialize() {
-    if (g_device.ready) {
+    invalidate_gl_cache();    if (g_device.ready) {
         return true;
     }
     if (g_device.failed) {
@@ -1115,7 +1143,7 @@ void note_texture(uint32_t map, uint32_t address, uint32_t width, uint32_t heigh
 }
 
 GLuint upload_levels(const std::vector<std::vector<uint32_t>>& images, uint32_t width, uint32_t height, bool generate) {
-    GLuint texture = 0;
+    invalidate_gl_cache();    GLuint texture = 0;
     gl.GenTextures(1, &texture);
     gl.BindTexture(GL_TEXTURE_2D, texture);
     for (size_t level = 0; level < images.size(); level++) {
@@ -1393,8 +1421,16 @@ void apply_depth(uint32_t word) {
 }
 
 void bind_efb() {
-    gl.BindFramebuffer(GL_FRAMEBUFFER, g_device.efb_framebuffer);
-    gl.Viewport(0, 0, scaled(kEfbWidth), scaled(kEfbHeight));
+    GlStateCache& cache = g_state_cache;
+    if (cache.framebuffer != g_device.efb_framebuffer) {
+        gl.BindFramebuffer(GL_FRAMEBUFFER, g_device.efb_framebuffer);
+        cache.framebuffer = g_device.efb_framebuffer;
+    }
+    const int vw = scaled(kEfbWidth), vh = scaled(kEfbHeight);
+    if (cache.viewport[0] != 0 || cache.viewport[1] != 0 || cache.viewport[2] != vw || cache.viewport[3] != vh) {
+        gl.Viewport(0, 0, vw, vh);
+        cache.viewport[0] = 0; cache.viewport[1] = 0; cache.viewport[2] = vw; cache.viewport[3] = vh;
+    }
 }
 
 void flush_pending() {
@@ -1416,10 +1452,20 @@ void flush_pending() {
     gl.BindBufferRange(GL_UNIFORM_BUFFER, 0, g_device.constants, constant_offset, sizeof(Constants));
     g_constant_cursor++;
     bind_efb();
+    GlStateCache& cache = g_state_cache;
     for (uint32_t map = 0; map < kTextureMaps; map++) {
-        gl.ActiveTexture(GL_TEXTURE0 + map);
-        gl.BindTexture(GL_TEXTURE_2D, pending.views[map]);
-        gl.BindSampler(map, pending.samplers[map]);
+        if (cache.active_unit != map) {
+            gl.ActiveTexture(GL_TEXTURE0 + map);
+            cache.active_unit = map;
+        }
+        if (cache.texture[map] != pending.views[map]) {
+            gl.BindTexture(GL_TEXTURE_2D, pending.views[map]);
+            cache.texture[map] = pending.views[map];
+        }
+        if (cache.sampler[map] != pending.samplers[map]) {
+            gl.BindSampler(map, pending.samplers[map]);
+            cache.sampler[map] = pending.samplers[map];
+        }
     }
     int left = static_cast<int>(((pending.top_left >> 12) & 0x7FF) - scissor_offset_x(pending.scissor_offset));
     int top = static_cast<int>((pending.top_left & 0x7FF) - scissor_offset_y(pending.scissor_offset));
@@ -1429,13 +1475,39 @@ void flush_pending() {
     top = std::max(top, 0);
     right = std::min(right, kEfbWidth);
     bottom = std::min(bottom, kEfbHeight);
-    gl.Enable(GL_SCISSOR_TEST);
-    gl.Scissor(scaled(left), scaled(top), std::max(0, scaled(right - left)), std::max(0, scaled(bottom - top)));
-    apply_blend(pending.blend);
-    apply_depth(pending.depth);
-    gl.UseProgram(pending.early_depth ? g_device.early_tev.id : g_device.tev.id);
-    gl.BindVertexArray(g_device.tev_layout);
-    gl.BindBuffer(GL_ARRAY_BUFFER, g_device.vertex_buffer);
+    if (!cache.scissor_on) {
+        gl.Enable(GL_SCISSOR_TEST);
+        cache.scissor_on = true;
+    }
+    const int sx = scaled(left), sy = scaled(top);
+    const int sw = std::max(0, scaled(right - left)), sh = std::max(0, scaled(bottom - top));
+    if (cache.scissor[0] != sx || cache.scissor[1] != sy || cache.scissor[2] != sw || cache.scissor[3] != sh) {
+        gl.Scissor(sx, sy, sw, sh);
+        cache.scissor[0] = sx; cache.scissor[1] = sy; cache.scissor[2] = sw; cache.scissor[3] = sh;
+    }
+    if (!cache.blend_valid || cache.blend_word != pending.blend) {
+        apply_blend(pending.blend);
+        cache.blend_valid = true;
+        cache.blend_word = pending.blend;
+    }
+    if (!cache.depth_valid || cache.depth_word != pending.depth) {
+        apply_depth(pending.depth);
+        cache.depth_valid = true;
+        cache.depth_word = pending.depth;
+    }
+    const GLuint program = pending.early_depth ? g_device.early_tev.id : g_device.tev.id;
+    if (cache.program != program) {
+        gl.UseProgram(program);
+        cache.program = program;
+    }
+    if (cache.vao != g_device.tev_layout) {
+        gl.BindVertexArray(g_device.tev_layout);
+        cache.vao = g_device.tev_layout;
+    }
+    if (cache.array_buffer != g_device.vertex_buffer) {
+        gl.BindBuffer(GL_ARRAY_BUFFER, g_device.vertex_buffer);
+        cache.array_buffer = g_device.vertex_buffer;
+    }
     size_t total = pending.vertices.size();
     size_t offset = 0;
     while (offset < total) {
@@ -1455,7 +1527,7 @@ void flush_pending() {
 }
 
 void plain_state() {
-    gl.Disable(GL_BLEND);
+    invalidate_gl_cache();    gl.Disable(GL_BLEND);
     gl.Disable(GL_DEPTH_TEST);
     gl.Disable(GL_SCISSOR_TEST);
     gl.ColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
@@ -1463,7 +1535,7 @@ void plain_state() {
 }
 
 void use_fullscreen(const Program& program, float flip) {
-    gl.UseProgram(program.id);
+    invalidate_gl_cache();    gl.UseProgram(program.id);
     gl.Uniform1f(program.flip, flip);
 }
 
@@ -1544,7 +1616,7 @@ void invalidate_textures() {
 }
 
 void release_copy(CopiedTexture& entry) {
-    release_target(entry.converted);
+    invalidate_gl_cache();    release_target(entry.converted);
     entry.view = 0;
 }
 
@@ -1598,7 +1670,7 @@ bool run_copy(const Target& target, uint32_t target_width, uint32_t target_heigh
 }
 
 GLuint take_buffer() {
-    if (!g_device.free_buffers.empty()) {
+    invalidate_gl_cache();    if (!g_device.free_buffers.empty()) {
         GLuint buffer = g_device.free_buffers.back();
         g_device.free_buffers.pop_back();
         return buffer;
@@ -1616,7 +1688,7 @@ constexpr size_t kGuardSamples = 1024;
 void complete_write_backs(bool wait, bool aged = true);
 
 uint64_t range_guard(uint32_t address, size_t size) {
-    if (size < 8) {
+    invalidate_gl_cache();    if (size < 8) {
         return 0;
     }
     const uint8_t* data = host(address);
@@ -1672,7 +1744,7 @@ bool queue_write_back(uint32_t address, uint32_t stride, int x, int y, int width
 }
 
 bool write_back(const PendingWriteBack& pending, bool wait, bool& stale) {
-    stale = false;
+    invalidate_gl_cache();    stale = false;
     auto wait_start = std::chrono::steady_clock::now();
     GLenum status = gl.ClientWaitSync(pending.fence, GL_SYNC_FLUSH_COMMANDS_BIT, wait ? kWaitForever : 0);
     if (status == GL_TIMEOUT_EXPIRED) {
@@ -1858,7 +1930,7 @@ void copy_to_framebuffer(int x, int y, int width, int height, bool depth, const 
 }
 
 void apply_scale() {
-    int scale = requested_scale();
+    invalidate_gl_cache();    int scale = requested_scale();
     if (scale == g_scale) {
         return;
     }
@@ -1889,7 +1961,7 @@ void apply_scale() {
 }
 
 void upload_image(GLuint& texture, uint32_t& width, uint32_t& height, const options::Image& image) {
-    if (image.pixels.size() != static_cast<size_t>(image.width) * image.height || image.width == 0 || image.height == 0) {
+    invalidate_gl_cache();    if (image.pixels.size() != static_cast<size_t>(image.width) * image.height || image.width == 0 || image.height == 0) {
         return;
     }
     if (!texture) {
@@ -1904,7 +1976,7 @@ void upload_image(GLuint& texture, uint32_t& width, uint32_t& height, const opti
 }
 
 void draw_titlebar(int client_width, int client_height, int bar) {
-    options::Image image;
+    invalidate_gl_cache();    options::Image image;
     if (titlebar::take(g_device.bar_version, image)) {
         upload_image(g_device.bar_texture, g_device.bar_width, g_device.bar_height, image);
     }
@@ -1920,7 +1992,7 @@ void draw_titlebar(int client_width, int client_height, int bar) {
 }
 
 void draw_overlay(int client_width, int client_height) {
-    options::Image image;
+    invalidate_gl_cache();    options::Image image;
     if (options::take_overlay(g_device.overlay_version, image, g_device.overlay_visible) && !image.pixels.empty()) {
         upload_image(g_device.overlay_texture, g_device.overlay_width, g_device.overlay_height, image);
     }
@@ -1944,7 +2016,7 @@ void draw_overlay(int client_width, int client_height) {
 }
 
 bool present_frame(void* window_handle, double aspect) {
-    if (!g_device.ready || !g_device.frame.texture || !window_handle) {
+    invalidate_gl_cache();    if (!g_device.ready || !g_device.frame.texture || !window_handle) {
         return false;
     }
     SDL_Window* window = static_cast<SDL_Window*>(window_handle);
@@ -1982,7 +2054,7 @@ bool present_frame(void* window_handle, double aspect) {
 }
 
 bool read_target(GLuint framebuffer, uint32_t width, uint32_t height, std::vector<uint32_t>& pixels) {
-    std::vector<uint8_t> bytes(static_cast<size_t>(width) * height * 4);
+    invalidate_gl_cache();    std::vector<uint8_t> bytes(static_cast<size_t>(width) * height * 4);
     gl.BindFramebuffer(GL_FRAMEBUFFER, framebuffer);
     gl.ReadPixels(0, 0, static_cast<GLsizei>(width), static_cast<GLsizei>(height), GL_RGBA, GL_UNSIGNED_BYTE, bytes.data());
     pixels.resize(static_cast<size_t>(width) * height);
@@ -2033,7 +2105,7 @@ bool read_frame(std::vector<uint32_t>& pixels, uint32_t& width, uint32_t& height
 }
 
 void clear(int x, int y, int width, int height) {
-    if (!initialize()) {
+    invalidate_gl_cache();    if (!initialize()) {
         return;
     }
     flush_pending();
