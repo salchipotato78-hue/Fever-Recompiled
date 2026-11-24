@@ -50,6 +50,9 @@ namespace {
 
 bool is_gles();
 
+// Verdadero si el renderer puede usar doble fuente de blend (SRC1_*). En escritorio siempre.
+bool g_dual_source = true;
+
 struct Gl {
 #define WP_GL_MEMBER(name) decltype(&::gl##name) name = nullptr;
     WP_GL_FUNCTIONS(WP_GL_MEMBER)
@@ -785,7 +788,7 @@ std::string adapt_glsl(GLenum type, const std::string& source) {
     }
     // #extension debe ir antes de cualquier token que no sea preprocesador (precision incluido).
     std::string header = "#version 320 es\n";
-    if (type == GL_FRAGMENT_SHADER) {
+    if (type == GL_FRAGMENT_SHADER && source.find("index = 1") != std::string::npos) {
         header += "#extension GL_EXT_blend_func_extended : require\n";
     }
     header += "precision highp float;\nprecision highp int;\nprecision highp sampler2D;\n";
@@ -808,6 +811,27 @@ GLuint compile_stage(GLenum type, const std::string& raw_source) {
         return 0;
     }
     return shader;
+}
+
+// Fuente del fragment TEV. Sin doble fuente de blend (GLES sin EXT_blend_func_extended) solo se
+// escribe out_color; los factores SRC1 de gl_factor pasan a SRC, que es el mismo valor en la mayoría de casos.
+std::string tev_fragment_source() {
+    std::string s = kTevFragment;
+    if (g_dual_source) {
+        return s;
+    }
+    auto replace_all = [&s](const std::string& from, const std::string& to) {
+        for (size_t pos = s.find(from); pos != std::string::npos; pos = s.find(from, pos + to.size())) {
+            s.replace(pos, from.size(), to);
+        }
+    };
+    replace_all("layout(location = 0, index = 0) out vec4 out_color;", "layout(location = 0) out vec4 out_color;");
+    replace_all("layout(location = 0, index = 1) out vec4 out_blend;", "");
+    replace_all("out_blend = vec4(result) / 255.0;", "");
+    if (s.find("out_blend") != std::string::npos) {
+        std::fprintf(stderr, "tev fragment: out_blend could not be removed for the GLES fallback\n");
+    }
+    return s;
 }
 
 bool link(Program& program, const std::string& vertex, const std::string& fragment) {
@@ -936,7 +960,11 @@ bool create_pipeline() {
         gl.ClipControl(GL_LOWER_LEFT, GL_ZERO_TO_ONE);
         g_device.clip_control = true;
     }
-    std::string fragment = std::string("#version 410 core\n") + kTevFragment;
+    g_dual_source = !is_gles() || has_extension("GL_EXT_blend_func_extended");
+    if (!g_dual_source) {
+        std::fprintf(stderr, "GL_EXT_blend_func_extended is missing: using single-source blending\n");
+    }
+    std::string fragment = std::string("#version 410 core\n") + tev_fragment_source();
     if (!link(g_device.tev, kTevVertex, fragment)) {
         return false;
     }
@@ -1308,11 +1336,11 @@ GLenum gl_factor(BlendFactor factor) {
     case BlendFactor::InverseDestinationAlpha:
         return GL_ONE_MINUS_DST_ALPHA;
     case BlendFactor::TevColor:
-        return GL_SRC1_COLOR;
+        return g_dual_source ? GL_SRC1_COLOR : GL_SRC_COLOR;
     case BlendFactor::TevAlpha:
-        return GL_SRC1_ALPHA;
+        return g_dual_source ? GL_SRC1_ALPHA : GL_SRC_ALPHA;
     case BlendFactor::InverseTevAlpha:
-        return GL_ONE_MINUS_SRC1_ALPHA;
+        return g_dual_source ? GL_ONE_MINUS_SRC1_ALPHA : GL_ONE_MINUS_SRC_ALPHA;
     }
     return GL_ONE;
 }
