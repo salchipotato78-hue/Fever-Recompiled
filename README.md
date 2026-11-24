@@ -1,10 +1,8 @@
-# rhf-port
+# Fever Recompiled
 
-Port de **Rhythm Heaven Fever** (Wii, NTSC-U, ID `SOME01`) usando el motor de
-[wiiparty-recomp](https://github.com/arelkair/wiiparty-recomp), con el objetivo de llevarlo a Android.
+Fever Recompiled is a native static recompilation of **Rhythm Heaven Fever** (Wii, NTSC-U, ID `SOME01`) for Android arm64-v8a
 
-> **Estado:** el juego arranca en PC y llega a inicializar el sistema (IOS). Todavía no está verificado
-> que se pueda jugar, y el port a Android no ha empezado.
+> **Early Stage** The game boots and it can be played but has some issues and bugs
 
 ## Aviso legal
 
