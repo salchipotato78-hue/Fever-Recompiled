@@ -1,6 +1,7 @@
 package com.rhf.port;
 
 import android.content.Context;
+import android.hardware.input.InputManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
@@ -8,6 +9,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.DisplayMetrics;
+import android.view.InputDevice;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
@@ -56,8 +58,11 @@ public class TouchOverlay extends View {
     private final float unit;   // tamaño base de botón en píxeles
     private final float margin;
 
+    private final InputManager inputManager;
+
     public TouchOverlay(Context context) {
         super(context);
+        inputManager = (InputManager) context.getSystemService(Context.INPUT_SERVICE);
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
         unit = 56f * dm.density;
         margin = 16f * dm.density;
@@ -183,7 +188,9 @@ public class TouchOverlay extends View {
     /** True when the player is in a course or on the map with no menu up (runtime, GameActivity-style). */
     private static native boolean nativeInGame();
 
-    private boolean visible = true;        // false en menús: no se dibujan ni consumen toques
+    private boolean gameVisible = true;   // lo que dice el motor: en gameplay y sin menú
+    private boolean padConnected = false; // hay un mando conectado: el touch se oculta
+    private boolean visible = true;       // resultado final: se dibuja y consume toques
     private boolean nativeMissing = false; // el motor aún no exporta nativeInGame: siempre visibles
 
     private final Runnable visibilityPoll = new Runnable() {
@@ -194,16 +201,41 @@ public class TouchOverlay extends View {
         }
     };
 
+    // Un mando conectado (o desconectado) cambia la visibilidad del touch al momento.
+    private final InputManager.InputDeviceListener deviceListener = new InputManager.InputDeviceListener() {
+        @Override
+        public void onInputDeviceAdded(int deviceId) {
+            updatePad();
+        }
+
+        @Override
+        public void onInputDeviceRemoved(int deviceId) {
+            updatePad();
+        }
+
+        @Override
+        public void onInputDeviceChanged(int deviceId) {
+            updatePad();
+        }
+    };
+
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
         removeCallbacks(visibilityPoll);
         post(visibilityPoll);
+        if (inputManager != null) {
+            inputManager.registerInputDeviceListener(deviceListener, null);
+        }
+        updatePad();
     }
 
     @Override
     protected void onDetachedFromWindow() {
         removeCallbacks(visibilityPoll);
+        if (inputManager != null) {
+            inputManager.unregisterInputDeviceListener(deviceListener);
+        }
         super.onDetachedFromWindow();
     }
 
@@ -216,10 +248,35 @@ public class TouchOverlay extends View {
                 nativeMissing = true;   // sin el export, los botones se quedan como antes
             }
         }
-        if (inGame == visible) return;
-        visible = inGame;
+        gameVisible = inGame;
+        applyVisibility();
+    }
+
+    private void updatePad() {
+        padConnected = hasGamepad();
+        applyVisibility();
+    }
+
+    /** Hay algún mando (gamepad o joystick) conectado que no sea virtual. */
+    private boolean hasGamepad() {
+        for (int id : InputDevice.getDeviceIds()) {
+            InputDevice device = InputDevice.getDevice(id);
+            if (device == null || device.isVirtual()) continue;
+            int sources = device.getSources();
+            if ((sources & InputDevice.SOURCE_GAMEPAD) == InputDevice.SOURCE_GAMEPAD
+                    || (sources & InputDevice.SOURCE_JOYSTICK) == InputDevice.SOURCE_JOYSTICK) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private void applyVisibility() {
+        boolean now = gameVisible && !padConnected;
+        if (now == visible) return;
+        visible = now;
         if (!visible) {
-            // Al salir del gameplay se sueltan los botones: no queda ninguna tecla pulsada.
+            // Al ocultarse se sueltan los botones: no queda ninguna tecla pulsada.
             releaseAll();
             fingers.clear();
         }

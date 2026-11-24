@@ -84,19 +84,13 @@ jobs:
           [ -f data/boot.bin ] && cp data/boot.bin engine/games/rhf/extracted/sys/boot.bin || true
           python3 tools/make_analysis.py data/symbols.txt engine/games/rhf/analysis
 
-      - name: Localizar el microcódigo de DSP (AX) en la DOL
-        run: |
-          set -e
-          python3 -m pip install --quiet numpy
-          python3 tools/find_dsp_ucode.py data/main.dol engine/games/rhf/analysis/dsp_ucode.csv
-
       - name: Clave de la traducción (caché)
         id: tkey
         run: |
           set -e
           GAME_TREE=$(git rev-parse "HEAD:games/rhf")
           TOOL_HASH=$(sha256sum tools/make_analysis.py | cut -c1-16)
-          echo "key=translated-v2-rhf-${DOL_SHA256:0:16}-${GAME_TREE:0:16}-${TOOL_HASH}-${ENGINE_SHA:0:12}" >> "$GITHUB_OUTPUT"
+          echo "key=translated-rhf-${DOL_SHA256:0:16}-${GAME_TREE:0:16}-${TOOL_HASH}-${ENGINE_SHA:0:12}" >> "$GITHUB_OUTPUT"
 
       - name: Restaurar la traducción guardada
         id: gen
@@ -114,7 +108,6 @@ jobs:
           set -e
           python3 -m pip install --quiet numpy
           python3 recompiler/recomp.py
-          python3 recompiler/dsp/recomp_dsp.py
 
       - name: Guardar la traducción
         if: steps.gen.outputs.cache-hit != 'true'
@@ -138,7 +131,8 @@ jobs:
           cmake -S . -B build/android -G Ninja \
             -DCMAKE_TOOLCHAIN_FILE=$ANDROID_NDK_HOME/build/cmake/android.toolchain.cmake \
             -DANDROID_ABI=arm64-v8a -DANDROID_PLATFORM=android-29 \
-            -DCMAKE_BUILD_TYPE=Release -DWP_GAME=rhf 2>&1 | tee ../build-config.log
+            -DCMAKE_BUILD_TYPE=Release -DWP_GAME=rhf \
+            -DWP_CODE_OPT="${{ vars.RHF_CODE_OPT || '-O1' }}" 2>&1 | tee ../build-config.log
           cmake --build build/android --target rhf 2>&1 | tee ../build.log
 
       - name: Copiar libmain.so y las clases Java de SDL3 al proyecto Android
