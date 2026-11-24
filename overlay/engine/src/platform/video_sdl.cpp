@@ -151,6 +151,8 @@ Window g_state;
 std::atomic<SDL_Window*> g_window{nullptr};
 std::atomic<bool> g_screenshot_requested{false};
 std::atomic<bool> g_title_changed{false};
+// Sube cada vez que Android devuelve la app a primer plano: la superficie EGL puede haber cambiado.
+std::atomic<uint32_t> g_surface_epoch{0};
 double g_aspect = kStandardAspect;
 std::mutex g_title_mutex;
 std::string g_title;
@@ -294,6 +296,10 @@ void handle_event(SDL_Window* window, const SDL_Event& event) {
     }
     case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED:
         options::refresh_menu(window);
+        return;
+    case SDL_EVENT_DID_ENTER_FOREGROUND:
+    case SDL_EVENT_WINDOW_RESTORED:
+        g_surface_epoch++;
         return;
     default:
         return;
@@ -484,6 +490,17 @@ void present_on_gpu(SDL_Window* window, double aspect) {
     }
 }
 
+}
+
+// True once after each return to foreground. Only the render thread calls this.
+bool surface_recreated() {
+    static uint32_t seen = 0;
+    uint32_t epoch = g_surface_epoch.load();
+    if (epoch == seen) {
+        return false;
+    }
+    seen = epoch;
+    return true;
 }
 
 bool make_gl_current() {

@@ -30,6 +30,10 @@
 #include "wp/settings.h"
 #include "wp/video.h"
 
+namespace wp::video {
+bool surface_recreated();
+}
+
 namespace wp::gx::render {
 
 void finish_write_backs();
@@ -2052,7 +2056,15 @@ void draw_overlay(int client_width, int client_height) {
 }
 
 bool present_frame(void* window_handle, double aspect) {
-    invalidate_gl_cache();    if (!g_device.ready || !g_device.frame.texture || !window_handle) {
+    invalidate_gl_cache();
+    if (g_device.ready && window_handle && video::surface_recreated()) {
+        // Volvió de segundo plano: Android pudo recrear la superficie. Se vuelve a enlazar el contexto
+        // antes de dibujar; si no, el frame se pierde y la pantalla se queda en negro.
+        if (!video::make_gl_current()) {
+            std::fputs("could not rebind the OpenGL context after resume\n", stderr);
+        }
+    }
+    if (!g_device.ready || !g_device.frame.texture || !window_handle) {
         return false;
     }
     SDL_Window* window = static_cast<SDL_Window*>(window_handle);
