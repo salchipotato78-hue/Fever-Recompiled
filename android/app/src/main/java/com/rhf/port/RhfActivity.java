@@ -1,5 +1,6 @@
 package com.rhf.port;
 
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
@@ -35,9 +36,20 @@ public class RhfActivity extends SDLActivity {
             // Sin estas variables el motor usa la carpeta actual; el juego lo indicará si no encuentra datos.
         }
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         // Botones táctiles encima de la superficie de SDL: cruceta, A, B y +.
         addContentView(new TouchOverlay(this), new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+    }
+
+    /**
+     * Solo horizontal. SDL pide orientaciones propias al crear la ventana (y puede permitir vertical
+     * con ventanas redimensionables), así que aquí se ignoran todas y se fuerza landscape.
+     * Permite girar entre las dos horizontales (sensor), nunca vertical.
+     */
+    @Override
+    public void setRequestedOrientation(int requestedOrientation) {
+        super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
     }
 
     @Override
