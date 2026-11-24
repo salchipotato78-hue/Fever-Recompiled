@@ -1,4 +1,3 @@
-name: Android APK (Rhythm Heaven Fever)
 
 # Compila Rhythm Heaven Fever para Android en GitHub Actions, con el mismo modelo que WarioRecomp:
 # el juego NO está en el repositorio. El DOL llega por un secreto de tu propio repositorio privado.
