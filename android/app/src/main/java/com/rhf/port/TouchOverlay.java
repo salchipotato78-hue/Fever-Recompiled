@@ -22,8 +22,8 @@ import java.util.List;
  *  - A y B: tocar el ritmo y confirmar / cancelar.
  *  - +: pausa.
  *
- * Cada botón envía un evento de tecla de Android al motor a través de SDLActivity, igual que un
- * gamepad. Si el motor no responde a un botón, revisa la tabla de mapeo en el motor (no aquí).
+ * Cada botón envía una tecla de Android que SDL traduce a la misma tecla que usa el motor por defecto
+ * (src/input/keymap.cpp): A = Enter, B = Backspace, + = NumPlus, cruceta = flechas.
  */
 public class TouchOverlay extends View {
 
@@ -57,9 +57,9 @@ public class TouchOverlay extends View {
         buttons.add(new Button("\u25BC", KeyEvent.KEYCODE_DPAD_DOWN, false));
         buttons.add(new Button("\u25C0", KeyEvent.KEYCODE_DPAD_LEFT, false));
         buttons.add(new Button("\u25B6", KeyEvent.KEYCODE_DPAD_RIGHT, false));
-        buttons.add(new Button("A", KeyEvent.KEYCODE_BUTTON_A, true));
-        buttons.add(new Button("B", KeyEvent.KEYCODE_BUTTON_B, false));
-        buttons.add(new Button("+", KeyEvent.KEYCODE_BUTTON_START, false));
+        buttons.add(new Button("A", KeyEvent.KEYCODE_ENTER, true));
+        buttons.add(new Button("B", KeyEvent.KEYCODE_DEL, false));
+        buttons.add(new Button("+", KeyEvent.KEYCODE_NUMPAD_ADD, false));
 
         fill.setColor(Color.WHITE);
         fill.setAlpha(60);
