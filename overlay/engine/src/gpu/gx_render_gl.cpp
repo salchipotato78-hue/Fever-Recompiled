@@ -793,6 +793,13 @@ uint64_t g_texture_epoch = 0;
 int g_scale = 1;
 uint32_t g_vertex_cursor = kVertexCapacity;
 uint32_t g_batches = 0;
+// Perfil del batch (solo con WP_LOG_GX): tiempo por sección y subidas de textura.
+struct BatchProfile {
+    double uniform_us = 0, state_us = 0, vertex_us = 0, draw_us = 0;
+    uint32_t samples = 0;
+    uint32_t texture_uploads = 0;
+};
+BatchProfile g_profile;
 uint32_t g_batch_vertices = 0;
 double g_batch_seconds = 0.0;
 uint32_t g_write_backs = 0;
@@ -800,6 +807,20 @@ double g_write_back_seconds = 0.0;
 
 int scaled(int value) {
     return value * g_scale;
+}
+
+// Escribe un rango del buffer sin sincronizar con los draws que ya lo usan. Con glBufferSubData, el driver
+// (sobre todo Mali) puede crear copias o esperar a la GPU; el khronos wiki (Buffer Object Streaming) y los
+// backends de Dolphin y Citra usan este mapeo para el streaming. Si el mapeo falla, cae a BufferSubData.
+void stream_write(GLenum target, GLintptr offset, GLsizeiptr size, const void* data) {
+    void* destination = gl.MapBufferRange(target, offset, size,
+                                          GL_MAP_WRITE_BIT | GL_MAP_UNSYNCHRONIZED_BIT | GL_MAP_INVALIDATE_RANGE_BIT);
+    if (!destination) {
+        gl.BufferSubData(target, offset, size, data);
+        return;
+    }
+    std::memcpy(destination, data, static_cast<size_t>(size));
+    gl.UnmapBuffer(target);
 }
 
 bool is_gles() {
@@ -1274,6 +1295,7 @@ GLuint texture_for(uint32_t map) {
         return use(entry);
     }
     flush_pending();
+    g_profile.texture_uploads++;
     release_cached(entry);
     entry.custom = false;
     entry.owned = true;
@@ -1441,6 +1463,7 @@ void flush_pending() {
     auto started = std::chrono::steady_clock::now();
     g_batches++;
     g_batch_vertices += static_cast<uint32_t>(pending.vertices.size());
+    auto t_uniform = started;
     gl.BindBuffer(GL_UNIFORM_BUFFER, g_device.constants);
     if (g_constant_cursor >= kConstantSlots) {
         // Al dar la vuelta se reasigna (orfan) para no tocar slots que la GPU aún usa.
@@ -1448,9 +1471,11 @@ void flush_pending() {
         g_constant_cursor = 0;
     }
     GLintptr constant_offset = static_cast<GLintptr>(g_constant_cursor) * kConstantStride;
-    gl.BufferSubData(GL_UNIFORM_BUFFER, constant_offset, sizeof(Constants), &pending.constants);
+    stream_write(GL_UNIFORM_BUFFER, constant_offset, sizeof(Constants), &pending.constants);
     gl.BindBufferRange(GL_UNIFORM_BUFFER, 0, g_device.constants, constant_offset, sizeof(Constants));
     g_constant_cursor++;
+    auto t_state = std::chrono::steady_clock::now();
+    g_profile.uniform_us += std::chrono::duration<double, std::micro>(t_state - t_uniform).count();
     bind_efb();
     GlStateCache& cache = g_state_cache;
     for (uint32_t map = 0; map < kTextureMaps; map++) {
@@ -1508,6 +1533,8 @@ void flush_pending() {
         gl.BindBuffer(GL_ARRAY_BUFFER, g_device.vertex_buffer);
         cache.array_buffer = g_device.vertex_buffer;
     }
+    auto t_vertex = std::chrono::steady_clock::now();
+    g_profile.state_us += std::chrono::duration<double, std::micro>(t_vertex - t_state).count();
     size_t total = pending.vertices.size();
     size_t offset = 0;
     while (offset < total) {
@@ -1516,14 +1543,23 @@ void flush_pending() {
             gl.BufferData(GL_ARRAY_BUFFER, kVertexCapacity * sizeof(ScreenVertex), nullptr, GL_STREAM_DRAW);
             g_vertex_cursor = 0;
         }
-        gl.BufferSubData(GL_ARRAY_BUFFER, static_cast<GLintptr>(g_vertex_cursor) * sizeof(ScreenVertex), batch * sizeof(ScreenVertex),
-                         pending.vertices.data() + offset);
+        stream_write(GL_ARRAY_BUFFER, static_cast<GLintptr>(g_vertex_cursor) * sizeof(ScreenVertex), batch * sizeof(ScreenVertex),
+                     pending.vertices.data() + offset);
         gl.DrawArrays(GL_TRIANGLES, static_cast<GLint>(g_vertex_cursor), static_cast<GLsizei>(batch));
         g_vertex_cursor += batch;
         offset += batch;
     }
+    auto t_end = std::chrono::steady_clock::now();
+    g_profile.vertex_us += std::chrono::duration<double, std::micro>(t_end - t_vertex).count();
+    g_profile.samples++;
+    if (g_log_gx && g_profile.samples >= 300) {
+        std::fprintf(stderr, "gx profile: per batch uniform %.1f us, state %.1f us, vertices+draw %.1f us, texture uploads %u\n",
+                     g_profile.uniform_us / g_profile.samples, g_profile.state_us / g_profile.samples,
+                     g_profile.vertex_us / g_profile.samples, g_profile.texture_uploads);
+        g_profile = BatchProfile{};
+    }
     pending.vertices.clear();
-    g_batch_seconds += std::chrono::duration<double>(std::chrono::steady_clock::now() - started).count();
+    g_batch_seconds += std::chrono::duration<double>(t_end - started).count();
 }
 
 void plain_state() {
