@@ -29,6 +29,7 @@ const Option kBaseOptions[] = {
     {"video.dump_textures", "0"},
     {"video.custom_textures", "1"},
     {"video.frame_blend", "0"},
+    {"video.frame_interpolation", "0"},   // 0/60 = apagado; 120, 180, 240 = FPS mostrados (experimental)
     {"input.gamepads", "1"},
     {"input.auto_grip", "1"},
     {"input.joycon_pairs", "1"},

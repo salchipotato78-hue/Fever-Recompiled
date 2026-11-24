@@ -51,8 +51,12 @@ public class OptionsActivity extends Activity {
                     GameOptions.setScale(this, scales[next]);
                 }));
         column.addView(optionButton(
-                () -> "Suavizado de movimiento: " + onOff(GameOptions.frameBlend(this)) + " (exp.)",
-                () -> GameOptions.setFrameBlend(this, !GameOptions.frameBlend(this))));
+                () -> {
+                    int fps = GameOptions.interpolationFps(this);
+                    return fps <= 60 ? "Interpolación: apagada"
+                            : "Interpolación: " + fps + " FPS (exp.)";
+                },
+                () -> GameOptions.cycleInterpolationFps(this)));
         column.addView(optionButton(
                 () -> "Texturas HD: " + onOff(GameOptions.customTextures(this)),
                 () -> GameOptions.setCustomTextures(this, !GameOptions.customTextures(this))));

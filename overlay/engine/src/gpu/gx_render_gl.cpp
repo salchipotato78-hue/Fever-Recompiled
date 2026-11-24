@@ -2058,15 +2058,27 @@ void draw_overlay(int client_width, int client_height) {
     gl.Disable(GL_BLEND);
 }
 
-// video.frame_blend (experimental): muestra mezclas de dos frames del juego entre retraces.
-bool frame_blend_enabled() {
-    static const settings::LiveFlag flag("video.frame_blend", "WP_FRAME_BLEND");
-    return flag();
+// video.frame_interpolation (experimental): 60 = apagado; 120, 180 o 240 FPS mostrados.
+// El juego sigue a 60 Hz (la lógica y el ritmo no cambian): cada frame nuevo se muestra N = destino/60
+// veces, con N-1 mezclas del frame anterior y el actual entre medias. Solo cambia lo que se ve.
+// video.frame_blend=1 (opción anterior, mezcla 50/50) equivale a 120 si no hay destino configurado.
+int interpolation_subframes() {
+    static const settings::LiveNumber target("video.frame_interpolation", "WP_FRAME_INTERPOLATION");
+    static const settings::LiveFlag legacy("video.frame_blend", "WP_FRAME_BLEND");
+    int fps = target();
+    if (fps <= 0 && legacy()) {
+        fps = 120;
+    }
+    if (fps < 120) {
+        return 1;
+    }
+    int subframes = fps / 60;
+    return subframes > 4 ? 4 : subframes;   // 120 -> 2, 180 -> 3, 240 -> 4
 }
 
-// Guarda el frame recién presentado para la siguiente mezcla. Solo cuando la opción está activa.
+// Guarda el frame recién presentado para la siguiente mezcla. Solo cuando la interpolación está activa.
 void keep_previous_frame() {
-    if (!frame_blend_enabled()) {
+    if (interpolation_subframes() <= 1) {
         g_device.previous_ready = false;
         return;
     }
@@ -2135,20 +2147,25 @@ bool present_frame(void* window_handle, double aspect) {
         gl.BindSampler(0, g_device.linear_sampler);
         gl.DrawArrays(GL_TRIANGLES, 0, 3);
     };
-    const bool blend = frame_blend_enabled() && g_device.previous_ready && g_device.previous.framebuffer &&
+    const int subframes = interpolation_subframes();
+    const bool blend = subframes > 1 && g_device.previous_ready && g_device.previous.framebuffer &&
                        g_device.previous.width == g_device.frame.width && g_device.previous.height == g_device.frame.height;
     if (blend) {
-        // Mezcla 50/50 del frame anterior y el actual. Se muestra un poco antes del frame nuevo
-        // (medio periodo de retrace), así el frame nuevo no aparece antes de lo que marca el juego.
-        present_pass([&] {
-            draw_texture(g_device.previous.texture);
-            gl.Enable(GL_BLEND);
-            gl.BlendColor(0, 0, 0, 0.5f);
-            gl.BlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
-            draw_texture(g_device.frame.texture);
-            gl.Disable(GL_BLEND);
-        });
-        std::this_thread::sleep_for(std::chrono::milliseconds(8));
+        // N-1 imágenes intermedias: mezcla con peso k/N del frame nuevo. Se reparten en el periodo de un
+        // frame del juego (16,7 ms); el frame nuevo va al final, así no aparece antes de lo que marca el juego.
+        const auto step = std::chrono::microseconds(16667 / subframes);
+        for (int k = 1; k < subframes; k++) {
+            const float weight = static_cast<float>(k) / static_cast<float>(subframes);
+            present_pass([&] {
+                draw_texture(g_device.previous.texture);
+                gl.Enable(GL_BLEND);
+                gl.BlendColor(0, 0, 0, weight);
+                gl.BlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
+                draw_texture(g_device.frame.texture);
+                gl.Disable(GL_BLEND);
+            });
+            std::this_thread::sleep_for(step);
+        }
     }
     present_pass([&] { draw_texture(g_device.frame.texture); });
     keep_previous_frame();

@@ -33,12 +33,25 @@ public final class GameOptions {
         prefs(context).edit().putInt("scale", scale).apply();
     }
 
-    public static boolean frameBlend(Context context) {
-        return prefs(context).getBoolean("frame_blend", false);
+    /** FPS que se muestran: 60 = apagado. 120, 180 y 240 interpolan frames (experimental). */
+    public static final int[] INTERPOLATION_FPS = {60, 120, 180, 240};
+
+    public static int interpolationFps(Context context) {
+        // Migración: la opción anterior era un interruptor (frame_blend); si estaba activa, equivale a 120.
+        int fallback = prefs(context).getBoolean("frame_blend", false) ? 120 : 60;
+        return prefs(context).getInt("interpolation_fps", fallback);
     }
 
-    public static void setFrameBlend(Context context, boolean on) {
-        prefs(context).edit().putBoolean("frame_blend", on).apply();
+    /** Pasa al siguiente valor de INTERPOLATION_FPS (y vuelve a 60 al final). */
+    public static void cycleInterpolationFps(Context context) {
+        int current = interpolationFps(context);
+        int next = INTERPOLATION_FPS[0];
+        for (int i = 0; i < INTERPOLATION_FPS.length; i++) {
+            if (INTERPOLATION_FPS[i] == current) {
+                next = INTERPOLATION_FPS[(i + 1) % INTERPOLATION_FPS.length];
+            }
+        }
+        prefs(context).edit().putInt("interpolation_fps", next).apply();
     }
 
     public static boolean customTextures(Context context) {
@@ -65,7 +78,7 @@ public final class GameOptions {
         text.append("[video]\n");
         text.append("scale=").append(scale(context)).append('\n');
         text.append("custom_textures=").append(customTextures(context) ? 1 : 0).append('\n');
-        text.append("frame_blend=").append(frameBlend(context) ? 1 : 0).append('\n');
+        text.append("frame_interpolation=").append(interpolationFps(context)).append('\n');
         text.append("\n[input]\n");
         text.append("gamepads=").append(gamepads(context) ? 1 : 0).append('\n');
         try (Writer out = new OutputStreamWriter(new FileOutputStream(file), "UTF-8")) {
