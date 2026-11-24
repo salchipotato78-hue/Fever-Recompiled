@@ -34,3 +34,10 @@ Orden cronológico de lo que se hizo y qué enseñó cada paso.
 8. **Controles táctiles (Android).** `TouchOverlay.java` añade cruceta, A, B y `+`, y los envía al motor como
    eventos de gamepad con `SDLActivity.onNativeKeyDown/Up`. Asumido: el motor lee esos códigos de tecla.
    Pendiente de prueba en el dispositivo.
+9. **Segunda ejecución y lectura del motor (commit dddb9ce, clonado desde GitHub).**
+   - El log nuevo es igual al anterior: mismas lecturas de disco, el último evento es a los 22 s (`RFL_DB.dat` no existe, -106).
+   - `fps` del log cuenta copias XFB de GX (`g_frames++` en `execute_copy`), no VI. Por tanto el juego sí emite comandos GX, unos 60 por segundo.
+   - `copy_to_framebuffer` del renderizador GL llama primero a `initialize()`, que registra "OpenGL renderer" y, si falla, "cannot initialise the OpenGL renderer". Ninguna de las dos líneas aparece. Es una contradicción que el log por sí solo no explica.
+   - Ramas posibles: (a) el backend de render no es el GL que se espera; (b) `initialize()` no termina de registrarse; (c) la ventana de SDL (`window_thread`) no se crea y `present()` no llega a dibujar.
+   - Pendiente: log con `WP_LOG_GX=1` (ya activado en RhfActivity para la siguiente prueba).
+10. **Barra de estado y de navegación ocultas.** `RhfActivity` oculta ambas barras al ganar foco (API 30+ con `WindowInsetsController`, API 29 con `SYSTEM_UI_FLAG_IMMERSIVE_STICKY`).
