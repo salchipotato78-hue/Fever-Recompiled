@@ -27,6 +27,8 @@ public class RhfActivity extends SDLActivity {
             java.io.File logDir = getExternalFilesDir(null);
             if (logDir == null) logDir = getFilesDir();
             Os.setenv("WP_LOG_FILE", new java.io.File(logDir, "rhf_log.txt").getAbsolutePath(), true);
+            // stderr en su propio archivo (rhf_stderr.txt): los mensajes de error de SDL/GL van ahí.
+            Os.setenv("WP_STDERR_FILE", new java.io.File(logDir, "rhf_stderr.txt").getAbsolutePath(), true);
             // Diagnóstico de video: registra los comandos GX para ver qué llega al renderizador.
             Os.setenv("WP_LOG_GX", "1", true);
         } catch (ErrnoException e) {

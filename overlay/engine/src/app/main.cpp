@@ -159,9 +159,13 @@ int main(int argc, char** argv) {
         if (chdir(home) != 0) std::fprintf(stderr, "no pude entrar a %s\n", home);
     }
 #endif
-    if (const char* log_path = std::getenv("WP_LOG_FILE")) {
+    if (std::getenv("WP_LOG_FILE")) {
         wp::log::write("boot", "log started");
-        std::freopen(log_path, "a", stderr);
+    }
+    // stderr va a su propio archivo. Si compartiera archivo con el log, las escrituras de ambos
+    // se pisarían (cada uno lleva su propio offset) y los mensajes de error se perderían.
+    if (const char* err_path = std::getenv("WP_STDERR_FILE")) {
+        std::freopen(err_path, "w", stderr);
     }
 #ifdef _WIN32
     SetUnhandledExceptionFilter(report_crash);
