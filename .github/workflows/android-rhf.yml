@@ -140,7 +140,14 @@ jobs:
           mkdir -p android/app/src/main/jniLibs/arm64-v8a android/app/src/main/java/org/libsdl
           cp engine/build/android/games/rhf/libmain.so android/app/src/main/jniLibs/arm64-v8a/
           cp -r engine/build/android/_deps/sdl3-src/android-project/app/src/main/java/org/libsdl/app android/app/src/main/java/org/libsdl/
+          # Quitar los símbolos de depuración: sin ellos, libmain.so pesa mucho menos.
+          "$ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/llvm-strip" --strip-debug android/app/src/main/jniLibs/arm64-v8a/libmain.so
           ls -la android/app/src/main/jniLibs/arm64-v8a/
+
+      # setup-gradle valida todos los gradle-wrapper.jar del espacio de trabajo. El de SDL no lo reconoce,
+      # y no hace falta: el proyecto usa Gradle 8.9 directamente.
+      - name: Quitar el wrapper de Gradle de SDL
+        run: rm -rf engine/build/android/_deps/sdl3-src/android-project/gradle
 
       - uses: gradle/actions/setup-gradle@v4
         with:
