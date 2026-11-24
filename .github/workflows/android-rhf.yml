@@ -134,6 +134,30 @@ jobs:
             -DCMAKE_BUILD_TYPE=Release -DWP_GAME=rhf 2>&1 | tee ../build-config.log
           cmake --build build/android --target rhf 2>&1 | tee ../build.log
 
+      - name: Copiar libmain.so y las clases Java de SDL3 al proyecto Android
+        run: |
+          set -e
+          mkdir -p android/app/src/main/jniLibs/arm64-v8a android/app/src/main/java/org/libsdl
+          cp engine/build/android/games/rhf/libmain.so android/app/src/main/jniLibs/arm64-v8a/
+          cp -r engine/build/android/_deps/sdl3-src/android-project/app/src/main/java/org/libsdl/app android/app/src/main/java/org/libsdl/
+          ls -la android/app/src/main/jniLibs/arm64-v8a/
+
+      - uses: gradle/actions/setup-gradle@v4
+        with:
+          gradle-version: "8.9"
+          build-root-directory: android
+
+      - name: Generar la APK
+        working-directory: android
+        run: gradle :app:assembleRelease --no-daemon --stacktrace
+
+      - name: Subir la APK (solo para el repositorio privado)
+        uses: actions/upload-artifact@v4
+        with:
+          name: rhf-apk
+          path: android/app/build/outputs/apk/release/*.apk
+          if-no-files-found: error
+
       - name: Guardar los logs de compilación
         if: always()
         uses: actions/upload-artifact@v4

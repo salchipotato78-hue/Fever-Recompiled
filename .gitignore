@@ -15,3 +15,9 @@ build_log.txt
 run_log.txt
 generated/
 toolkit/
+
+# Copiados durante la compilación de CI (no se versionan)
+android/app/src/main/jniLibs/
+android/app/src/main/java/org/libsdl/
+android/app/build/
+android/.gradle/
