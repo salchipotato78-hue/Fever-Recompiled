@@ -2160,7 +2160,7 @@ bool present_frame(void* window_handle, double aspect) {
                 draw_texture(g_device.previous.texture);
                 gl.Enable(GL_BLEND);
                 gl.BlendColor(0, 0, 0, weight);
-                gl.BlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
+                gl.BlendFuncSeparate(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA, GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
                 draw_texture(g_device.frame.texture);
                 gl.Disable(GL_BLEND);
             });
