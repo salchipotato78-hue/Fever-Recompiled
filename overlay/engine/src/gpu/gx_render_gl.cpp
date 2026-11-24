@@ -38,7 +38,7 @@ bool write_back_overlaps(uint32_t address, size_t size);
 namespace {
 
 #define WP_GL_FUNCTIONS(X)                                                                                                                                  \
-    X(ActiveTexture) X(AttachShader) X(BindBuffer) X(BindBufferBase) X(BindFramebuffer) X(BindSampler) X(BindTexture) X(BindVertexArray)              \
+    X(ActiveTexture) X(AttachShader) X(BindBuffer) X(BindBufferBase) X(BindBufferRange) X(BindFramebuffer) X(BindSampler) X(BindTexture) X(BindVertexArray)              \
     X(BlendEquationSeparate) X(BlendFuncSeparate) X(BufferData) X(BufferSubData) X(CheckFramebufferStatus) X(Clear) X(ClearColor)                \
     X(ColorMask) X(CompileShader) X(CreateProgram) X(CreateShader) X(DeleteFramebuffers) X(DeleteShader) X(DeleteTextures) X(DepthFunc)              \
     X(DepthMask) X(Disable) X(DrawArrays) X(Enable) X(EnableVertexAttribArray) X(FramebufferTexture2D) X(GenBuffers) X(GenFramebuffers)             \
@@ -91,6 +91,10 @@ bool load_functions() {
 }
 
 constexpr uint32_t kVertexCapacity = 1 << 16;
+// Anillo de constantes: un slot por batch, alineado a 256 bytes (límite de alineación de UBO en GL).
+constexpr uint32_t kConstantSlots = 256;
+constexpr GLintptr kConstantStride = ((sizeof(Constants) + 255) / 256) * 256;
+uint32_t g_constant_cursor = 0;
 
 const char* kFullscreenVertex = R"GLSL(#version 410 core
 uniform float flip;
@@ -1009,7 +1013,7 @@ bool create_pipeline() {
     }
     gl.GenBuffers(1, &g_device.constants);
     gl.BindBuffer(GL_UNIFORM_BUFFER, g_device.constants);
-    gl.BufferData(GL_UNIFORM_BUFFER, sizeof(Constants), nullptr, GL_STREAM_DRAW);
+    gl.BufferData(GL_UNIFORM_BUFFER, kConstantSlots * kConstantStride, nullptr, GL_STREAM_DRAW);
     gl.GenBuffers(1, &g_device.copy_constants);
     gl.BindBuffer(GL_UNIFORM_BUFFER, g_device.copy_constants);
     gl.BufferData(GL_UNIFORM_BUFFER, 80, nullptr, GL_STREAM_DRAW);
@@ -1402,8 +1406,15 @@ void flush_pending() {
     g_batches++;
     g_batch_vertices += static_cast<uint32_t>(pending.vertices.size());
     gl.BindBuffer(GL_UNIFORM_BUFFER, g_device.constants);
-    gl.BufferData(GL_UNIFORM_BUFFER, sizeof(Constants), &pending.constants, GL_STREAM_DRAW);
-    gl.BindBufferBase(GL_UNIFORM_BUFFER, 0, g_device.constants);
+    if (g_constant_cursor >= kConstantSlots) {
+        // Al dar la vuelta se reasigna (orfan) para no tocar slots que la GPU aún usa.
+        gl.BufferData(GL_UNIFORM_BUFFER, kConstantSlots * kConstantStride, nullptr, GL_STREAM_DRAW);
+        g_constant_cursor = 0;
+    }
+    GLintptr constant_offset = static_cast<GLintptr>(g_constant_cursor) * kConstantStride;
+    gl.BufferSubData(GL_UNIFORM_BUFFER, constant_offset, sizeof(Constants), &pending.constants);
+    gl.BindBufferRange(GL_UNIFORM_BUFFER, 0, g_device.constants, constant_offset, sizeof(Constants));
+    g_constant_cursor++;
     bind_efb();
     for (uint32_t map = 0; map < kTextureMaps; map++) {
         gl.ActiveTexture(GL_TEXTURE0 + map);
