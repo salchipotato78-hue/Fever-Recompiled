@@ -1,6 +1,9 @@
 package com.rhf.port;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.RectF;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -32,6 +35,8 @@ public class TouchOverlay extends View {
         final int keycode;
         final boolean big;
         float cx, cy, radius;
+        Bitmap bitmap;            // arte de Wario (A, B, +); null = círculo con texto
+        final RectF target = new RectF();
         int holders;              // cuántos dedos lo mantienen pulsado
         Button(String label, int keycode, boolean big) {
             this.label = label;
@@ -44,6 +49,7 @@ public class TouchOverlay extends View {
     private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint stroke = new Paint(Paint.ANTI_ALIAS_FLAG);
     private final Paint text = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
     private final float unit;   // tamaño base de botón en píxeles
     private final float margin;
 
@@ -73,7 +79,20 @@ public class TouchOverlay extends View {
         text.setTextSize(20f * dm.density);
         text.setFakeBoldText(true);
 
+        attachArt("A", R.drawable.btn_a);
+        attachArt("B", R.drawable.btn_b);
+        attachArt("+", R.drawable.btn_plus);
+
         setFocusable(false);
+    }
+
+    private void attachArt(String label, int resId) {
+        for (Button b : buttons) {
+            if (b.label.equals(label)) {
+                b.bitmap = BitmapFactory.decodeResource(getResources(), resId);
+                return;
+            }
+        }
     }
 
     @Override
@@ -108,6 +127,14 @@ public class TouchOverlay extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         for (Button b : buttons) {
+            if (b.bitmap != null) {
+                // Arte de Wario: un poco más grande que el área de toque y más opaco al pulsar.
+                float half = b.radius * 1.15f;
+                b.target.set(b.cx - half, b.cy - half, b.cx + half, b.cy + half);
+                bitmapPaint.setAlpha(b.holders > 0 ? 255 : 200);
+                canvas.drawBitmap(b.bitmap, null, b.target, bitmapPaint);
+                continue;
+            }
             fill.setAlpha(b.holders > 0 ? 150 : 60);
             canvas.drawCircle(b.cx, b.cy, b.radius, fill);
             canvas.drawCircle(b.cx, b.cy, b.radius, stroke);
