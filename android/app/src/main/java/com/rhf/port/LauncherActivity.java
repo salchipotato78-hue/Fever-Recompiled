@@ -74,6 +74,8 @@ public class LauncherActivity extends Activity {
         LinearLayout.LayoutParams buttonParams = new LinearLayout.LayoutParams(dp(260), dp(56));
         buttonParams.topMargin = dp(16);
         column.addView(menuButton("JUGAR", v -> play()), buttonParams);
+        column.addView(menuButton("OPCIONES", v -> startActivity(new Intent(this, OptionsActivity.class))),
+                buttonParams);
         column.addView(menuButton("IMPORTAR JUEGO", v -> startActivity(new Intent(this, SetupActivity.class))),
                 buttonParams);
 
@@ -92,6 +94,12 @@ public class LauncherActivity extends Activity {
 
     private void play() {
         if (SetupActivity.dataReady(this)) {
+            try {
+                GameOptions.writeSettingsFile(this);   // las opciones del launcher llegan al motor
+            } catch (java.io.IOException e) {
+                status.setText("No se pudieron guardar las opciones: " + e.getMessage());
+                return;
+            }
             startActivity(new Intent(this, RhfActivity.class));
         } else {
             startActivity(new Intent(this, SetupActivity.class));

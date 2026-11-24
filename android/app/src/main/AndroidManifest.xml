@@ -23,6 +23,12 @@
             </intent-filter>
         </activity>
 
+        <activity
+            android:name=".OptionsActivity"
+            android:exported="false"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
+
         <!-- Importación del juego (ya no es la entrada principal). -->
         <activity
             android:name=".SetupActivity"

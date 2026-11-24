@@ -16,6 +16,7 @@
 #include <filesystem>
 #include <map>
 #include <string>
+#include <thread>
 #include <unordered_map>
 #include <unordered_set>
 #include <vector>
@@ -50,7 +51,7 @@ namespace {
     X(GetShaderiv) X(GetString) X(GetStringi) X(GetUniformBlockIndex) X(GetUniformLocation) X(LinkProgram) X(PixelStorei) X(ReadPixels)             \
     X(SamplerParameterf) X(SamplerParameteri) X(Scissor) X(ShaderSource) X(TexImage2D) X(TexParameteri) X(TexSubImage2D) X(Uniform1i)              \
     X(Uniform1f) X(Uniform4f) X(UniformBlockBinding) X(UseProgram) X(VertexAttribPointer) X(Viewport) X(MapBufferRange) X(UnmapBuffer)    \
-    X(FenceSync) X(ClientWaitSync) X(DeleteSync)
+    X(FenceSync) X(ClientWaitSync) X(DeleteSync) X(BlendColor) X(BlitFramebuffer)
 
 bool is_gles();
 
@@ -721,6 +722,8 @@ struct Device {
     GLuint efb_framebuffer = 0;
     Target frame;
     Target write_back;
+    Target previous;          // frame anterior, para el suavizado de movimiento (video.frame_blend)
+    bool previous_ready = false;
     std::vector<GLuint> free_buffers;
     std::vector<PendingWriteBack> write_backs;
     GLuint overlay_texture = 0;
@@ -2055,6 +2058,35 @@ void draw_overlay(int client_width, int client_height) {
     gl.Disable(GL_BLEND);
 }
 
+// video.frame_blend (experimental): muestra mezclas de dos frames del juego entre retraces.
+bool frame_blend_enabled() {
+    static const settings::LiveFlag flag("video.frame_blend", "WP_FRAME_BLEND");
+    return flag();
+}
+
+// Guarda el frame recién presentado para la siguiente mezcla. Solo cuando la opción está activa.
+void keep_previous_frame() {
+    if (!frame_blend_enabled()) {
+        g_device.previous_ready = false;
+        return;
+    }
+    if (!g_device.previous.framebuffer || g_device.previous.width != g_device.frame.width ||
+        g_device.previous.height != g_device.frame.height) {
+        release_target(g_device.previous);
+        if (!create_render_texture(g_device.previous, g_device.frame.width, g_device.frame.height)) {
+            release_target(g_device.previous);
+            g_device.previous_ready = false;
+            return;
+        }
+    }
+    gl.BindFramebuffer(GL_READ_FRAMEBUFFER, g_device.frame.framebuffer);
+    gl.BindFramebuffer(GL_DRAW_FRAMEBUFFER, g_device.previous.framebuffer);
+    gl.BlitFramebuffer(0, 0, static_cast<GLint>(g_device.frame.width), static_cast<GLint>(g_device.frame.height), 0, 0,
+                       static_cast<GLint>(g_device.frame.width), static_cast<GLint>(g_device.frame.height), GL_COLOR_BUFFER_BIT, GL_NEAREST);
+    gl.BindFramebuffer(GL_FRAMEBUFFER, 0);
+    g_device.previous_ready = true;
+}
+
 bool present_frame(void* window_handle, double aspect) {
     invalidate_gl_cache();
     if (g_device.ready && window_handle && video::surface_recreated()) {
@@ -2074,11 +2106,6 @@ bool present_frame(void* window_handle, double aspect) {
         return false;
     }
     flush_pending();
-    gl.BindFramebuffer(GL_FRAMEBUFFER, 0);
-    plain_state();
-    gl.Viewport(0, 0, client_width, client_height);
-    gl.ClearColor(0, 0, 0, 1);
-    gl.Clear(GL_COLOR_BUFFER_BIT);
     int bar = titlebar::height(window);
     int area = std::max(1, client_height - bar);
     double width = client_width;
@@ -2087,16 +2114,44 @@ bool present_frame(void* window_handle, double aspect) {
         height = area;
         width = height * aspect;
     }
-    gl.Viewport(static_cast<GLint>((client_width - width) / 2), static_cast<GLint>((area - height) / 2), static_cast<GLsizei>(width),
-                static_cast<GLsizei>(height));
-    use_fullscreen(g_device.present, 1.0f);
-    gl.ActiveTexture(GL_TEXTURE0);
-    gl.BindTexture(GL_TEXTURE_2D, g_device.frame.texture);
-    gl.BindSampler(0, g_device.linear_sampler);
-    gl.DrawArrays(GL_TRIANGLES, 0, 3);
-    draw_overlay(client_width, client_height);
-    draw_titlebar(client_width, client_height, bar);
-    SDL_GL_SwapWindow(window);
+    // Una pasada de presentación: fondo, imagen centrada, overlay y barra; luego se muestra.
+    auto present_pass = [&](auto draw_picture) {
+        gl.BindFramebuffer(GL_FRAMEBUFFER, 0);
+        plain_state();
+        gl.Viewport(0, 0, client_width, client_height);
+        gl.ClearColor(0, 0, 0, 1);
+        gl.Clear(GL_COLOR_BUFFER_BIT);
+        gl.Viewport(static_cast<GLint>((client_width - width) / 2), static_cast<GLint>((area - height) / 2), static_cast<GLsizei>(width),
+                    static_cast<GLsizei>(height));
+        draw_picture();
+        draw_overlay(client_width, client_height);
+        draw_titlebar(client_width, client_height, bar);
+        SDL_GL_SwapWindow(window);
+    };
+    auto draw_texture = [](GLuint texture) {
+        use_fullscreen(g_device.present, 1.0f);
+        gl.ActiveTexture(GL_TEXTURE0);
+        gl.BindTexture(GL_TEXTURE_2D, texture);
+        gl.BindSampler(0, g_device.linear_sampler);
+        gl.DrawArrays(GL_TRIANGLES, 0, 3);
+    };
+    const bool blend = frame_blend_enabled() && g_device.previous_ready && g_device.previous.framebuffer &&
+                       g_device.previous.width == g_device.frame.width && g_device.previous.height == g_device.frame.height;
+    if (blend) {
+        // Mezcla 50/50 del frame anterior y el actual. Se muestra un poco antes del frame nuevo
+        // (medio periodo de retrace), así el frame nuevo no aparece antes de lo que marca el juego.
+        present_pass([&] {
+            draw_texture(g_device.previous.texture);
+            gl.Enable(GL_BLEND);
+            gl.BlendColor(0, 0, 0, 0.5f);
+            gl.BlendFunc(GL_CONSTANT_ALPHA, GL_ONE_MINUS_CONSTANT_ALPHA);
+            draw_texture(g_device.frame.texture);
+            gl.Disable(GL_BLEND);
+        });
+        std::this_thread::sleep_for(std::chrono::milliseconds(8));
+    }
+    present_pass([&] { draw_texture(g_device.frame.texture); });
+    keep_previous_frame();
     apply_scale();
     return true;
 }
