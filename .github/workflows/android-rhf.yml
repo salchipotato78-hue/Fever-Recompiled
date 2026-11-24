@@ -72,6 +72,9 @@ jobs:
       - name: Parchear el motor para Android
         run: python3 tools/patch_engine_android.py engine
 
+      - name: Aplicar el overlay de Android (fibers, CPU, backtrace)
+        run: cp -r overlay/engine/. engine/engine/
+
       - name: Preparar el proyecto del juego
         run: |
           set -e
