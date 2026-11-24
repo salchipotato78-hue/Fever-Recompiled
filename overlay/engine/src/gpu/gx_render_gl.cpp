@@ -783,10 +783,12 @@ std::string adapt_glsl(GLenum type, const std::string& source) {
     if (pos == std::string::npos) {
         return source;
     }
-    std::string header = "#version 320 es\nprecision highp float;\nprecision highp int;\nprecision highp sampler2D;\n";
+    // #extension debe ir antes de cualquier token que no sea preprocesador (precision incluido).
+    std::string header = "#version 320 es\n";
     if (type == GL_FRAGMENT_SHADER) {
         header += "#extension GL_EXT_blend_func_extended : require\n";
     }
+    header += "precision highp float;\nprecision highp int;\nprecision highp sampler2D;\n";
     return header + source.substr(pos + desktop.size());
 }
 
