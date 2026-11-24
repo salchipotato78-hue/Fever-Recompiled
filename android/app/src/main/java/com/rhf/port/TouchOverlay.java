@@ -20,7 +20,10 @@ import java.util.List;
 /**
  * Controles táctiles mínimos para Rhythm Heaven Fever.
  *
- * Solo los botones que el juego necesita:
+ * Solo se muestran en el gameplay (el motor lo dice con nativeInGame); en los menús el toque llega
+ * directo al juego, como en NSMBW. Si el motor no exporta nativeInGame, los botones se quedan visibles.
+ *
+ * Botones:
  *  - Cruceta: navegar menús.
  *  - A y B: tocar el ritmo y confirmar / cancelar.
  *  - +: pausa.
@@ -126,6 +129,7 @@ public class TouchOverlay extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
+        if (!visible) return;
         for (Button b : buttons) {
             if (b.bitmap != null) {
                 // Arte de Wario: un poco más grande que el área de toque y más opaco al pulsar.
@@ -176,8 +180,55 @@ public class TouchOverlay extends View {
     // Guarda, para cada dedo (pointerId), el botón que está pulsando.
     private final java.util.HashMap<Integer, Button> fingers = new java.util.HashMap<>();
 
+    /** True when the player is in a course or on the map with no menu up (runtime, GameActivity-style). */
+    private static native boolean nativeInGame();
+
+    private boolean visible = true;        // false en menús: no se dibujan ni consumen toques
+    private boolean nativeMissing = false; // el motor aún no exporta nativeInGame: siempre visibles
+
+    private final Runnable visibilityPoll = new Runnable() {
+        @Override
+        public void run() {
+            refreshVisibility();
+            postDelayed(this, 100);
+        }
+    };
+
+    @Override
+    protected void onAttachedToWindow() {
+        super.onAttachedToWindow();
+        removeCallbacks(visibilityPoll);
+        post(visibilityPoll);
+    }
+
+    @Override
+    protected void onDetachedFromWindow() {
+        removeCallbacks(visibilityPoll);
+        super.onDetachedFromWindow();
+    }
+
+    private void refreshVisibility() {
+        boolean inGame = true;
+        if (!nativeMissing) {
+            try {
+                inGame = nativeInGame();
+            } catch (UnsatisfiedLinkError e) {
+                nativeMissing = true;   // sin el export, los botones se quedan como antes
+            }
+        }
+        if (inGame == visible) return;
+        visible = inGame;
+        if (!visible) {
+            // Al salir del gameplay se sueltan los botones: no queda ninguna tecla pulsada.
+            releaseAll();
+            fingers.clear();
+        }
+        invalidate();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if (!visible) return false;   // en menús el toque lo recibe el juego
         int action = event.getActionMasked();
         boolean consumed = false;
 

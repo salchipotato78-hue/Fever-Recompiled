@@ -19,6 +19,7 @@ import org.libsdl.app.SDLActivity;
  * SDL carga la librería "main" (libmain.so) y ejecuta su SDL_main (engine/src/app/main.cpp).
  */
 public class RhfActivity extends SDLActivity {
+    private static final boolean DEBUG_GX = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         try {
@@ -30,8 +31,9 @@ public class RhfActivity extends SDLActivity {
             Os.setenv("WP_LOG_FILE", new java.io.File(logDir, "rhf_log.txt").getAbsolutePath(), true);
             // stderr en su propio archivo (rhf_stderr.txt): los mensajes de error de SDL/GL van ahí.
             Os.setenv("WP_STDERR_FILE", new java.io.File(logDir, "rhf_stderr.txt").getAbsolutePath(), true);
-            // Diagnóstico de video: registra los comandos GX para ver qué llega al renderizador.
-            Os.setenv("WP_LOG_GX", "1", true);
+            // Diagnóstico de video (perfil GX por batch). Apagado para medir el rendimiento real;
+            // con DEBUG_GX = true vuelve a escribir "gx profile:" en rhf_stderr.txt.
+            if (DEBUG_GX) Os.setenv("WP_LOG_GX", "1", true);
         } catch (ErrnoException e) {
             // Sin estas variables el motor usa la carpeta actual; el juego lo indicará si no encuentra datos.
         }
