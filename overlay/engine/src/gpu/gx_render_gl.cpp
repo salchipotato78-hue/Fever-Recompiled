@@ -724,6 +724,7 @@ struct Device {
     Target write_back;
     Target previous;          // frame anterior, para el suavizado de movimiento (video.frame_blend)
     bool previous_ready = false;
+    Target blur[4];           // cadena de reducción (1/2, 1/4, 1/8, 1/16) para el fondo de los bordes ultrawide
     std::vector<GLuint> free_buffers;
     std::vector<PendingWriteBack> write_backs;
     GLuint overlay_texture = 0;
@@ -2099,6 +2100,40 @@ void keep_previous_frame() {
     g_device.previous_ready = true;
 }
 
+// video.wide_backdrop: en pantallas más anchas que la imagen del juego, los bordes muestran el mismo
+// frame difuminado. La imagen del juego se dibuja con su proporción real, sin estirarse.
+bool wide_backdrop_enabled() {
+    static const settings::LiveFlag flag("video.wide_backdrop", "WP_WIDE_BACKDROP");
+    return flag();
+}
+
+// Reduce el frame a 1/16 en cuatro pasos de mitad de tamaño con filtro lineal. Al estirar el último
+// paso a toda la pantalla queda difuminado, así que el estiramiento no se nota. Resultado: blur[3].
+bool build_backdrop() {
+    const Target* from = &g_device.frame;
+    uint32_t w = g_device.frame.width;
+    uint32_t h = g_device.frame.height;
+    for (int i = 0; i < 4; i++) {
+        Target& to = g_device.blur[i];
+        w = std::max(1u, w / 2);
+        h = std::max(1u, h / 2);
+        if (!to.framebuffer || to.width != w || to.height != h) {
+            release_target(to);
+            if (!create_render_texture(to, w, h)) {
+                release_target(to);
+                return false;
+            }
+        }
+        gl.BindFramebuffer(GL_READ_FRAMEBUFFER, from->framebuffer);
+        gl.BindFramebuffer(GL_DRAW_FRAMEBUFFER, to.framebuffer);
+        gl.BlitFramebuffer(0, 0, static_cast<GLint>(from->width), static_cast<GLint>(from->height), 0, 0,
+                           static_cast<GLint>(w), static_cast<GLint>(h), GL_COLOR_BUFFER_BIT, GL_LINEAR);
+        from = &to;
+    }
+    gl.BindFramebuffer(GL_FRAMEBUFFER, 0);
+    return true;
+}
+
 bool present_frame(void* window_handle, double aspect) {
     invalidate_gl_cache();
     if (g_device.ready && window_handle && video::surface_recreated()) {
@@ -2126,6 +2161,15 @@ bool present_frame(void* window_handle, double aspect) {
         height = area;
         width = height * aspect;
     }
+    auto draw_texture = [](GLuint texture) {
+        use_fullscreen(g_device.present, 1.0f);
+        gl.ActiveTexture(GL_TEXTURE0);
+        gl.BindTexture(GL_TEXTURE_2D, texture);
+        gl.BindSampler(0, g_device.linear_sampler);
+        gl.DrawArrays(GL_TRIANGLES, 0, 3);
+    };
+    // Pantalla más ancha que la imagen (ultrawide o móvil alto): hay bordes a los lados.
+    const bool backdrop = width < client_width - 1 && wide_backdrop_enabled() && build_backdrop();
     // Una pasada de presentación: fondo, imagen centrada, overlay y barra; luego se muestra.
     auto present_pass = [&](auto draw_picture) {
         gl.BindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -2133,19 +2177,15 @@ bool present_frame(void* window_handle, double aspect) {
         gl.Viewport(0, 0, client_width, client_height);
         gl.ClearColor(0, 0, 0, 1);
         gl.Clear(GL_COLOR_BUFFER_BIT);
+        if (backdrop) {
+            draw_texture(g_device.blur[3].texture);
+        }
         gl.Viewport(static_cast<GLint>((client_width - width) / 2), static_cast<GLint>((area - height) / 2), static_cast<GLsizei>(width),
                     static_cast<GLsizei>(height));
         draw_picture();
         draw_overlay(client_width, client_height);
         draw_titlebar(client_width, client_height, bar);
         SDL_GL_SwapWindow(window);
-    };
-    auto draw_texture = [](GLuint texture) {
-        use_fullscreen(g_device.present, 1.0f);
-        gl.ActiveTexture(GL_TEXTURE0);
-        gl.BindTexture(GL_TEXTURE_2D, texture);
-        gl.BindSampler(0, g_device.linear_sampler);
-        gl.DrawArrays(GL_TRIANGLES, 0, 3);
     };
     const int subframes = interpolation_subframes();
     const bool blend = subframes > 1 && g_device.previous_ready && g_device.previous.framebuffer &&

@@ -11,30 +11,17 @@
         android:hasCode="true"
         android:allowBackup="false">
 
-        <!-- Launcher vertical: entrada principal de la app. -->
+        <!-- Entrada de la app: pide el .zip del juego y después abre el juego. -->
         <activity
-            android:name=".LauncherActivity"
+            android:name=".SetupActivity"
             android:exported="true"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar">
+            android:screenOrientation="sensorLandscape"
+            android:theme="@android:style/Theme.DeviceDefault.Light">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-        <activity
-            android:name=".OptionsActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.DeviceDefault.Light.NoActionBar" />
-
-        <!-- Importación del juego (ya no es la entrada principal). -->
-        <activity
-            android:name=".SetupActivity"
-            android:exported="false"
-            android:screenOrientation="sensorLandscape"
-            android:theme="@android:style/Theme.DeviceDefault.Light" />
 
         <activity
             android:name=".RhfActivity"

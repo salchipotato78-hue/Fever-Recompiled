@@ -2,8 +2,10 @@ package com.rhf.port;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.provider.OpenableColumns;
 import android.view.Gravity;
 import android.widget.Button;
 import android.widget.LinearLayout;
@@ -18,9 +20,9 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * Pantalla de inicio. Si el juego ya está importado, arranca directamente. Si no, pide un .zip
- * con la carpeta DATA del disco (la que contiene sys/ y files/) y la extrae en la carpeta interna
- * de la app, en games/rhf/extracted, que es la ruta que usa el motor.
+ * Pantalla de inicio y única entrada de la app. Pide siempre un .zip con la carpeta DATA del disco
+ * (la que contiene sys/ y files/) y la extrae en la carpeta interna de la app, en games/rhf/extracted,
+ * que es la ruta que usa el motor. Después abre el juego, donde están los ajustes (engranaje).
  */
 public class SetupActivity extends Activity {
     private static final int REQUEST_ZIP = 1;
@@ -41,13 +43,15 @@ public class SetupActivity extends Activity {
         return new File(extracted, "sys/main.dol").isFile() && new File(extracted, "files").isDirectory();
     }
 
+    private static final String PREFS = "rhf_import";
+
+    /**
+     * Entrada de la app. Siempre se pide el .zip al abrir: no hay forma de saltarse esta pantalla.
+     * Si el zip es el mismo que ya se importó (mismo nombre y tamaño), no se vuelve a extraer.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (dataReady(this)) {
-            startGame();
-            return;
-        }
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
@@ -61,7 +65,7 @@ public class SetupActivity extends Activity {
         layout.addView(title);
 
         status = new TextView(this);
-        status.setText("Primero importa el juego.\n\nElige un .zip con tu carpeta DATA del disco "
+        status.setText("Elige el .zip con tu carpeta DATA del disco para jugar "
                 + "(debe contener sys/main.dol y files/).");
         status.setGravity(Gravity.CENTER);
         status.setPadding(0, 32, 0, 32);
@@ -73,6 +77,23 @@ public class SetupActivity extends Activity {
         layout.addView(chooseButton);
 
         setContentView(layout);
+    }
+
+    /** Nombre y tamaño del archivo elegido: sirven para saber si es el mismo zip que ya se importó. */
+    private String zipIdentity(Uri uri) {
+        String name = "?";
+        long size = -1;
+        try (Cursor cursor = getContentResolver().query(uri, null, null, null, null)) {
+            if (cursor != null && cursor.moveToFirst()) {
+                int nameColumn = cursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+                if (nameColumn >= 0) name = cursor.getString(nameColumn);
+                int sizeColumn = cursor.getColumnIndex(OpenableColumns.SIZE);
+                if (sizeColumn >= 0 && !cursor.isNull(sizeColumn)) size = cursor.getLong(sizeColumn);
+            }
+        } catch (RuntimeException e) {
+            // Sin metadatos no se puede comparar: el zip se importa de nuevo.
+        }
+        return name + "|" + size;
     }
 
     private void chooseZip() {
@@ -90,13 +111,24 @@ public class SetupActivity extends Activity {
         }
         Uri uri = data.getData();
         chooseButton.setEnabled(false);
-        status.setText("Importando el juego... esto puede tardar unos minutos.");
+        String identity = zipIdentity(uri);
+        boolean alreadyImported = identity.equals(getSharedPreferences(PREFS, MODE_PRIVATE).getString("zip_id", null))
+                && dataReady(this);
+        status.setText(alreadyImported ? "Juego ya importado, abriendo..."
+                : "Importando el juego... esto puede tardar unos minutos.");
         new Thread(() -> {
             String error = null;
             try {
-                extract(uri);
-                if (!dataReady(this)) {
-                    error = "El .zip no contiene sys/main.dol y files/. Revisa que sea la carpeta DATA.";
+                if (!alreadyImported) {
+                    extract(uri);
+                    if (!dataReady(this)) {
+                        error = "El .zip no contiene sys/main.dol y files/. Revisa que sea la carpeta DATA.";
+                    } else {
+                        getSharedPreferences(PREFS, MODE_PRIVATE).edit().putString("zip_id", identity).apply();
+                    }
+                }
+                if (error == null) {
+                    GameOptions.writeSettingsFile(this);   // los ajustes llegan al motor antes de arrancar
                 }
             } catch (IOException e) {
                 error = "No pude leer el .zip: " + e.getMessage();

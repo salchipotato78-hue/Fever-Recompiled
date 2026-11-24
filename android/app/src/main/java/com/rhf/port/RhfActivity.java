@@ -3,11 +3,13 @@ package com.rhf.port;
 import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
+import android.view.Gravity;
 import android.view.View;
 import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.system.ErrnoException;
 import android.system.Os;
 
@@ -42,6 +44,38 @@ public class RhfActivity extends SDLActivity {
         // Botones táctiles encima de la superficie de SDL: cruceta, A, B y +.
         addContentView(new TouchOverlay(this), new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+        // Ajustes dentro del juego: engranaje arriba a la derecha (o el botón Atrás).
+        settingsPanel = new GameSettingsPanel(this);
+        addContentView(settingsPanel, new FrameLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+        TextView gear = new TextView(this);
+        gear.setText("⚙");
+        gear.setTextSize(22);
+        gear.setTextColor(0xCCFFFFFF);
+        gear.setGravity(Gravity.CENTER);
+        gear.setBackgroundColor(0x66000000);
+        gear.setOnClickListener(v -> toggleSettings());
+        int size = Math.round(48 * getResources().getDisplayMetrics().density);
+        FrameLayout.LayoutParams gearParams = new FrameLayout.LayoutParams(size, size,
+                Gravity.END | Gravity.TOP);
+        addContentView(gear, gearParams);
+    }
+
+    private GameSettingsPanel settingsPanel;
+
+    private void toggleSettings() {
+        if (settingsPanel.isOpen()) {
+            settingsPanel.hide();
+        } else {
+            settingsPanel.show();
+        }
+    }
+
+    /** Atrás abre o cierra los ajustes; no sale del juego. */
+    @Override
+    public void onBackPressed() {
+        toggleSettings();
     }
 
     /**

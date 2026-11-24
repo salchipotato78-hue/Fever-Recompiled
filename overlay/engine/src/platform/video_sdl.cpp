@@ -632,6 +632,9 @@ void save_next_frame(const char* path) {
 }
 
 void present() {
+    // Los cambios de Ajustes en el juego (engranaje) se escriben en settings.ini desde Android;
+    // se recargan aquí para que apliquen sin reiniciar.
+    settings::reload_if_changed();
     SDL_Window* window = g_window;
     static const bool saving = std::getenv("WP_SAVE_FRAME") || std::getenv("WP_CAPTURE_AT");
     if (!window && !saving) {
