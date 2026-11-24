@@ -16,8 +16,13 @@ public class RhfActivity extends SDLActivity {
     protected void onCreate(Bundle savedInstanceState) {
         try {
             Os.setenv("RHF_HOME", getFilesDir().getAbsolutePath(), true);
+            // El motor escribe su log en stderr; en Android eso no llega a logcat. Con WP_LOG_FILE
+            // se guarda en un archivo en la carpeta externa de la app (se lee con adb pull).
+            java.io.File logDir = getExternalFilesDir(null);
+            if (logDir == null) logDir = getFilesDir();
+            Os.setenv("WP_LOG_FILE", new java.io.File(logDir, "rhf_log.txt").getAbsolutePath(), true);
         } catch (ErrnoException e) {
-            // Sin RHF_HOME el motor usa la carpeta actual; el juego lo indicará si no encuentra datos.
+            // Sin estas variables el motor usa la carpeta actual; el juego lo indicará si no encuentra datos.
         }
         super.onCreate(savedInstanceState);
     }
