@@ -69,6 +69,9 @@ jobs:
           git clone "$ENGINE_REPO" engine
           git -C engine checkout "$ENGINE_SHA"
 
+      - name: Parchear el motor para Android
+        run: python3 tools/patch_engine_android.py engine
+
       - name: Preparar el proyecto del juego
         run: |
           set -e
