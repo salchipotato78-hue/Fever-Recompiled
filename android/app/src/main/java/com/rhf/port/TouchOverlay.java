@@ -17,37 +17,31 @@ import android.view.View;
 import org.libsdl.app.SDLActivity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
- * Controles táctiles mínimos para Rhythm Heaven Fever.
+ * Controles táctiles para Rhythm Heaven Fever: A, B y +.
  *
- * Solo se muestran en el gameplay (el motor lo dice con nativeInGame). Si el motor no exporta
- * nativeInGame, quedan ocultos por defecto: el toque de pantalla ya hace A y la cruceta (input.cpp).
- * El botón de la esquina superior izquierda los muestra u oculta a mano.
- *
- * Botones:
- *  - Cruceta: navegar menús.
- *  - A y B: tocar el ritmo y confirmar / cancelar.
- *  - +: pausa.
+ * Visibles por defecto, en todas las pantallas. Se ocultan solo si hay un mando conectado, y el botón
+ * de la esquina superior izquierda los muestra u oculta a mano. Los toques fuera de los botones no se
+ * consumen aquí, así que llegan al juego como puntero.
  *
  * Cada botón envía una tecla de Android que SDL traduce a la misma tecla que usa el motor por defecto
- * (src/input/keymap.cpp): A = Enter, B = Backspace, + = NumPlus, cruceta = flechas.
+ * (src/input/keymap.cpp): A = Enter, B = Backspace, + = NumPlus.
  */
 public class TouchOverlay extends View {
 
     private static final class Button {
         final String label;
         final int keycode;
-        final boolean big;
         float cx, cy, radius;
         Bitmap bitmap;            // arte de Wario (A, B, +); null = círculo con texto
         final RectF target = new RectF();
         int holders;              // cuántos dedos lo mantienen pulsado
-        Button(String label, int keycode, boolean big) {
+        Button(String label, int keycode) {
             this.label = label;
             this.keycode = keycode;
-            this.big = big;
         }
     }
 
@@ -68,13 +62,9 @@ public class TouchOverlay extends View {
         unit = 56f * dm.density;
         margin = 16f * dm.density;
 
-        buttons.add(new Button("\u25B2", KeyEvent.KEYCODE_DPAD_UP, false));
-        buttons.add(new Button("\u25BC", KeyEvent.KEYCODE_DPAD_DOWN, false));
-        buttons.add(new Button("\u25C0", KeyEvent.KEYCODE_DPAD_LEFT, false));
-        buttons.add(new Button("\u25B6", KeyEvent.KEYCODE_DPAD_RIGHT, false));
-        buttons.add(new Button("A", KeyEvent.KEYCODE_ENTER, true));
-        buttons.add(new Button("B", KeyEvent.KEYCODE_DEL, false));
-        buttons.add(new Button("+", KeyEvent.KEYCODE_NUMPAD_ADD, false));
+        buttons.add(new Button("A", KeyEvent.KEYCODE_ENTER));
+        buttons.add(new Button("B", KeyEvent.KEYCODE_DEL));
+        buttons.add(new Button("+", KeyEvent.KEYCODE_NUMPAD_ADD));
 
         fill.setColor(Color.WHITE);
         fill.setAlpha(60);
@@ -107,17 +97,12 @@ public class TouchOverlay extends View {
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
-        // Cruceta abajo a la izquierda.
-        float dcx = margin + 1.5f * unit;
-        float dcy = h - margin - 1.5f * unit;
-        place("\u25B2", dcx, dcy - unit, 0.5f * unit);
-        place("\u25BC", dcx, dcy + unit, 0.5f * unit);
-        place("\u25C0", dcx - unit, dcy, 0.5f * unit);
-        place("\u25B6", dcx + unit, dcy, 0.5f * unit);
-        // A y B abajo a la derecha.
-        place("A", w - margin - 0.9f * unit, h - margin - 0.9f * unit, 0.6f * unit);
-        place("B", w - margin - 2.3f * unit, h - margin - 0.5f * unit, 0.5f * unit);
-        // Pausa arriba a la derecha.
+        // A y B: a la altura de los dedos del jugador, B a la izquierda y A a la derecha. Medidas en
+        // fracciones de la pantalla para que escalen con cualquier resolución.
+        float abRadius = 0.0426f * w;   // el arte se dibuja un 15 % más grande que este radio
+        place("B", 0.115f * w, 0.784f * h, abRadius);
+        place("A", 0.884f * w, 0.784f * h, abRadius);
+        // Pausa arriba a la derecha (sin cambios).
         place("+", w - margin - 0.6f * unit, margin + 0.6f * unit, 0.5f * unit);
     }
 
@@ -138,7 +123,7 @@ public class TouchOverlay extends View {
         if (!visible) return;
         for (Button b : buttons) {
             if (b.bitmap != null) {
-                // Arte de Wario: un poco más grande que el área de toque y más opaco al pulsar.
+                // Arte: un poco más grande que el área de toque y más opaco al pulsar.
                 float half = b.radius * 1.15f;
                 b.target.set(b.cx - half, b.cy - half, b.cx + half, b.cy + half);
                 bitmapPaint.setAlpha(b.holders > 0 ? 255 : 200);
@@ -184,17 +169,12 @@ public class TouchOverlay extends View {
     }
 
     // Guarda, para cada dedo (pointerId), el botón que está pulsando.
-    private final java.util.HashMap<Integer, Button> fingers = new java.util.HashMap<>();
+    private final HashMap<Integer, Button> fingers = new HashMap<>();
 
-    /** True when the player is in a course or on the map with no menu up (runtime, GameActivity-style). */
-    private static native boolean nativeInGame();
-
-    private boolean gameVisible = false;  // lo que dice el motor: en gameplay y sin menú (false hasta la primera lectura)
     private boolean padConnected = false; // hay un mando conectado: el touch se oculta
     private boolean visible = true;       // resultado final: se dibuja y consume toques
-    private boolean nativeMissing = false; // el motor aún no exporta nativeInGame: siempre visibles
-    // Elección del jugador con el botón de la app: null = automático (gameplay y sin mando),
-    // true / false = se muestran / se ocultan siempre, aunque haya mando o estemos en menús.
+    // Elección del jugador con el botón de la esquina: null = automático (visibles salvo con mando),
+    // true / false = se muestran / se ocultan siempre.
     private Boolean userChoice = null;
 
     /** Invierte lo que se ve ahora: si están visibles los oculta, y si no, los muestra. */
@@ -206,14 +186,6 @@ public class TouchOverlay extends View {
     public boolean isUserVisible() {
         return visible;
     }
-
-    private final Runnable visibilityPoll = new Runnable() {
-        @Override
-        public void run() {
-            refreshVisibility();
-            postDelayed(this, 100);
-        }
-    };
 
     // Un mando conectado (o desconectado) cambia la visibilidad del touch al momento.
     private final InputManager.InputDeviceListener deviceListener = new InputManager.InputDeviceListener() {
@@ -236,8 +208,6 @@ public class TouchOverlay extends View {
     @Override
     protected void onAttachedToWindow() {
         super.onAttachedToWindow();
-        removeCallbacks(visibilityPoll);
-        post(visibilityPoll);
         if (inputManager != null) {
             inputManager.registerInputDeviceListener(deviceListener, null);
         }
@@ -246,24 +216,10 @@ public class TouchOverlay extends View {
 
     @Override
     protected void onDetachedFromWindow() {
-        removeCallbacks(visibilityPoll);
         if (inputManager != null) {
             inputManager.unregisterInputDeviceListener(deviceListener);
         }
         super.onDetachedFromWindow();
-    }
-
-    private void refreshVisibility() {
-        boolean inGame = true;
-        if (!nativeMissing) {
-            try {
-                inGame = nativeInGame();
-            } catch (UnsatisfiedLinkError e) {
-                nativeMissing = true;   // sin el export, los botones se quedan como antes
-            }
-        }
-        gameVisible = inGame;
-        applyVisibility();
     }
 
     private void updatePad() {
@@ -286,10 +242,7 @@ public class TouchOverlay extends View {
     }
 
     private void applyVisibility() {
-        // Sin nativeInGame el motor no dice cuándo hay gameplay: los botones quedan ocultos y el toque
-        // de pantalla hace A y la cruceta (ver input.cpp). El botón de la esquina los muestra si hacen falta.
-        boolean autoVisible = !nativeMissing && gameVisible && !padConnected;
-        boolean now = userChoice != null ? userChoice : autoVisible;
+        boolean now = userChoice != null ? userChoice : !padConnected;
         if (now == visible) return;
         visible = now;
         if (!visible) {
@@ -303,14 +256,14 @@ public class TouchOverlay extends View {
 
     private Runnable visibilityListener;
 
-    /** Avisa cuando cambia la visibilidad (para que el botón de la app muestre el texto correcto). */
+    /** Avisa cuando cambia la visibilidad (para que el botón de la app muestre el estado correcto). */
     public void setVisibilityListener(Runnable listener) {
         visibilityListener = listener;
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if (!visible) return false;   // en menús el toque lo recibe el juego
+        if (!visible) return false;   // oculto: el toque lo recibe el juego
         int action = event.getActionMasked();
         boolean consumed = false;
 
