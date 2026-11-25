@@ -25,6 +25,58 @@ namespace wp::input {
 
 namespace {
 
+// Toques en pantalla (Android): un toque corto pulsa A y un deslizamiento pulsa la cruceta en esa
+// dirección. Así se puede iniciar el juego y cambiar de opción sin los botones táctiles. Los toques
+// sobre los botones del overlay de Java no llegan aquí, así que no se duplican.
+constexpr int64_t kTapMaxMs = 400;
+constexpr float kTapMaxMove = 24.0f;
+constexpr float kSwipeMin = 80.0f;
+constexpr int64_t kGesturePulseMs = 120;
+
+struct TouchGesture {
+    bool down = false;
+    float start_x = 0.0f;
+    float start_y = 0.0f;
+    float last_x = 0.0f;
+    float last_y = 0.0f;
+    int64_t start_ms = 0;
+    int64_t until = 0;
+    uint32_t bits = 0;
+};
+
+uint32_t touch_gesture(TouchGesture& g, bool held, float x, float y, int64_t now) {
+    if (held) {
+        if (!g.down) {
+            g.down = true;
+            g.start_x = x;
+            g.start_y = y;
+            g.start_ms = now;
+        }
+        g.last_x = x;
+        g.last_y = y;
+        return 0;
+    }
+    if (g.down) {
+        g.down = false;
+        float dx = g.last_x - g.start_x;
+        float dy = g.last_y - g.start_y;
+        float ax = dx < 0.0f ? -dx : dx;
+        float ay = dy < 0.0f ? -dy : dy;
+        if (ax >= kSwipeMin || ay >= kSwipeMin) {
+            if (ax >= ay) {
+                g.bits = dx < 0.0f ? kButtonLeft : kButtonRight;
+            } else {
+                g.bits = dy < 0.0f ? kButtonUp : kButtonDown;
+            }
+            g.until = now + kGesturePulseMs;
+        } else if (ax <= kTapMaxMove && ay <= kTapMaxMove && now - g.start_ms <= kTapMaxMs) {
+            g.bits = kButtonA;
+            g.until = now + kGesturePulseMs;
+        }
+    }
+    return now < g.until ? g.bits : 0;
+}
+
 constexpr auto kWheelSwing = std::chrono::milliseconds(120);
 constexpr int64_t kNoticePulsePeriod = 500;
 constexpr int64_t kNoticePulseLength = 100;
@@ -366,6 +418,16 @@ Sample device_sample(uint32_t channel) {
         result.pointer_x = pad.pointer_x;
         result.pointer_y = pad.pointer_y;
     }
+#ifdef __ANDROID__
+    static TouchGesture touch;
+    if (channel == 0) {
+        long tx = 0;
+        long ty = 0;
+        bool held = video::cursor_held();
+        video::cursor_position(tx, ty);
+        result.buttons |= touch_gesture(touch, held, static_cast<float>(tx), static_cast<float>(ty), now);
+    }
+#endif
     return result;
 }
 

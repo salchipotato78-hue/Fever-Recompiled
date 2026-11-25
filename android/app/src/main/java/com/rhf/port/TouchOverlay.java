@@ -22,8 +22,9 @@ import java.util.List;
 /**
  * Controles táctiles mínimos para Rhythm Heaven Fever.
  *
- * Solo se muestran en el gameplay (el motor lo dice con nativeInGame); en los menús el toque llega
- * directo al juego, como en NSMBW. Si el motor no exporta nativeInGame, los botones se quedan visibles.
+ * Solo se muestran en el gameplay (el motor lo dice con nativeInGame). Si el motor no exporta
+ * nativeInGame, quedan ocultos por defecto: el toque de pantalla ya hace A y la cruceta (input.cpp).
+ * El botón de la esquina superior izquierda los muestra u oculta a mano.
  *
  * Botones:
  *  - Cruceta: navegar menús.
@@ -188,7 +189,7 @@ public class TouchOverlay extends View {
     /** True when the player is in a course or on the map with no menu up (runtime, GameActivity-style). */
     private static native boolean nativeInGame();
 
-    private boolean gameVisible = true;   // lo que dice el motor: en gameplay y sin menú
+    private boolean gameVisible = false;  // lo que dice el motor: en gameplay y sin menú (false hasta la primera lectura)
     private boolean padConnected = false; // hay un mando conectado: el touch se oculta
     private boolean visible = true;       // resultado final: se dibuja y consume toques
     private boolean nativeMissing = false; // el motor aún no exporta nativeInGame: siempre visibles
@@ -285,7 +286,10 @@ public class TouchOverlay extends View {
     }
 
     private void applyVisibility() {
-        boolean now = userChoice != null ? userChoice : (gameVisible && !padConnected);
+        // Sin nativeInGame el motor no dice cuándo hay gameplay: los botones quedan ocultos y el toque
+        // de pantalla hace A y la cruceta (ver input.cpp). El botón de la esquina los muestra si hacen falta.
+        boolean autoVisible = !nativeMissing && gameVisible && !padConnected;
+        boolean now = userChoice != null ? userChoice : autoVisible;
         if (now == visible) return;
         visible = now;
         if (!visible) {
