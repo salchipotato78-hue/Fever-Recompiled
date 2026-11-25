@@ -21,27 +21,32 @@ import java.util.HashMap;
 import java.util.List;
 
 /**
- * Controles táctiles para Rhythm Heaven Fever: A, B y +.
+ * Controles táctiles para Rhythm Heaven Fever.
  *
- * Visibles por defecto, en todas las pantallas. Se ocultan solo si hay un mando conectado, y el botón
- * de la esquina superior izquierda los muestra u oculta a mano. Los toques fuera de los botones no se
- * consumen aquí, así que llegan al juego como puntero.
+ *  - A, B y +: visibles por defecto, en la posición de la imagen de referencia de los niveles.
+ *  - Cruceta: para los menús. Se muestra por defecto y el interruptor de arriba al centro la oculta
+ *    (o vuelve a mostrar) al estar en un nivel. El motor aún no dice en qué pantalla está el juego.
+ *
+ * Todo el overlay se oculta si hay un mando conectado. Los toques fuera de los botones no se consumen,
+ * así que llegan al juego como puntero.
  *
  * Cada botón envía una tecla de Android que SDL traduce a la misma tecla que usa el motor por defecto
- * (src/input/keymap.cpp): A = Enter, B = Backspace, + = NumPlus.
+ * (src/input/keymap.cpp): A = Enter, B = Backspace, + = NumPlus, cruceta = flechas.
  */
 public class TouchOverlay extends View {
 
     private static final class Button {
         final String label;
         final int keycode;
+        final boolean dpad;       // solo se muestra con la cruceta encendida
         float cx, cy, radius;
         Bitmap bitmap;            // arte de Wario (A, B, +); null = círculo con texto
         final RectF target = new RectF();
         int holders;              // cuántos dedos lo mantienen pulsado
-        Button(String label, int keycode) {
+        Button(String label, int keycode, boolean dpad) {
             this.label = label;
             this.keycode = keycode;
+            this.dpad = dpad;
         }
     }
 
@@ -52,6 +57,9 @@ public class TouchOverlay extends View {
     private final Paint bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
     private final float unit;   // tamaño base de botón en píxeles
     private final float margin;
+    private final float density;
+
+    private final RectF menuToggle = new RectF();   // interruptor de la cruceta, arriba al centro
 
     private final InputManager inputManager;
 
@@ -59,12 +67,17 @@ public class TouchOverlay extends View {
         super(context);
         inputManager = (InputManager) context.getSystemService(Context.INPUT_SERVICE);
         DisplayMetrics dm = context.getResources().getDisplayMetrics();
+        density = dm.density;
         unit = 56f * dm.density;
         margin = 16f * dm.density;
 
-        buttons.add(new Button("A", KeyEvent.KEYCODE_ENTER));
-        buttons.add(new Button("B", KeyEvent.KEYCODE_DEL));
-        buttons.add(new Button("+", KeyEvent.KEYCODE_NUMPAD_ADD));
+        buttons.add(new Button("A", KeyEvent.KEYCODE_ENTER, false));
+        buttons.add(new Button("B", KeyEvent.KEYCODE_DEL, false));
+        buttons.add(new Button("+", KeyEvent.KEYCODE_NUMPAD_ADD, false));
+        buttons.add(new Button("\u25B2", KeyEvent.KEYCODE_DPAD_UP, true));
+        buttons.add(new Button("\u25BC", KeyEvent.KEYCODE_DPAD_DOWN, true));
+        buttons.add(new Button("\u25C0", KeyEvent.KEYCODE_DPAD_LEFT, true));
+        buttons.add(new Button("\u25B6", KeyEvent.KEYCODE_DPAD_RIGHT, true));
 
         fill.setColor(Color.WHITE);
         fill.setAlpha(60);
@@ -104,6 +117,19 @@ public class TouchOverlay extends View {
         place("A", 0.884f * w, 0.784f * h, abRadius);
         // Pausa arriba a la derecha (sin cambios).
         place("+", w - margin - 0.6f * unit, margin + 0.6f * unit, 0.5f * unit);
+        // Cruceta a la izquierda, por encima de B para no tocarse.
+        float dcx = 0.11f * w;
+        float dcy = 0.42f * h;
+        float arm = unit;
+        float dr = 0.5f * unit;
+        place("\u25B2", dcx, dcy - arm, dr);
+        place("\u25BC", dcx, dcy + arm, dr);
+        place("\u25C0", dcx - arm, dcy, dr);
+        place("\u25B6", dcx + arm, dcy, dr);
+        // Interruptor de la cruceta arriba al centro.
+        float half = 80f * density;
+        float cx = w / 2f;
+        menuToggle.set(cx - half, margin, cx + half, margin + 40f * density);
     }
 
     private void place(String label, float cx, float cy, float radius) {
@@ -122,6 +148,7 @@ public class TouchOverlay extends View {
         super.onDraw(canvas);
         if (!visible) return;
         for (Button b : buttons) {
+            if (!isActive(b)) continue;
             if (b.bitmap != null) {
                 // Arte: un poco más grande que el área de toque y más opaco al pulsar.
                 float half = b.radius * 1.15f;
@@ -136,10 +163,23 @@ public class TouchOverlay extends View {
             float baseline = b.cy - (text.descent() + text.ascent()) / 2f;
             canvas.drawText(b.label, b.cx, baseline, text);
         }
+        // Interruptor de la cruceta.
+        float radius = menuToggle.height() / 2f;
+        fill.setAlpha(60);
+        canvas.drawRoundRect(menuToggle, radius, radius, fill);
+        canvas.drawRoundRect(menuToggle, radius, radius, stroke);
+        float baseline = menuToggle.centerY() - (text.descent() + text.ascent()) / 2f;
+        canvas.drawText(dpadShown ? "Cruceta: sí" : "Cruceta: no", menuToggle.centerX(), baseline, text);
+    }
+
+    /** Un botón se ve y recibe toques solo si el overlay está visible (y la cruceta, si es de la cruceta). */
+    private boolean isActive(Button b) {
+        return visible && (!b.dpad || dpadShown);
     }
 
     private Button buttonAt(float x, float y) {
         for (Button b : buttons) {
+            if (!isActive(b)) continue;
             float dx = x - b.cx, dy = y - b.cy;
             if (dx * dx + dy * dy <= b.radius * b.radius * 1.2f) return b;
         }
@@ -173,7 +213,8 @@ public class TouchOverlay extends View {
 
     private boolean padConnected = false; // hay un mando conectado: el touch se oculta
     private boolean visible = true;       // resultado final: se dibuja y consume toques
-    // Elección del jugador con el botón de la esquina: null = automático (visibles salvo con mando),
+    private boolean dpadShown = true;     // cruceta encendida (menús) o apagada (niveles)
+    // Elección del jugador con el botón de la esquina: null = automático (visible salvo con mando),
     // true / false = se muestran / se ocultan siempre.
     private Boolean userChoice = null;
 
@@ -261,6 +302,25 @@ public class TouchOverlay extends View {
         visibilityListener = listener;
     }
 
+    /** Enciende o apaga la cruceta (menús). Al apagarla se sueltan sus botones. */
+    private void toggleDpad() {
+        dpadShown = !dpadShown;
+        if (!dpadShown) {
+            for (Button b : buttons) {
+                if (b.dpad && b.holders > 0) {
+                    b.holders = 1;
+                    release(b);
+                }
+            }
+            // Quitar los dedos que estaban sobre la cruceta.
+            java.util.Iterator<Button> it = fingers.values().iterator();
+            while (it.hasNext()) {
+                if (it.next().dpad) it.remove();
+            }
+        }
+        invalidate();
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!visible) return false;   // oculto: el toque lo recibe el juego
@@ -271,7 +331,13 @@ public class TouchOverlay extends View {
             case MotionEvent.ACTION_DOWN:
             case MotionEvent.ACTION_POINTER_DOWN: {
                 int i = event.getActionIndex();
-                consumed = touchDown(event.getPointerId(i), event.getX(i), event.getY(i));
+                float x = event.getX(i), y = event.getY(i);
+                if (menuToggle.contains(x, y)) {
+                    if (action == MotionEvent.ACTION_DOWN) toggleDpad();
+                    consumed = true;
+                    break;
+                }
+                consumed = touchDown(event.getPointerId(i), x, y);
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
