@@ -668,42 +668,6 @@ void log_projection_extent(const ProjectionState& p) {
     }
 }
 
-// Ultrawide: los lienzos ortográficos de pantalla completa de RHF (832x528 y 608x528) se amplían al
-// aspecto de la pantalla, con la misma altura y más escena a los lados. La proyección y la presentación
-// se escalan igual, así que el HUD conserva su posición y tamaño y nada se estira. Las cámaras pequeñas
-// (texturas auxiliares, de menos de 600x440 unidades) no se tocan.
-std::atomic<float> g_screen_aspect{0.0f};   // aspecto de la ventana (ancho / alto del área de juego)
-std::atomic<float> g_display_aspect{0.0f};  // aspecto con el que se presenta el cuadro
-
-void widen_to_screen(ProjectionState& p) {
-    if (!p.orthographic) {
-        return;
-    }
-    const float screen = g_screen_aspect.load(std::memory_order_relaxed);
-    const float ax = std::fabs(p.a * p.x_scale);
-    const float cy = std::fabs(p.c * p.y_scale);
-    if (!(screen > 0.0f) || !(ax > 0.0f) || !(cy > 0.0f)) {
-        return;
-    }
-    const float width = 2.0f / ax;
-    const float height = 2.0f / cy;
-    if (width < 600.0f || height < 440.0f) {
-        return;
-    }
-    const float canvas = width / height;
-    if (screen <= canvas) {
-        // Pantalla más estrecha que el lienzo: no se amplía, se presenta letterbox a su aspecto.
-        g_display_aspect.store(canvas, std::memory_order_relaxed);
-        return;
-    }
-    // f < 1 reduce la escala X: el mismo alto, más unidades visibles. Escala también el offset X,
-    // así que el centro de la pantalla sigue siendo el centro del juego.
-    const float f = canvas / screen;
-    p.x_scale *= f;
-    p.x_offset *= f;
-    g_display_aspect.store(screen, std::memory_order_relaxed);
-}
-
 void begin_projection() {
     g_projection.a = xf_float(0x1020);
     g_projection.b = xf_float(0x1021);
@@ -718,7 +682,6 @@ void begin_projection() {
     g_projection.y_offset = 1.0f - 2.0f * (xf_float(0x101E) - kViewportOffset) / kEfbHeight;
     g_projection.z_scale = xf_float(0x101C);
     g_projection.z_offset = xf_float(0x101F);
-    widen_to_screen(g_projection);
     log_projection_extent(g_projection);
 }
 
@@ -1651,14 +1614,6 @@ void process() {
     item.bytes.swap(g_fifo);
     g_fifo.reserve(item.bytes.capacity());
     enqueue(std::move(item));
-}
-
-void set_screen_aspect(float aspect) {
-    g_screen_aspect.store(aspect, std::memory_order_relaxed);
-}
-
-float display_aspect() {
-    return g_display_aspect.load(std::memory_order_relaxed);
 }
 
 void run_frame_task(std::function<void()> task) {

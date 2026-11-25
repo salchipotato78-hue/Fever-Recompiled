@@ -37,6 +37,8 @@ public class RhfActivity extends SDLActivity {
             // Diagnóstico de video (perfil GX por batch). Apagado para medir el rendimiento real;
             // con DEBUG_GX = true vuelve a escribir "gx profile:" en rhf_stderr.txt.
             if (DEBUG_GX) Os.setenv("WP_LOG_GX", "1", true);
+            // Diagnóstico de entrada: escribe "input buttons=" en rhf_stderr.txt cada vez que cambian los botones.
+            Os.setenv("WP_LOG_INPUT", "1", true);
         } catch (ErrnoException e) {
             // Sin estas variables el motor usa la carpeta actual; el juego lo indicará si no encuentra datos.
         }
