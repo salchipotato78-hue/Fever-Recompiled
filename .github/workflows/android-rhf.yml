@@ -161,8 +161,24 @@ jobs:
           gradle-version: "8.9"
           build-root-directory: android
 
+      # Firma con el keystore del repositorio (secretos). Sin él, cada build se firma con una clave distinta
+      # y Android no deja actualizar la app encima: hay que desinstalarla.
+      - name: Preparar el keystore de firma
+        env:
+          RHF_KEYSTORE_BASE64: ${{ secrets.RHF_KEYSTORE_BASE64 }}
+        run: |
+          test -n "$RHF_KEYSTORE_BASE64" || { echo "::error::Falta el secreto RHF_KEYSTORE_BASE64."; exit 1; }
+          echo "$RHF_KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/rhf-release.jks"
+          echo "RHF_KEYSTORE_PATH=$RUNNER_TEMP/rhf-release.jks" >> "$GITHUB_ENV"
+
       - name: Generar la APK
         working-directory: android
+        env:
+          RHF_KEYSTORE_PASSWORD: ${{ secrets.RHF_KEYSTORE_PASSWORD }}
+          RHF_KEY_PASSWORD: ${{ secrets.RHF_KEYSTORE_PASSWORD }}
+          RHF_KEY_ALIAS: ${{ secrets.RHF_KEY_ALIAS }}
+          RHF_VERSION_CODE: ${{ github.run_number }}
+          RHF_VERSION_NAME: "0.1.${{ github.run_number }}"
         run: gradle :app:assembleRelease --no-daemon --stacktrace
 
       - name: Subir la APK (solo para el repositorio privado)
