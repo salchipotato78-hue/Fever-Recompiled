@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Icono del botón que muestra u oculta los controles táctiles (blanco). Viene del SVG del proyecto:
+     mismas rutas, con el eje Y invertido por el grupo para que quede derecho. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="48dp"
+    android:height="24.8dp"
+    android:viewportWidth="12800"
+    android:viewportHeight="6620">
+    <group android:scaleY="-1" android:translateY="6620">
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M6519 6616 c-2 -2 -83 -9 -179 -16 -1038 -68 -1997 -335 -3035 -845 -850 -418 -1725 -1011 -2500 -1693 -313 -276 -785 -738 -785 -769 0 -6 127 -136 283 -289 1420 -1402 2856 -2305 4347 -2733 713 -204 1566 -302 2215 -253 913 68 1663 255 2486 620 1186 526 2403 1445 3308 2497 66 77 120 146 121 154 1 36 -429 512 -784 866 -424 424 -700 666 -1096 964 -1173 882 -2412 1376 -3690 1471 -80 6 -192 15 -250 20 -103 10 -433 14 -441 6z m379 -595 c512 -79 982 -283 1382 -601 124 -98 328 -300 424 -420 232 -289 416 -647 511 -995 208 -759 69 -1567 -383 -2225 -198 -289 -468 -552 -768 -750 -1148 -755 -2684 -601 -3649 365 -416 417 -681 944 -772 1535 -25 160 -25 577 -1 737 25 162 64 328 109 465 345 1042 1282 1785 2409 1907 149 17 586 6 738 -18z" />
+        <path
+            android:fillColor="#FFFFFFFF"
+            android:pathData="M6316 4809 c-376 -40 -738 -219 -990 -490 -337 -363 -478 -846 -386 -1323 117 -604 597 -1083 1218 -1217 124 -26 407 -37 537 -20 669 88 1202 577 1342 1231 26 123 26 469 -1 590 -81 373 -289 697 -590 922 -318 238 -728 349 -1130 307z" />
+    </group>
+</vector>

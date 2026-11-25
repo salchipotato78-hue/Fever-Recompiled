@@ -1,6 +1,7 @@
 package com.rhf.port;
 
 import android.content.pm.ActivityInfo;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.view.Gravity;
@@ -9,7 +10,7 @@ import android.view.WindowInsets;
 import android.view.WindowInsetsController;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.system.ErrnoException;
 import android.system.Os;
 
@@ -47,21 +48,22 @@ public class RhfActivity extends SDLActivity {
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
         // Botón para mostrar u ocultar los controles táctiles (arriba a la izquierda).
-        final TextView toggle = new TextView(this);
-        toggle.setText("Ocultar botones");
-        toggle.setTextSize(14);
-        toggle.setTextColor(0xCCFFFFFF);
-        toggle.setGravity(Gravity.CENTER);
-        int pad = Math.round(12 * getResources().getDisplayMetrics().density);
+        final ImageView toggle = new ImageView(this);
+        toggle.setImageResource(R.drawable.ic_touch_toggle);
+        toggle.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        float density = getResources().getDisplayMetrics().density;
+        int pad = Math.round(10 * density);
         toggle.setPadding(pad, pad, pad, pad);
-        toggle.setBackgroundColor(0x66000000);
-        toggle.setOnClickListener(v -> {
-            overlay.toggleUserVisible();
-            toggle.setText(overlay.isUserVisible() ? "Ocultar botones" : "Mostrar botones");
-        });
-        addContentView(toggle, new FrameLayout.LayoutParams(
-                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
-                Gravity.START | Gravity.TOP));
+        GradientDrawable round = new GradientDrawable();
+        round.setShape(GradientDrawable.OVAL);
+        round.setColor(0x66000000);
+        toggle.setBackground(round);
+        toggle.setContentDescription("Mostrar u ocultar los botones");
+        toggle.setOnClickListener(v -> overlay.toggleUserVisible());
+        // Con los botones ocultos el icono se atenúa, para que se vea cuál es el estado.
+        overlay.setVisibilityListener(() -> toggle.setAlpha(overlay.isUserVisible() ? 1f : 0.5f));
+        int size = Math.round(56 * density);
+        addContentView(toggle, new FrameLayout.LayoutParams(size, size, Gravity.START | Gravity.TOP));
 
     }
 
