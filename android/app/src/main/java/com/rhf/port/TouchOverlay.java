@@ -192,6 +192,17 @@ public class TouchOverlay extends View {
     private boolean padConnected = false; // hay un mando conectado: el touch se oculta
     private boolean visible = true;       // resultado final: se dibuja y consume toques
     private boolean nativeMissing = false; // el motor aún no exporta nativeInGame: siempre visibles
+    private boolean userVisible = true;    // botón de la app (mostrar / ocultar los controles)
+
+    /** Muestra u oculta los controles táctiles a petición del jugador. */
+    public void toggleUserVisible() {
+        userVisible = !userVisible;
+        applyVisibility();
+    }
+
+    public boolean isUserVisible() {
+        return userVisible;
+    }
 
     private final Runnable visibilityPoll = new Runnable() {
         @Override
@@ -272,7 +283,7 @@ public class TouchOverlay extends View {
     }
 
     private void applyVisibility() {
-        boolean now = gameVisible && !padConnected;
+        boolean now = userVisible && gameVisible && !padConnected;
         if (now == visible) return;
         visible = now;
         if (!visible) {

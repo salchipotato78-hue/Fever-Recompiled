@@ -22,7 +22,7 @@ import java.util.zip.ZipInputStream;
 /**
  * Pantalla de inicio y única entrada de la app. Pide siempre un .zip con la carpeta DATA del disco
  * (la que contiene sys/ y files/) y la extrae en la carpeta interna de la app, en games/rhf/extracted,
- * que es la ruta que usa el motor. Después abre el juego, donde están los ajustes (engranaje).
+ * que es la ruta que usa el motor. Después abre el juego.
  */
 public class SetupActivity extends Activity {
     private static final int REQUEST_ZIP = 1;

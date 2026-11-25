@@ -13,7 +13,8 @@ Si es el mismo zip que ya se importó (mismo nombre y tamaño), no se vuelve a e
 
 Para crear el zip: comprime la carpeta `DATA` del disco extraído (la que tiene `sys` y `files` dentro).
 
-## Ajustes dentro del juego
+## Ajustes
 
-Engranaje arriba a la derecha (o el botón Atrás): resolución, interpolación de FPS, bordes ultrawide
-(difuminados o negros), texturas HD y mando. Cada cambio se guarda en `settings.ini` al momento.
+Por ahora no hay ajustes en la app. Al importar el zip se escribe `settings.ini` con valores fijos
+(1x, texturas HD activas, interpolación apagada, bordes ultrawide negros, mando activo). Las opciones
+volverán cuando haya un ultrawide real y buen rendimiento.

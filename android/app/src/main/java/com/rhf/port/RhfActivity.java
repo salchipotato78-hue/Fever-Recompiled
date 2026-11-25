@@ -42,40 +42,27 @@ public class RhfActivity extends SDLActivity {
         super.onCreate(savedInstanceState);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
         // Botones táctiles encima de la superficie de SDL: cruceta, A, B y +.
-        addContentView(new TouchOverlay(this), new FrameLayout.LayoutParams(
+        final TouchOverlay overlay = new TouchOverlay(this);
+        addContentView(overlay, new FrameLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
-        // Ajustes dentro del juego: engranaje arriba a la derecha (o el botón Atrás).
-        settingsPanel = new GameSettingsPanel(this);
-        addContentView(settingsPanel, new FrameLayout.LayoutParams(
-                ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-        TextView gear = new TextView(this);
-        gear.setText("⚙");
-        gear.setTextSize(22);
-        gear.setTextColor(0xCCFFFFFF);
-        gear.setGravity(Gravity.CENTER);
-        gear.setBackgroundColor(0x66000000);
-        gear.setOnClickListener(v -> toggleSettings());
-        int size = Math.round(48 * getResources().getDisplayMetrics().density);
-        FrameLayout.LayoutParams gearParams = new FrameLayout.LayoutParams(size, size,
-                Gravity.END | Gravity.TOP);
-        addContentView(gear, gearParams);
-    }
+        // Botón para mostrar u ocultar los controles táctiles (arriba a la izquierda).
+        final TextView toggle = new TextView(this);
+        toggle.setText("Ocultar botones");
+        toggle.setTextSize(14);
+        toggle.setTextColor(0xCCFFFFFF);
+        toggle.setGravity(Gravity.CENTER);
+        int pad = Math.round(12 * getResources().getDisplayMetrics().density);
+        toggle.setPadding(pad, pad, pad, pad);
+        toggle.setBackgroundColor(0x66000000);
+        toggle.setOnClickListener(v -> {
+            overlay.toggleUserVisible();
+            toggle.setText(overlay.isUserVisible() ? "Ocultar botones" : "Mostrar botones");
+        });
+        addContentView(toggle, new FrameLayout.LayoutParams(
+                FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT,
+                Gravity.START | Gravity.TOP));
 
-    private GameSettingsPanel settingsPanel;
-
-    private void toggleSettings() {
-        if (settingsPanel.isOpen()) {
-            settingsPanel.hide();
-        } else {
-            settingsPanel.show();
-        }
-    }
-
-    /** Atrás abre o cierra los ajustes; no sale del juego. */
-    @Override
-    public void onBackPressed() {
-        toggleSettings();
     }
 
     /**

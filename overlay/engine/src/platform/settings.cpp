@@ -30,7 +30,7 @@ const Option kBaseOptions[] = {
     {"video.custom_textures", "1"},
     {"video.frame_blend", "0"},
     {"video.frame_interpolation", "0"},   // 0/60 = apagado; 120, 180, 240 = FPS mostrados (experimental)
-    {"video.wide_backdrop", "1"},         // bordes ultrawide: 1 = imagen difuminada, 0 = negro
+    {"video.wide_backdrop", "0"},         // bordes ultrawide: 1 = imagen difuminada, 0 = negro
     {"input.gamepads", "1"},
     {"input.auto_grip", "1"},
     {"input.joycon_pairs", "1"},

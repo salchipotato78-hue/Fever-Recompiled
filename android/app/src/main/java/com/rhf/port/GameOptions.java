@@ -1,7 +1,6 @@
 package com.rhf.port;
 
 import android.content.Context;
-import android.content.SharedPreferences;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -19,95 +18,27 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * Ajustes del juego. Se guardan en SharedPreferences y se escriben en games/rhf/settings.ini, el
- * archivo que lee el motor. Se cambian desde el engranaje dentro del juego (GameSettingsPanel).
+ * Ajustes fijos del juego. Por ahora no hay opciones en la app: al importar el zip se escriben estos
+ * valores en games/rhf/settings.ini, el archivo que lee el motor. Las opciones volverán cuando haya un
+ * ultrawide real y buen rendimiento.
  */
 public final class GameOptions {
-    private static final String PREFS = "rhf_options";
-
-    /** Escala de render (video.scale): 1x es el original; más alto = más nítido, más costoso. */
-    public static final int[] SCALES = {1, 2, 3, 4};
-
-    /** FPS que se muestran: 60 = apagado. 120, 180 y 240 interpolan frames (experimental). */
-    public static final int[] INTERPOLATION_FPS = {60, 120, 180, 240};
-
     private GameOptions() {}
 
-    private static SharedPreferences prefs(Context context) {
-        return context.getSharedPreferences(PREFS, Context.MODE_PRIVATE);
-    }
-
-    public static int scale(Context context) {
-        return prefs(context).getInt("scale", 1);
-    }
-
-    public static void cycleScale(Context context) {
-        int current = scale(context);
-        int next = SCALES[0];
-        for (int i = 0; i < SCALES.length; i++) {
-            if (SCALES[i] == current) {
-                next = SCALES[(i + 1) % SCALES.length];
-            }
-        }
-        prefs(context).edit().putInt("scale", next).apply();
-    }
-
-    public static int interpolationFps(Context context) {
-        // Migración: la opción anterior era un interruptor (frame_blend); si estaba activa, equivale a 120.
-        int fallback = prefs(context).getBoolean("frame_blend", false) ? 120 : 60;
-        return prefs(context).getInt("interpolation_fps", fallback);
-    }
-
-    public static void cycleInterpolationFps(Context context) {
-        int current = interpolationFps(context);
-        int next = INTERPOLATION_FPS[0];
-        for (int i = 0; i < INTERPOLATION_FPS.length; i++) {
-            if (INTERPOLATION_FPS[i] == current) {
-                next = INTERPOLATION_FPS[(i + 1) % INTERPOLATION_FPS.length];
-            }
-        }
-        prefs(context).edit().putInt("interpolation_fps", next).apply();
-    }
-
-    /** Bordes ultrawide: true = imagen difuminada a los lados; false = negro. */
-    public static boolean wideBackdrop(Context context) {
-        return prefs(context).getBoolean("wide_backdrop", true);
-    }
-
-    public static void setWideBackdrop(Context context, boolean on) {
-        prefs(context).edit().putBoolean("wide_backdrop", on).apply();
-    }
-
-    public static boolean customTextures(Context context) {
-        return prefs(context).getBoolean("custom_textures", true);
-    }
-
-    public static void setCustomTextures(Context context, boolean on) {
-        prefs(context).edit().putBoolean("custom_textures", on).apply();
-    }
-
-    public static boolean gamepads(Context context) {
-        return prefs(context).getBoolean("gamepads", true);
-    }
-
-    public static void setGamepads(Context context, boolean on) {
-        prefs(context).edit().putBoolean("gamepads", on).apply();
-    }
-
     /**
-     * Escribe las opciones en games/rhf/settings.ini. Solo cambia las claves que pertenecen a la app;
-     * el resto del archivo (controles, idioma, etc., que guarda el motor) se conserva tal cual.
+     * Escribe los valores fijos en games/rhf/settings.ini. Solo cambia las claves que pertenecen a la
+     * app; el resto del archivo (controles, idioma, etc., que guarda el motor) se conserva tal cual.
      */
     public static void writeSettingsFile(Context context) throws IOException {
         File file = new File(context.getFilesDir(), "games/rhf/settings.ini");
         file.getParentFile().mkdirs();
 
         Map<String, String> owned = new LinkedHashMap<>();   // "seccion.clave" -> valor
-        owned.put("video.scale", String.valueOf(scale(context)));
-        owned.put("video.custom_textures", customTextures(context) ? "1" : "0");
-        owned.put("video.frame_interpolation", String.valueOf(interpolationFps(context)));
-        owned.put("video.wide_backdrop", wideBackdrop(context) ? "1" : "0");
-        owned.put("input.gamepads", gamepads(context) ? "1" : "0");
+        owned.put("video.scale", "1");
+        owned.put("video.custom_textures", "1");
+        owned.put("video.frame_interpolation", "0");
+        owned.put("video.wide_backdrop", "0");
+        owned.put("input.gamepads", "1");
 
         List<String> lines = readLines(file);
         List<String> out = new ArrayList<>();
