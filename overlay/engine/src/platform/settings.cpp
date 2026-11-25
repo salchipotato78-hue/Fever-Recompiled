@@ -45,7 +45,7 @@ const Option kBaseOptions[] = {
     {"system.interface_language", "en"},
     {"system.language", "auto"},
     {"system.pal60", "1"},
-    {"system.skip_notices", "1"},
+    {"system.skip_notices", "0"},
     {"system.discord_presence", "1"},
     {"system.options_menu", "1"},
     {"audio.mute", "0"},
