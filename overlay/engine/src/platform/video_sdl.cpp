@@ -597,6 +597,13 @@ bool cursor_position(long& x, long& y) {
     return true;
 }
 
+bool cursor_held() {
+    if (!g_window.load()) {
+        return false;
+    }
+    return SDL_GetMouseState(nullptr, nullptr) != 0;
+}
+
 bool cursor_on_image(float& x, float& y) {
     SDL_Window* window = g_window;
     if (!window || SDL_GetMouseFocus() != window) {

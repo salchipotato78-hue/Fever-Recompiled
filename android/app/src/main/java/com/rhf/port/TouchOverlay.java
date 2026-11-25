@@ -304,16 +304,6 @@ public class TouchOverlay extends View {
         visibilityListener = listener;
     }
 
-    /**
-     * Un toque fuera de los botones oculta los controles: el dedo pasa a ser el puntero del juego
-     * (SDL lo convierte en mouse y el motor lo usa como puntero del Wii Remote; el toque es clic = A).
-     * Vuelven con el botón "Mostrar botones".
-     */
-    private void hideForPointer() {
-        userChoice = false;
-        applyVisibility();
-    }
-
     @Override
     public boolean onTouchEvent(MotionEvent event) {
         if (!visible) return false;   // en menús el toque lo recibe el juego
@@ -325,7 +315,6 @@ public class TouchOverlay extends View {
             case MotionEvent.ACTION_POINTER_DOWN: {
                 int i = event.getActionIndex();
                 consumed = touchDown(event.getPointerId(i), event.getX(i), event.getY(i));
-                if (!consumed) hideForPointer();   // toque libre: el dedo es el puntero
                 break;
             }
             case MotionEvent.ACTION_MOVE: {
