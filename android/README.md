@@ -7,9 +7,10 @@ Proyecto Gradle de la app. Lo que NO está aquí, y lo pone el flujo de CI:
 
 ## Al abrir la app: elegir el .zip
 
-La app siempre empieza pidiendo un `.zip` con tu carpeta DATA del disco; no se puede saltar esa pantalla.
-El zip puede tener la carpeta `DATA` o solo su contenido, pero debe incluir `sys/main.dol` y la carpeta `files/`.
-Si es el mismo zip que ya se importó (mismo nombre y tamaño), no se vuelve a extraer y el juego abre enseguida.
+La primera vez la app pide un `.zip` con tu carpeta DATA del disco. El zip puede tener la carpeta `DATA`
+o solo su contenido, pero debe incluir `sys/main.dol` y la carpeta `files/`.
+Después de importarlo, la app abre el juego directamente. Para cambiar de datos, borra los datos de la app
+(o reinstálala) y vuelve a elegir el zip.
 
 Para crear el zip: comprime la carpeta `DATA` del disco extraído (la que tiene `sys` y `files` dentro).
 

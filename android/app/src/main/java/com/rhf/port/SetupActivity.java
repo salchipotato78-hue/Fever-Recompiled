@@ -20,7 +20,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 /**
- * Pantalla de inicio y única entrada de la app. Pide siempre un .zip con la carpeta DATA del disco
+ * Pantalla de inicio y única entrada de la app. La primera vez pide un .zip con la carpeta DATA del disco
  * (la que contiene sys/ y files/) y la extrae en la carpeta interna de la app, en games/rhf/extracted,
  * que es la ruta que usa el motor. Después abre el juego.
  */
@@ -46,12 +46,23 @@ public class SetupActivity extends Activity {
     private static final String PREFS = "rhf_import";
 
     /**
-     * Entrada de la app. Siempre se pide el .zip al abrir: no hay forma de saltarse esta pantalla.
-     * Si el zip es el mismo que ya se importó (mismo nombre y tamaño), no se vuelve a extraer.
+     * Entrada de la app. La primera vez pide el .zip; después, si los datos ya están importados, abre
+     * el juego directamente. Para cambiar de datos hay que borrar los datos de la app (o reinstalarla).
      */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        boolean imported = getSharedPreferences(PREFS, MODE_PRIVATE).getString("zip_id", null) != null;
+        if (imported && dataReady(this)) {
+            try {
+                GameOptions.writeSettingsFile(this);
+            } catch (IOException e) {
+                // Sin settings.ini el motor usa sus valores por defecto; el juego abre igual.
+            }
+            startGame();
+            return;
+        }
 
         LinearLayout layout = new LinearLayout(this);
         layout.setOrientation(LinearLayout.VERTICAL);
