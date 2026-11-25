@@ -33,6 +33,11 @@
 #include "wp/settings.h"
 #include "wp/ui_text.h"
 
+namespace wp::gx {
+void set_screen_aspect(float aspect);
+float display_aspect();
+}
+
 namespace wp::video {
 
 namespace {
@@ -647,8 +652,25 @@ void present() {
         gx::process();
         return;
     }
-    double aspect = g_aspect;
-    gx::run_frame_task([window, aspect] { present_on_gpu(window, aspect); });
+    // El aspecto de presentación lo fija el juego (gx: pantalla completa ampliada, o el lienzo si la
+    // pantalla es más estrecha). Se lee en la tarea de GPU, después de procesar el cuadro.
+    gx::run_frame_task([window] {
+        if (window) {
+            int pixel_width = 0;
+            int pixel_height = 0;
+            if (SDL_GetWindowSizeInPixels(window, &pixel_width, &pixel_height)) {
+                const int area = pixel_height - titlebar::height(window);
+                if (pixel_width > 0 && area > 0) {
+                    gx::set_screen_aspect(static_cast<float>(pixel_width) / static_cast<float>(area));
+                }
+            }
+        }
+        double aspect = gx::display_aspect();
+        if (!(aspect > 0.0)) {
+            aspect = g_aspect;
+        }
+        present_on_gpu(window, aspect);
+    });
 }
 
 }
