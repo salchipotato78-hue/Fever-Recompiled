@@ -45,6 +45,7 @@ const Option kBaseOptions[] = {
     {"system.interface_language", "en"},
     {"system.language", "auto"},
     {"system.pal60", "1"},
+    {"video.skip_fade", "0"},   // PRUEBA de diagnóstico: 1 = omitir dibujos de ~1 unidad (pantalla negra)
     {"system.skip_notices", "0"},   // 0 = el aviso espera una pulsación real, como en el juego original
     {"system.discord_presence", "1"},
     {"system.options_menu", "1"},
