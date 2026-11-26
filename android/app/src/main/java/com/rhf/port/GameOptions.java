@@ -39,6 +39,7 @@ public final class GameOptions {
         owned.put("video.frame_interpolation", "0");
         owned.put("video.wide_backdrop", "0");
         owned.put("input.gamepads", "1");
+        owned.put("video.skip_fade", "1");   // prueba de diagnóstico de pantalla negra; quitar al cerrar el caso
 
         List<String> lines = readLines(file);
         List<String> out = new ArrayList<>();
