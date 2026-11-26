@@ -1013,6 +1013,12 @@ void draw_primitive(uint8_t command, const uint8_t* data, uint32_t count) {
     {
         static int unit_logged = 0;
         const float width = std::fabs(g_projection.a * g_projection.x_scale) > 0.0f ? 2.0f / std::fabs(g_projection.a * g_projection.x_scale) : 0.0f;
+        // PRUEBA (pantalla negra): con WP_SKIP_FADE=1 se omiten los dibujos de ~1 unidad para ver si
+        // hay escena debajo que el cuadro esté tapando.
+        static const bool skip_fade = std::getenv("WP_SKIP_FADE") != nullptr;
+        if (skip_fade && g_projection.orthographic && width > 0.0f && width < 4.0f) {
+            return;
+        }
         if (g_projection.orthographic && width > 0.0f && width < 4.0f && unit_logged < 60 && triangles.size() >= 3) {
             unit_logged++;
             const ScreenVertex& t = triangles[0];
