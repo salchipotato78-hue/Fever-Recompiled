@@ -33,6 +33,7 @@
 
 namespace wp::video {
 bool surface_recreated();
+void request_surface_rebind();
 }
 
 namespace wp::gx::render {
@@ -2185,7 +2186,11 @@ bool present_frame(void* window_handle, double aspect) {
         draw_picture();
         draw_overlay(client_width, client_height);
         draw_titlebar(client_width, client_height, bar);
-        SDL_GL_SwapWindow(window);
+        if (!SDL_GL_SwapWindow(window)) {
+            // Antes el fallo era silencioso: el frame se "presenta" y la pantalla queda negra.
+            std::fprintf(stderr, "[surface] swap failed: %s\n", SDL_GetError());
+            video::request_surface_rebind();
+        }
     };
     const int subframes = interpolation_subframes();
     const bool blend = subframes > 1 && g_device.previous_ready && g_device.previous.framebuffer &&
