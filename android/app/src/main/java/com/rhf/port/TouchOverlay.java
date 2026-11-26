@@ -123,11 +123,12 @@ public class TouchOverlay extends View {
         super.onSizeChanged(w, h, oldw, oldh);
         // A y B: a la altura de los dedos del jugador, B a la izquierda y A a la derecha. Medidas en
         // fracciones de la pantalla para que escalen con cualquier resolución.
-        float abRadius = 0.0426f * w;   // el arte se dibuja un 15 % más grande que este radio
-        place("B", 0.115f * w, 0.784f * h, abRadius);
-        place("A", 0.884f * w, 0.784f * h, abRadius);
-        // Pausa arriba a la derecha (sin cambios).
-        place("+", w - margin - 0.6f * unit, margin + 0.6f * unit, 0.5f * unit);
+        // Medidas de la imagen de referencia: B y A grandes, en las esquinas inferiores (parte de cada
+        // botón queda fuera de la pantalla, como en la referencia). El arte se dibuja un 15 % más grande.
+        place("B", 0.037f * w, 0.890f * h, 0.081f * w);
+        place("A", 0.967f * w, 0.896f * h, 0.084f * w);
+        // Pausa arriba a la derecha, en la esquina.
+        place("+", 0.978f * w, 0.050f * h, 0.032f * w);
         // Cruceta a la izquierda, por encima de B para no tocarse.
         float dcx = 0.11f * w;
         float dcy = 0.42f * h;
