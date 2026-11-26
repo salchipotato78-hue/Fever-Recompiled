@@ -166,6 +166,8 @@ int main(int argc, char** argv) {
     // se pisarían (cada uno lleva su propio offset) y los mensajes de error se perderían.
     if (const char* err_path = std::getenv("WP_STDERR_FILE")) {
         std::freopen(err_path, "w", stderr);
+        // Sin búfer: con búfer de bloques (4 KB) los últimos mensajes se perdían si el proceso se pausaba.
+        std::setvbuf(stderr, nullptr, _IONBF, 0);
     }
 #ifdef _WIN32
     SetUnhandledExceptionFilter(report_crash);
