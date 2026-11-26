@@ -299,6 +299,11 @@ void handle_event(SDL_Window* window, const SDL_Event& event) {
         return;
     case SDL_EVENT_DID_ENTER_FOREGROUND:
     case SDL_EVENT_WINDOW_RESTORED:
+    case SDL_EVENT_WINDOW_SHOWN:
+    case SDL_EVENT_WINDOW_EXPOSED:
+        // Android puede recrear la superficie en cualquiera de estos eventos (pantalla apagada/encendida,
+        // vuelta desde recientes). Se marca para volver a enlazar el contexto antes del siguiente frame.
+        std::fprintf(stderr, "[surface] event %u, rebind pending\n", static_cast<unsigned>(event.type));
         g_surface_epoch++;
         return;
     default:
@@ -490,6 +495,11 @@ void present_on_gpu(SDL_Window* window, double aspect) {
     }
 }
 
+}
+
+// Pide volver a enlazar el contexto en el siguiente frame (p. ej. si SDL_GL_SwapWindow falla).
+void request_surface_rebind() {
+    g_surface_epoch++;
 }
 
 // True once after each return to foreground. Only the render thread calls this.
