@@ -1008,6 +1008,20 @@ void draw_primitive(uint8_t command, const uint8_t* data, uint32_t count) {
                      g_konst[3], g_bp[0x28], g_bp[0xF6], vertices[0].vertex.color[0][0], vertices[0].vertex.color[0][1], vertices[0].vertex.color[0][2],
                      vertices[0].vertex.color[0][3], g_xf[0x100C], g_xf[0x100E]);
     }
+    // DIAGNÓSTICO (pantalla negra): dibujos con proyección ortográfica de ~1 unidad (fundido o cuadro
+    // de pantalla completa). Registra color, alfa, geometría y blend de las primeras llamadas.
+    {
+        static int unit_logged = 0;
+        const float width = std::fabs(g_projection.a * g_projection.x_scale) > 0.0f ? 2.0f / std::fabs(g_projection.a * g_projection.x_scale) : 0.0f;
+        if (g_projection.orthographic && width > 0.0f && width < 4.0f && unit_logged < 60 && triangles.size() >= 3) {
+            unit_logged++;
+            const ScreenVertex& t = triangles[0];
+            std::fprintf(stderr, "[fade] draw#%d cmd=%02x n=%u tri=%zu blend=%06x z=%06x tev0=%06x/%06x color0=(%.3f %.3f %.3f %.3f) tri0=(%.2f %.2f %.2f)(%.2f %.2f %.2f)(%.2f %.2f %.2f)\n",
+                         unit_logged, command, count, triangles.size() / 3, g_bp[0x41], g_bp[0x40], g_bp[0xC0], g_bp[0xC1],
+                         vertices[0].vertex.color[0][0], vertices[0].vertex.color[0][1], vertices[0].vertex.color[0][2], vertices[0].vertex.color[0][3],
+                         t.x, t.y, t.z, triangles[1].x, triangles[1].y, triangles[1].z, triangles[2].x, triangles[2].y, triangles[2].z);
+        }
+    }
     if (g_capture) {
         capture_draw(command, count, triangles.size() / 3, layout, raw, vertices);
     }
