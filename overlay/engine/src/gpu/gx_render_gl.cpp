@@ -2188,7 +2188,12 @@ bool present_frame(void* window_handle, double aspect) {
         draw_titlebar(client_width, client_height, bar);
         if (!SDL_GL_SwapWindow(window)) {
             // Antes el fallo era silencioso: el frame se "presenta" y la pantalla queda negra.
-            std::fprintf(stderr, "[surface] swap failed: %s\n", SDL_GetError());
+            // Se registra el 1.º, el 2.º, el 10.º y después uno de cada 300 para no inundar el log en segundo plano.
+            static int swap_failures = 0;
+            swap_failures++;
+            if (swap_failures <= 2 || swap_failures == 10 || swap_failures % 300 == 0) {
+                std::fprintf(stderr, "[surface] swap failed (x%d): %s\n", swap_failures, SDL_GetError());
+            }
             video::request_surface_rebind();
         }
     };
