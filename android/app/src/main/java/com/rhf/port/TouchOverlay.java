@@ -8,6 +8,9 @@ import android.graphics.RectF;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.view.InputDevice;
 import android.view.KeyEvent;
@@ -43,12 +46,20 @@ public class TouchOverlay extends View {
         Bitmap bitmap;            // arte de Wario (A, B, +); null = círculo con texto
         final RectF target = new RectF();
         int holders;              // cuántos dedos lo mantienen pulsado
+        boolean keyDown;          // la tecla está pulsada en SDL
+        long downAt;              // momento en que se envió el key-down
+        Runnable pendingUp;       // key-up aplazado hasta cumplir el tiempo mínimo
         Button(String label, int keycode, boolean dpad) {
             this.label = label;
             this.keycode = keycode;
             this.dpad = dpad;
         }
     }
+
+    // Tiempo mínimo que una tecla táctil permanece pulsada. El motor lee el teclado una vez por
+    // fotograma; un toque más corto que eso (down y up en el mismo fotograma) no llega al juego.
+    private static final long MIN_HOLD_MS = 80;
+    private final Handler handler = new Handler(Looper.getMainLooper());
 
     private final List<Button> buttons = new ArrayList<>();
     private final Paint fill = new Paint(Paint.ANTI_ALIAS_FLAG);
@@ -187,13 +198,36 @@ public class TouchOverlay extends View {
     }
 
     private void press(Button b) {
-        if (b.holders++ == 0) {
+        if (b.pendingUp != null) {
+            // Se volvió a pulsar antes de soltar la tecla: se cancela el key-up pendiente.
+            handler.removeCallbacks(b.pendingUp);
+            b.pendingUp = null;
+        }
+        if (b.holders++ == 0 && !b.keyDown) {
+            b.keyDown = true;
+            b.downAt = SystemClock.uptimeMillis();
             SDLActivity.onNativeKeyDown(b.keycode);
         }
     }
 
     private void release(Button b) {
         if (b.holders > 0 && --b.holders == 0) {
+            long wait = MIN_HOLD_MS - (SystemClock.uptimeMillis() - b.downAt);
+            if (wait <= 0) {
+                sendKeyUp(b);
+            } else {
+                b.pendingUp = () -> {
+                    b.pendingUp = null;
+                    sendKeyUp(b);
+                };
+                handler.postDelayed(b.pendingUp, wait);
+            }
+        }
+    }
+
+    private void sendKeyUp(Button b) {
+        if (b.keyDown && b.holders == 0) {
+            b.keyDown = false;
             SDLActivity.onNativeKeyUp(b.keycode);
         }
     }
