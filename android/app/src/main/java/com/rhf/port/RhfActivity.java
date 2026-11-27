@@ -1,5 +1,9 @@
 package com.rhf.port;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.ActivityInfo;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
@@ -25,6 +29,9 @@ public class RhfActivity extends SDLActivity {
     private static final boolean DEBUG_GX = false;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        initLifecycleLog();
+        lc("onCreate savedState=" + (savedInstanceState != null));
+        registerScreenReceiver();
         try {
             Os.setenv("RHF_HOME", getFilesDir().getAbsolutePath(), true);
             // El motor escribe su log en stderr; en Android eso no llega a logcat. Con WP_LOG_FILE
@@ -79,9 +86,64 @@ public class RhfActivity extends SDLActivity {
         super.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE);
     }
 
+
+    // ---- Diagnóstico de ciclo de vida: rhf_lifecycle.txt (misma carpeta que rhf_log.txt) ----
+    private static java.io.File lifecycleFile;
+    private BroadcastReceiver screenReceiver;
+
+    private void initLifecycleLog() {
+        if (lifecycleFile != null) return;
+        java.io.File dir = getExternalFilesDir(null);
+        if (dir == null) dir = getFilesDir();
+        lifecycleFile = new java.io.File(dir, "rhf_lifecycle.txt");
+    }
+
+    /** Escribe una línea con hora de pared, uptime y PID. Nunca lanza excepciones. */
+    static void lc(String msg) {
+        java.io.File f = lifecycleFile;
+        if (f == null) return;
+        String line = new java.text.SimpleDateFormat("HH:mm:ss.SSS", java.util.Locale.US).format(new java.util.Date())
+                + " uptime=" + android.os.SystemClock.uptimeMillis()
+                + " pid=" + android.os.Process.myPid() + " " + msg + "\n";
+        try (java.io.FileWriter w = new java.io.FileWriter(f, true)) {
+            w.write(line);
+        } catch (java.io.IOException ignored) {
+        }
+    }
+
+    private void registerScreenReceiver() {
+        screenReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                lc("broadcast " + intent.getAction());
+            }
+        };
+        IntentFilter filter = new IntentFilter();
+        filter.addAction(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        filter.addAction(Intent.ACTION_USER_PRESENT);
+        registerReceiver(screenReceiver, filter);
+    }
+
+    @Override public void onStart() { lc("onStart"); super.onStart(); }
+    @Override public void onRestart() { lc("onRestart"); super.onRestart(); }
+    @Override public void onResume() { lc("onResume"); super.onResume(); }
+    @Override public void onPause() { lc("onPause"); super.onPause(); }
+    @Override public void onStop() { lc("onStop isFinishing=" + isFinishing()); super.onStop(); }
+    @Override public void onDestroy() {
+        lc("onDestroy isFinishing=" + isFinishing());
+        if (screenReceiver != null) {
+            try { unregisterReceiver(screenReceiver); } catch (IllegalArgumentException ignored) { }
+        }
+        super.onDestroy();
+    }
+    @Override public void onTrimMemory(int level) { lc("onTrimMemory level=" + level); super.onTrimMemory(level); }
+    @Override public void onLowMemory() { lc("onLowMemory"); super.onLowMemory(); }
+
     @Override
     public void onWindowFocusChanged(boolean hasFocus) {
         super.onWindowFocusChanged(hasFocus);
+        lc("onWindowFocusChanged hasFocus=" + hasFocus);
         if (hasFocus) {
             hideSystemBars();
         }
