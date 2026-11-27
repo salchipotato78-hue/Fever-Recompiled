@@ -45,7 +45,6 @@ const Option kBaseOptions[] = {
     {"system.interface_language", "en"},
     {"system.language", "auto"},
     {"system.pal60", "1"},
-    {"video.skip_fade", "1"},   // PRUEBA de diagnóstico (build de prueba): omite dibujos de ~1 unidad
     {"system.skip_notices", "0"},   // 0 = el aviso espera una pulsación real, como en el juego original
     {"system.discord_presence", "1"},
     {"system.options_menu", "1"},

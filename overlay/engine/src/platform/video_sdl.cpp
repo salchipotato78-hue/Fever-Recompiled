@@ -219,9 +219,36 @@ std::string window_title(double fps) {
     return std::string(game::description().title) + " (" + code + ") | " + gx::render::api_name() + " | " + region + " | " + statistics;
 }
 
+// Nombre legible de los eventos de ciclo de vida de SDL, para el log de diagnóstico.
+static const char* lifecycle_event_name(uint32_t type) {
+    switch (type) {
+    case SDL_EVENT_WILL_ENTER_BACKGROUND: return "WILL_ENTER_BACKGROUND";
+    case SDL_EVENT_DID_ENTER_BACKGROUND: return "DID_ENTER_BACKGROUND";
+    case SDL_EVENT_WILL_ENTER_FOREGROUND: return "WILL_ENTER_FOREGROUND";
+    case SDL_EVENT_DID_ENTER_FOREGROUND: return "DID_ENTER_FOREGROUND";
+    case SDL_EVENT_LOW_MEMORY: return "LOW_MEMORY";
+    case SDL_EVENT_TERMINATING: return "TERMINATING";
+    case SDL_EVENT_WINDOW_HIDDEN: return "WINDOW_HIDDEN";
+    case SDL_EVENT_WINDOW_SHOWN: return "WINDOW_SHOWN";
+    case SDL_EVENT_WINDOW_EXPOSED: return "WINDOW_EXPOSED";
+    case SDL_EVENT_WINDOW_OCCLUDED: return "WINDOW_OCCLUDED";
+    case SDL_EVENT_WINDOW_MINIMIZED: return "WINDOW_MINIMIZED";
+    case SDL_EVENT_WINDOW_RESTORED: return "WINDOW_RESTORED";
+    case SDL_EVENT_WINDOW_FOCUS_GAINED: return "WINDOW_FOCUS_GAINED";
+    case SDL_EVENT_WINDOW_FOCUS_LOST: return "WINDOW_FOCUS_LOST";
+    case SDL_EVENT_WINDOW_CLOSE_REQUESTED: return "WINDOW_CLOSE_REQUESTED";
+    case SDL_EVENT_WINDOW_PIXEL_SIZE_CHANGED: return "WINDOW_PIXEL_SIZE_CHANGED";
+    default: return nullptr;
+    }
+}
+
+
 void handle_event(SDL_Window* window, const SDL_Event& event) {
     if (titlebar::handle_event(window, event)) {
         return;
+    }
+    if (const char* lc_name = lifecycle_event_name(event.type)) {
+        std::fprintf(stderr, "[lifecycle] %s ticks=%llu\n", lc_name, static_cast<unsigned long long>(SDL_GetTicks()));
     }
     switch (event.type) {
     case SDL_EVENT_QUIT:
