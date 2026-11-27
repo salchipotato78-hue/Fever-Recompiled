@@ -2140,7 +2140,15 @@ bool present_frame(void* window_handle, double aspect) {
     if (g_device.ready && window_handle && video::surface_recreated()) {
         // Volvió de segundo plano: Android pudo recrear la superficie. Se vuelve a enlazar el contexto
         // antes de dibujar; si no, el frame se pierde y la pantalla se queda en negro.
-        if (!video::make_gl_current()) {
+        SDL_Window* rebind_window = static_cast<SDL_Window*>(window_handle);
+        int rebind_w = 0;
+        int rebind_h = 0;
+        SDL_GetWindowSizeInPixels(rebind_window, &rebind_w, &rebind_h);
+        bool rebound = video::make_gl_current();
+        std::fprintf(stderr, "[surface] rebind %s flags=%llx size=%dx%d%s%s\n", rebound ? "ok" : "FAILED",
+                     static_cast<unsigned long long>(SDL_GetWindowFlags(rebind_window)), rebind_w, rebind_h,
+                     rebound ? "" : ": ", rebound ? "" : SDL_GetError());
+        if (!rebound) {
             std::fputs("could not rebind the OpenGL context after resume\n", stderr);
         }
     }
@@ -2186,15 +2194,19 @@ bool present_frame(void* window_handle, double aspect) {
         draw_picture();
         draw_overlay(client_width, client_height);
         draw_titlebar(client_width, client_height, bar);
+        static int swap_failures = 0;
         if (!SDL_GL_SwapWindow(window)) {
             // Antes el fallo era silencioso: el frame se "presenta" y la pantalla queda negra.
             // Se registra el 1.º, el 2.º, el 10.º y después uno de cada 300 para no inundar el log en segundo plano.
-            static int swap_failures = 0;
             swap_failures++;
             if (swap_failures <= 2 || swap_failures == 10 || swap_failures % 300 == 0) {
-                std::fprintf(stderr, "[surface] swap failed (x%d): %s\n", swap_failures, SDL_GetError());
+                std::fprintf(stderr, "[surface] swap failed (x%d) flags=%llx: %s\n", swap_failures,
+                             static_cast<unsigned long long>(SDL_GetWindowFlags(window)), SDL_GetError());
             }
             video::request_surface_rebind();
+        } else if (swap_failures > 0) {
+            std::fprintf(stderr, "[surface] swap recovered after %d failures\n", swap_failures);
+            swap_failures = 0;
         }
     };
     const int subframes = interpolation_subframes();
